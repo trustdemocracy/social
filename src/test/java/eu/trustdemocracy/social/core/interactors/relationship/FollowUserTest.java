@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import eu.trustdemocracy.social.core.entities.RelationshipStatus;
 import eu.trustdemocracy.social.core.entities.RelationshipType;
 import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
-import eu.trustdemocracy.social.core.models.request.RelationshipRequestDTO;
+import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.gateways.RelationshipDAO;
 import eu.trustdemocracy.social.gateways.fake.FakeRelationshipDAO;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 
 public class FollowUserTest {
 
-  private static List<RelationshipRequestDTO> inputRelationships;
+  private static List<OriginRelationshipRequestDTO> inputRelationships;
   private RelationshipDAO relationshipDAO;
   private UUID originUserId = UUID.randomUUID();
   private String originUserUsername = "username";
@@ -31,7 +31,7 @@ public class FollowUserTest {
     inputRelationships = new ArrayList<>();
 
     for (int i = 0; i < 10; i++) {
-      inputRelationships.add(new RelationshipRequestDTO()
+      inputRelationships.add(new OriginRelationshipRequestDTO()
           .setOriginUserToken(TokenUtils.createToken(originUserId, originUserUsername))
           .setTargetUserId(UUID.randomUUID())
           .setRelationshipType(RelationshipType.FOLLOW));

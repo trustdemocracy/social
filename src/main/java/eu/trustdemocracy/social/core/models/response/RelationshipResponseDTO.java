@@ -13,6 +13,7 @@ public class RelationshipResponseDTO {
   private UUID originUserId;
   private String originUserUsername;
   private UUID targetUserId;
+  private String targetUserUsername;
   private RelationshipType relationshipType;
   private RelationshipStatus relationshipStatus;
 }

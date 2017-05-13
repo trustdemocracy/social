@@ -1,12 +1,12 @@
 package eu.trustdemocracy.social.core.entities.util;
 
 import eu.trustdemocracy.social.core.entities.Relationship;
-import eu.trustdemocracy.social.core.models.request.RelationshipRequestDTO;
+import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.RelationshipResponseDTO;
 
 public class RelationshipMapper {
 
-  public static Relationship createEntity(RelationshipRequestDTO relationshipRequestDTO) {
+  public static Relationship createEntity(OriginRelationshipRequestDTO relationshipRequestDTO) {
     return new Relationship()
         .setOriginUser(UserMapper.createEntity(relationshipRequestDTO.getOriginUserToken()))
         .setTargetUserId(relationshipRequestDTO.getTargetUserId())

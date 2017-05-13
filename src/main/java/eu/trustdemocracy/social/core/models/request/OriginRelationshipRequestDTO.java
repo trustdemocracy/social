@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class RelationshipRequestDTO {
+public class OriginRelationshipRequestDTO {
 
   private String originUserToken;
   private UUID targetUserId;
