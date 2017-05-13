@@ -1,6 +1,5 @@
-package eu.trustdemocracy.social.core.interactors;
+package eu.trustdemocracy.social.core.interactors.event;
 
-import eu.trustdemocracy.social.core.interactors.event.CreateEvent;
 import eu.trustdemocracy.social.core.models.request.EventRequestDTO;
 import eu.trustdemocracy.social.gateways.fake.FakeEventDAO;
 import io.vertx.core.json.JsonObject;
