@@ -9,4 +9,6 @@ public interface RelationshipDAO {
   Relationship update(Relationship relationship);
 
   Relationship find(Relationship relationship);
+
+  Relationship remove(Relationship foundRelationship);
 }
