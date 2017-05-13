@@ -63,11 +63,10 @@ public class CancelFollowTest {
     assertEquals(originUserId, responseRelationship.getOriginUserId());
     assertEquals(originUserUsername, responseRelationship.getOriginUserUsername());
     assertEquals(targetUserId, responseRelationship.getTargetUserId());
-    assertEquals(targetUserUsername, responseRelationship.getOriginUserUsername());
+    assertEquals(targetUserUsername, responseRelationship.getTargetUserUsername());
     assertEquals(acceptedRelationship.getRelationshipType(),
         responseRelationship.getRelationshipType());
     assertEquals(RelationshipStatus.ACEPTED, responseRelationship.getRelationshipStatus());
-
   }
 
 
