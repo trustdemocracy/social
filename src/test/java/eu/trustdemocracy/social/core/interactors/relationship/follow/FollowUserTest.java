@@ -1,4 +1,4 @@
-package eu.trustdemocracy.social.core.interactors.relationship;
+package eu.trustdemocracy.social.core.interactors.relationship.follow;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

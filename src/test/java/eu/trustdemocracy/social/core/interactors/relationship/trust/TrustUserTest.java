@@ -1,9 +1,10 @@
-package eu.trustdemocracy.social.core.interactors.relationship;
+package eu.trustdemocracy.social.core.interactors.relationship.trust;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import eu.trustdemocracy.social.core.entities.RelationshipStatus;
 import eu.trustdemocracy.social.core.entities.RelationshipType;
+import eu.trustdemocracy.social.core.interactors.relationship.trust.TrustUser;
 import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.gateways.RelationshipDAO;

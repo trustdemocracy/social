@@ -1,25 +1,26 @@
-package eu.trustdemocracy.social.core.interactors.relationship;
+package eu.trustdemocracy.social.core.interactors.relationship.follow;
 
 import eu.trustdemocracy.social.core.entities.RelationshipType;
 import eu.trustdemocracy.social.core.entities.util.RelationshipMapper;
 import eu.trustdemocracy.social.core.interactors.Interactor;
-import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
+import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.RelationshipResponseDTO;
 import eu.trustdemocracy.social.gateways.RelationshipDAO;
 import lombok.val;
 
-public class UnFollow implements Interactor<OriginRelationshipRequestDTO, RelationshipResponseDTO> {
+public class CancelFollow implements
+    Interactor<TargetRelationshipRequestDTO, RelationshipResponseDTO> {
 
   private RelationshipDAO relationshipDAO;
 
-  public UnFollow(RelationshipDAO relationshipDAO) {
+  public CancelFollow(RelationshipDAO relationshipDAO) {
     this.relationshipDAO = relationshipDAO;
   }
 
   @Override
   public RelationshipResponseDTO execute(
-      OriginRelationshipRequestDTO originRelationshipRequestDTO) {
-    val relationship = RelationshipMapper.createEntity(originRelationshipRequestDTO);
+      TargetRelationshipRequestDTO targetRelationshipRequestDTO) {
+    val relationship = RelationshipMapper.createEntity(targetRelationshipRequestDTO);
     relationship.setRelationshipType(RelationshipType.FOLLOW);
 
     val foundRelationship = relationshipDAO.find(relationship);

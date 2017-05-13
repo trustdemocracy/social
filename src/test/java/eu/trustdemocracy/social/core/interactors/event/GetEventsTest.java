@@ -3,8 +3,8 @@ package eu.trustdemocracy.social.core.interactors.event;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import eu.trustdemocracy.social.core.interactors.relationship.AcceptFollow;
-import eu.trustdemocracy.social.core.interactors.relationship.FollowUser;
+import eu.trustdemocracy.social.core.interactors.relationship.follow.AcceptFollow;
+import eu.trustdemocracy.social.core.interactors.relationship.follow.FollowUser;
 import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
 import eu.trustdemocracy.social.core.models.request.EventRequestDTO;
 import eu.trustdemocracy.social.core.models.request.GetEventsRequestDTO;

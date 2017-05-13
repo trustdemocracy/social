@@ -1,4 +1,4 @@
-package eu.trustdemocracy.social.core.interactors.relationship;
+package eu.trustdemocracy.social.core.interactors.relationship.trust;
 
 import eu.trustdemocracy.social.core.entities.RelationshipStatus;
 import eu.trustdemocracy.social.core.entities.RelationshipType;
@@ -9,19 +9,19 @@ import eu.trustdemocracy.social.core.models.response.RelationshipResponseDTO;
 import eu.trustdemocracy.social.gateways.RelationshipDAO;
 import lombok.val;
 
-public class FollowUser implements
-    Interactor<OriginRelationshipRequestDTO, RelationshipResponseDTO> {
+public class TrustUser implements Interactor<OriginRelationshipRequestDTO, RelationshipResponseDTO> {
 
   private RelationshipDAO relationshipDAO;
 
-  public FollowUser(RelationshipDAO relationshipDAO) {
+  public TrustUser(RelationshipDAO relationshipDAO) {
     this.relationshipDAO = relationshipDAO;
   }
 
   @Override
-  public RelationshipResponseDTO execute(OriginRelationshipRequestDTO relationshipRequestDTO) {
-    val relationship = RelationshipMapper.createEntity(relationshipRequestDTO);
-    relationship.setRelationshipType(RelationshipType.FOLLOW);
+  public RelationshipResponseDTO execute(
+      OriginRelationshipRequestDTO originRelationshipRequestDTO) {
+    val relationship = RelationshipMapper.createEntity(originRelationshipRequestDTO);
+    relationship.setRelationshipType(RelationshipType.TRUST);
     relationship.setRelationshipStatus(RelationshipStatus.PENDING);
     return RelationshipMapper.createResponse(relationshipDAO.create(relationship));
   }
