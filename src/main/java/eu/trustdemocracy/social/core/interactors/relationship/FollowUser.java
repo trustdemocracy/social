@@ -10,16 +10,16 @@ import lombok.val;
 
 public class FollowUser implements Interactor<RelationshipRequestDTO, RelationshipResponseDTO> {
 
-    private RelationshipDAO relationshipDAO;
+  private RelationshipDAO relationshipDAO;
 
-    public FollowUser(RelationshipDAO relationshipDAO) {
-        this.relationshipDAO = relationshipDAO;
-    }
+  public FollowUser(RelationshipDAO relationshipDAO) {
+    this.relationshipDAO = relationshipDAO;
+  }
 
-    @Override
-    public RelationshipResponseDTO execute(RelationshipRequestDTO relationshipRequestDTO) {
-        val relationship = RelationshipMapper.createEntity(relationshipRequestDTO);
-        relationship.setRelationshipStatus(RelationshipStatus.PENDING);
-        return RelationshipMapper.createResponse(relationshipDAO.create(relationship));
-    }
+  @Override
+  public RelationshipResponseDTO execute(RelationshipRequestDTO relationshipRequestDTO) {
+    val relationship = RelationshipMapper.createEntity(relationshipRequestDTO);
+    relationship.setRelationshipStatus(RelationshipStatus.PENDING);
+    return RelationshipMapper.createResponse(relationshipDAO.create(relationship));
+  }
 }

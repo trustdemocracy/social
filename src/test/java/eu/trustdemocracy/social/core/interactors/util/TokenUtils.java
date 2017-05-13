@@ -1,14 +1,13 @@
 package eu.trustdemocracy.social.core.interactors.util;
 
 import eu.trustdemocracy.social.infrastructure.JWTKeyFactory;
+import java.util.UUID;
 import lombok.val;
 import org.jose4j.jwk.RsaJwkGenerator;
 import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.lang.JoseException;
-
-import java.util.UUID;
 
 public final class TokenUtils {
 

@@ -2,15 +2,14 @@ package eu.trustdemocracy.social.core.entities.util;
 
 import eu.trustdemocracy.social.core.entities.User;
 import eu.trustdemocracy.social.infrastructure.JWTKeyFactory;
+import java.util.Map;
+import java.util.UUID;
 import lombok.val;
 import org.jose4j.jwa.AlgorithmConstraints;
 import org.jose4j.jwa.AlgorithmConstraints.ConstraintType;
 import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
-
-import java.util.Map;
-import java.util.UUID;
 
 public final class UserMapper {
 

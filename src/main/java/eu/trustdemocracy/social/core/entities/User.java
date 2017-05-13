@@ -1,9 +1,8 @@
 package eu.trustdemocracy.social.core.entities;
 
+import java.util.UUID;
 import lombok.Data;
 import lombok.experimental.Accessors;
-
-import java.util.UUID;
 
 @Data
 @Accessors(chain = true)
