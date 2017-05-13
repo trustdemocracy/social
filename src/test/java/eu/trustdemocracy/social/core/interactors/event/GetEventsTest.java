@@ -94,7 +94,7 @@ public class GetEventsTest {
     val getEventsRequest = new GetEventsRequestDTO()
         .setUserToken(TokenUtils.createToken(userId, "originUsername"));
 
-    val eventsDTO = new GetEvents(eventDAO).execute(getEventsRequest);
+    val eventsDTO = new GetEvents(eventDAO, relationshipDAO).execute(getEventsRequest);
     val events = eventsDTO.getEvents();
 
     assertNotEquals(0, createdEvents.size());
@@ -103,7 +103,7 @@ public class GetEventsTest {
     assertNotEquals(0, remainingEvents);
 
     for (val createdEvent : createdEvents) {
-      if (createdEvent.getUserId() == userId || followedUsersIds.get(createdEvent.getUserId())) {
+      if (createdEvent.getUserId().equals(userId) || followedUsersIds.get(createdEvent.getUserId())) {
         assertNotEquals(-1, events.indexOf(createdEvent));
         remainingEvents--;
       }

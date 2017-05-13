@@ -1,6 +1,9 @@
 package eu.trustdemocracy.social.gateways;
 
 import eu.trustdemocracy.social.core.entities.Relationship;
+import eu.trustdemocracy.social.core.entities.RelationshipType;
+import java.util.Set;
+import java.util.UUID;
 
 public interface RelationshipDAO {
 
@@ -11,4 +14,6 @@ public interface RelationshipDAO {
   Relationship find(Relationship relationship);
 
   Relationship remove(Relationship foundRelationship);
+
+  Set<Relationship> getAllOriginRelationships(UUID id, RelationshipType relationshipType);
 }
