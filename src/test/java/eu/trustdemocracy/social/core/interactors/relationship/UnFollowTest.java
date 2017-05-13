@@ -34,19 +34,18 @@ public class UnFollowTest {
     createdRelationship = new FollowUser(relationshipDAO)
         .execute(new OriginRelationshipRequestDTO()
             .setOriginUserToken(TokenUtils.createToken(originUserId, originUserUsername))
-            .setTargetUserId(targetUserId)
-            .setRelationshipType(RelationshipType.FOLLOW));
+            .setTargetUserId(targetUserId));
   }
 
   @Test
   public void unFollow() {
     val unFollowRelationship = new OriginRelationshipRequestDTO()
         .setOriginUserToken(TokenUtils.createToken(originUserId, originUserUsername))
-        .setTargetUserId(targetUserId)
-        .setRelationshipType(RelationshipType.FOLLOW);
+        .setTargetUserId(targetUserId);
 
 
     val relationship = RelationshipMapper.createEntity(unFollowRelationship);
+    relationship.setRelationshipType(RelationshipType.FOLLOW);
     assertNotNull(relationshipDAO.find(relationship));
     val responseRelationship = new UnFollow(relationshipDAO).execute(unFollowRelationship);
     assertNull(relationshipDAO.find(relationship));
@@ -54,8 +53,7 @@ public class UnFollowTest {
     assertEquals(originUserId, responseRelationship.getOriginUserId());
     assertEquals(originUserUsername, responseRelationship.getOriginUserUsername());
     assertEquals(targetUserId, responseRelationship.getTargetUserId());
-    assertEquals(createdRelationship.getRelationshipType(),
-        responseRelationship.getRelationshipType());
+    assertEquals(RelationshipType.FOLLOW, responseRelationship.getRelationshipType());
     assertEquals(RelationshipStatus.PENDING, responseRelationship.getRelationshipStatus());
 
   }

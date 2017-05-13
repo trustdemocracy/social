@@ -1,6 +1,7 @@
 package eu.trustdemocracy.social.core.interactors.relationship;
 
 import eu.trustdemocracy.social.core.entities.RelationshipStatus;
+import eu.trustdemocracy.social.core.entities.RelationshipType;
 import eu.trustdemocracy.social.core.entities.util.RelationshipMapper;
 import eu.trustdemocracy.social.core.interactors.Interactor;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
@@ -21,6 +22,7 @@ public class AcceptFollow implements
   public RelationshipResponseDTO execute(
       TargetRelationshipRequestDTO targetRelationshipRequestDTO) {
     val relationship = RelationshipMapper.createEntity(targetRelationshipRequestDTO);
+    relationship.setRelationshipType(RelationshipType.FOLLOW);
 
     val foundRelationship = relationshipDAO.find(relationship);
 

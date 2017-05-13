@@ -33,16 +33,14 @@ public class AcceptFollowTest {
     createdRelationship = new FollowUser(relationshipDAO)
         .execute(new OriginRelationshipRequestDTO()
             .setOriginUserToken(TokenUtils.createToken(originUserId, originUserUsername))
-            .setTargetUserId(targetUserId)
-            .setRelationshipType(RelationshipType.FOLLOW));
+            .setTargetUserId(targetUserId));
   }
 
   @Test
   public void acceptFollow() {
     val toBeAcceptedRelationship = new TargetRelationshipRequestDTO()
         .setOriginUserId(createdRelationship.getOriginUserId())
-        .setTargetUserToken(TokenUtils.createToken(targetUserId, targetUserUsername))
-        .setRelationshipType(RelationshipType.FOLLOW);
+        .setTargetUserToken(TokenUtils.createToken(targetUserId, targetUserUsername));
 
     val responseRelationship = new AcceptFollow(relationshipDAO).execute(toBeAcceptedRelationship);
 
@@ -50,8 +48,7 @@ public class AcceptFollowTest {
     assertEquals(originUserUsername, responseRelationship.getOriginUserUsername());
     assertEquals(targetUserId, responseRelationship.getTargetUserId());
     assertEquals(targetUserUsername, responseRelationship.getTargetUserUsername());
-    assertEquals(createdRelationship.getRelationshipType(),
-        responseRelationship.getRelationshipType());
+    assertEquals(RelationshipType.FOLLOW, responseRelationship.getRelationshipType());
     assertEquals(RelationshipStatus.ACEPTED, responseRelationship.getRelationshipStatus());
   }
 

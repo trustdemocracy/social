@@ -36,13 +36,11 @@ public class CancelFollowTest {
     val createdRelationship = new FollowUser(relationshipDAO)
         .execute(new OriginRelationshipRequestDTO()
             .setOriginUserToken(TokenUtils.createToken(originUserId, originUserUsername))
-            .setTargetUserId(targetUserId)
-            .setRelationshipType(RelationshipType.FOLLOW));
+            .setTargetUserId(targetUserId));
 
     val toBeAcceptedRelationship = new TargetRelationshipRequestDTO()
         .setOriginUserId(createdRelationship.getOriginUserId())
-        .setTargetUserToken(TokenUtils.createToken(targetUserId, targetUserUsername))
-        .setRelationshipType(RelationshipType.FOLLOW);
+        .setTargetUserToken(TokenUtils.createToken(targetUserId, targetUserUsername));
 
     acceptedRelationship = new AcceptFollow(relationshipDAO).execute(toBeAcceptedRelationship);
   }
@@ -51,11 +49,11 @@ public class CancelFollowTest {
   public void cancelFollow() {
     val cancelFollowRelationship = new TargetRelationshipRequestDTO()
         .setOriginUserId(acceptedRelationship.getOriginUserId())
-        .setTargetUserToken(TokenUtils.createToken(targetUserId, targetUserUsername))
-        .setRelationshipType(RelationshipType.FOLLOW);
+        .setTargetUserToken(TokenUtils.createToken(targetUserId, targetUserUsername));
 
 
     val relationship = RelationshipMapper.createEntity(cancelFollowRelationship);
+    relationship.setRelationshipType(RelationshipType.FOLLOW);
     assertNotNull(relationshipDAO.find(relationship));
     val responseRelationship = new CancelFollow(relationshipDAO).execute(cancelFollowRelationship);
     assertNull(relationshipDAO.find(relationship));
@@ -64,8 +62,7 @@ public class CancelFollowTest {
     assertEquals(originUserUsername, responseRelationship.getOriginUserUsername());
     assertEquals(targetUserId, responseRelationship.getTargetUserId());
     assertEquals(targetUserUsername, responseRelationship.getTargetUserUsername());
-    assertEquals(acceptedRelationship.getRelationshipType(),
-        responseRelationship.getRelationshipType());
+    assertEquals(RelationshipType.FOLLOW, responseRelationship.getRelationshipType());
     assertEquals(RelationshipStatus.ACEPTED, responseRelationship.getRelationshipStatus());
   }
 

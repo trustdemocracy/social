@@ -1,6 +1,5 @@
 package eu.trustdemocracy.social.core.models.request;
 
-import eu.trustdemocracy.social.core.entities.RelationshipType;
 import java.util.UUID;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -11,5 +10,4 @@ public class OriginRelationshipRequestDTO {
 
   private String originUserToken;
   private UUID targetUserId;
-  private RelationshipType relationshipType;
 }

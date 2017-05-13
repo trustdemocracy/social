@@ -3,7 +3,6 @@ package eu.trustdemocracy.social.core.interactors.event;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import eu.trustdemocracy.social.core.entities.RelationshipType;
 import eu.trustdemocracy.social.core.interactors.relationship.AcceptFollow;
 import eu.trustdemocracy.social.core.interactors.relationship.FollowUser;
 import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
@@ -79,12 +78,10 @@ public class GetEventsTest {
       if (followedUsersIds.get(followedUserId)) {
         followUser.execute(new OriginRelationshipRequestDTO()
             .setOriginUserToken(TokenUtils.createToken(userId, "originUsername"))
-            .setTargetUserId(followedUserId)
-            .setRelationshipType(RelationshipType.FOLLOW));
+            .setTargetUserId(followedUserId));
         acceptFollow.execute(new TargetRelationshipRequestDTO()
             .setOriginUserId(userId)
-            .setTargetUserToken(TokenUtils.createToken(followedUserId, "targetUsername"))
-            .setRelationshipType(RelationshipType.FOLLOW));
+            .setTargetUserToken(TokenUtils.createToken(followedUserId, "targetUsername")));
       }
     }
   }

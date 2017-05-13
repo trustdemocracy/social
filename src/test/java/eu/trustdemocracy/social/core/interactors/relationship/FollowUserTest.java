@@ -33,8 +33,7 @@ public class FollowUserTest {
     for (int i = 0; i < 10; i++) {
       inputRelationships.add(new OriginRelationshipRequestDTO()
           .setOriginUserToken(TokenUtils.createToken(originUserId, originUserUsername))
-          .setTargetUserId(UUID.randomUUID())
-          .setRelationshipType(RelationshipType.FOLLOW));
+          .setTargetUserId(UUID.randomUUID()));
     }
   }
 
@@ -47,8 +46,7 @@ public class FollowUserTest {
     assertEquals(originUserId, responseRelationship.getOriginUserId());
     assertEquals(originUserUsername, responseRelationship.getOriginUserUsername());
     assertEquals(inputRelationship.getTargetUserId(), responseRelationship.getTargetUserId());
-    assertEquals(inputRelationship.getRelationshipType(),
-        responseRelationship.getRelationshipType());
+    assertEquals(RelationshipType.FOLLOW, responseRelationship.getRelationshipType());
     assertEquals(RelationshipStatus.PENDING, responseRelationship.getRelationshipStatus());
   }
 

@@ -33,8 +33,7 @@ public class TrustUserTest {
     for (int i = 0; i < 10; i++) {
       inputRelationships.add(new OriginRelationshipRequestDTO()
           .setOriginUserToken(TokenUtils.createToken(originUserId, originUserUsername))
-          .setTargetUserId(UUID.randomUUID())
-          .setRelationshipType(RelationshipType.TRUST));
+          .setTargetUserId(UUID.randomUUID()));
     }
   }
 
@@ -47,8 +46,7 @@ public class TrustUserTest {
     assertEquals(originUserId, responseRelationship.getOriginUserId());
     assertEquals(originUserUsername, responseRelationship.getOriginUserUsername());
     assertEquals(inputRelationship.getTargetUserId(), responseRelationship.getTargetUserId());
-    assertEquals(inputRelationship.getRelationshipType(),
-        responseRelationship.getRelationshipType());
+    assertEquals(RelationshipType.TRUST, responseRelationship.getRelationshipType());
     assertEquals(RelationshipStatus.PENDING, responseRelationship.getRelationshipStatus());
   }
 

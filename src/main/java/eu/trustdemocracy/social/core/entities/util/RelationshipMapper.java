@@ -11,15 +11,13 @@ public class RelationshipMapper {
   public static Relationship createEntity(OriginRelationshipRequestDTO relationshipRequestDTO) {
     return new Relationship()
         .setOriginUser(UserMapper.createEntity(relationshipRequestDTO.getOriginUserToken()))
-        .setTargetUser(new User().setId(relationshipRequestDTO.getTargetUserId()))
-        .setRelationshipType(relationshipRequestDTO.getRelationshipType());
+        .setTargetUser(new User().setId(relationshipRequestDTO.getTargetUserId()));
   }
 
   public static Relationship createEntity(TargetRelationshipRequestDTO relationshipRequestDTO) {
     return new Relationship()
         .setOriginUser(new User().setId(relationshipRequestDTO.getOriginUserId()))
-        .setTargetUser(UserMapper.createEntity(relationshipRequestDTO.getTargetUserToken()))
-        .setRelationshipType(relationshipRequestDTO.getRelationshipType());
+        .setTargetUser(UserMapper.createEntity(relationshipRequestDTO.getTargetUserToken()));
   }
 
   public static RelationshipResponseDTO createResponse(Relationship relationship) {
