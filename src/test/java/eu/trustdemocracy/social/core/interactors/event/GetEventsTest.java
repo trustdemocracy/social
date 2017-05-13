@@ -135,4 +135,37 @@ public class GetEventsTest {
     assertEquals(0, remainingEvents);
   }
 
+  @Test
+  public void getFollowedUserEvents() {
+    UUID followedUserId = null;
+
+    for (val id : followedUsersIds.keySet()) {
+      if (followedUsersIds.get(id)) {
+        followedUserId = id;
+      }
+    }
+    assert followedUserId != null;
+
+
+    val getEventsRequest = new GetEventsRequestDTO()
+        .setUserToken(TokenUtils.createToken(userId, "originUsername"))
+        .setTargetUserId(followedUserId);
+
+    val eventsDTO = new GetEvents(eventDAO, relationshipDAO).execute(getEventsRequest);
+    val events = eventsDTO.getEvents();
+
+    assertNotEquals(0, createdEvents.size());
+
+    int remainingEvents = events.size();
+    assertNotEquals(0, remainingEvents);
+
+    for (val createdEvent : createdEvents) {
+      if (createdEvent.getUserId().equals(followedUserId)) {
+        assertNotEquals(-1, events.indexOf(createdEvent));
+        remainingEvents--;
+      }
+    }
+    assertEquals(0, remainingEvents);
+  }
+
 }
