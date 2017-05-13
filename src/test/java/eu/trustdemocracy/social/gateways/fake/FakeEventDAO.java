@@ -46,7 +46,7 @@ public class FakeEventDAO implements EventDAO {
     }
 
     for (val event : events.values()) {
-      if (event.getId().equals(targetUserId)) {
+      if (event.getUserId().equals(targetUserId)) {
         userEvents.add(event);
       }
     }
