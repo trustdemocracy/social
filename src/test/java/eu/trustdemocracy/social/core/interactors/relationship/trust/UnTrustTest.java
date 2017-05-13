@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import eu.trustdemocracy.social.core.entities.RelationshipStatus;
 import eu.trustdemocracy.social.core.entities.RelationshipType;
 import eu.trustdemocracy.social.core.entities.util.RelationshipMapper;
-import eu.trustdemocracy.social.core.interactors.relationship.follow.FollowUser;
 import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.RelationshipResponseDTO;
@@ -32,7 +31,7 @@ public class UnTrustTest {
     TokenUtils.generateKeys();
 
     relationshipDAO = new FakeRelationshipDAO();
-    createdRelationship = new FollowUser(relationshipDAO)
+    createdRelationship = new TrustUser(relationshipDAO)
         .execute(new OriginRelationshipRequestDTO()
             .setOriginUserToken(TokenUtils.createToken(originUserId, originUserUsername))
             .setTargetUserId(targetUserId));
@@ -46,7 +45,7 @@ public class UnTrustTest {
 
 
     val relationship = RelationshipMapper.createEntity(unTrustRelationship);
-    relationship.setRelationshipType(RelationshipType.FOLLOW);
+    relationship.setRelationshipType(RelationshipType.TRUST);
     assertNotNull(relationshipDAO.find(relationship));
     val responseRelationship = new UnTrust(relationshipDAO).execute(unTrustRelationship);
     assertNull(relationshipDAO.find(relationship));
