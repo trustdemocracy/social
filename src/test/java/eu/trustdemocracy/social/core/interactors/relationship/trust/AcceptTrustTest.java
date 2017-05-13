@@ -65,7 +65,7 @@ public class AcceptTrustTest {
 
     val foundRelationship = relationshipDAO.find(followRelationship);
     assertNotNull(foundRelationship);
-    assertEquals(RelationshipStatus.ACEPTED, followRelationship.getRelationshipStatus());
+    assertEquals(RelationshipStatus.ACEPTED, foundRelationship.getRelationshipStatus());
   }
 
 
