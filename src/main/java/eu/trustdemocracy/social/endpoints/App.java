@@ -1,4 +1,4 @@
-package eu.trustdemocracy.social;
+package eu.trustdemocracy.social.endpoints;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.ext.web.Router;
