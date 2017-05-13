@@ -1,19 +1,35 @@
 package eu.trustdemocracy.social.core.interactors.relationship;
 
+import eu.trustdemocracy.social.core.entities.RelationshipStatus;
+import eu.trustdemocracy.social.core.entities.util.RelationshipMapper;
 import eu.trustdemocracy.social.core.interactors.Interactor;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.RelationshipResponseDTO;
 import eu.trustdemocracy.social.gateways.RelationshipDAO;
+import lombok.val;
 
 public class AcceptFollow implements
     Interactor<TargetRelationshipRequestDTO, RelationshipResponseDTO> {
 
+  private RelationshipDAO relationshipDAO;
+
   public AcceptFollow(RelationshipDAO relationshipDAO) {
+    this.relationshipDAO = relationshipDAO;
   }
 
   @Override
   public RelationshipResponseDTO execute(
       TargetRelationshipRequestDTO targetRelationshipRequestDTO) {
-    return null;
+    val relationship = RelationshipMapper.createEntity(targetRelationshipRequestDTO);
+
+    val foundRelationship = relationshipDAO.find(relationship);
+
+    if (foundRelationship == null) {
+      throw new RuntimeException("The relationship must exist to be accepted");
+    }
+
+    foundRelationship.setTargetUser(relationship.getTargetUser());
+    foundRelationship.setRelationshipStatus(RelationshipStatus.ACEPTED);
+    return RelationshipMapper.createResponse(relationshipDAO.update(foundRelationship));
   }
 }

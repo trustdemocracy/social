@@ -40,7 +40,7 @@ public class AcceptFollowTest {
   @Test
   public void acceptFollow() {
     val toBeAcceptedRelationship = new TargetRelationshipRequestDTO()
-        .setOriginUserId(UUID.randomUUID())
+        .setOriginUserId(createdRelationship.getOriginUserId())
         .setTargetUserToken(TokenUtils.createToken(targetUserId, targetUserUsername))
         .setRelationshipType(RelationshipType.FOLLOW);
 
