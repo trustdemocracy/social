@@ -1,15 +1,18 @@
 package eu.trustdemocracy.social.gateways.mongo;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.in;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import eu.trustdemocracy.social.core.entities.Event;
 import eu.trustdemocracy.social.gateways.EventDAO;
 import io.vertx.core.json.JsonObject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.val;
 import org.bson.Document;
 
@@ -37,7 +40,19 @@ public class MongoEventDAO implements EventDAO {
 
   @Override
   public List<Event> getEvents(Set<UUID> targetUsersIds) {
-    return null;
+    List<String> ids = targetUsersIds.stream()
+        .map(UUID::toString)
+        .collect(Collectors.toList());
+
+    val documents = collection.find(in("user_id", ids));
+
+    List<Event> events = new ArrayList<>();
+
+    for (val document : documents) {
+      events.add(buildFromDocument(document));
+    }
+
+    return events;
   }
 
   private Event findById(UUID id) {
