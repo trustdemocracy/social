@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.UUID;
 import lombok.val;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 public class MongoRelationshipDAO implements RelationshipDAO {
 
@@ -26,33 +27,21 @@ public class MongoRelationshipDAO implements RelationshipDAO {
 
   @Override
   public Relationship create(Relationship relationship) {
-    val originUser = new Document("id", relationship.getOriginUser().getId().toString())
-        .append("username", relationship.getOriginUser().getUsername());
-    val targetUser = new Document("id", relationship.getTargetUser().getId().toString())
-        .append("username", relationship.getTargetUser().getUsername());
-
-    val document = new Document()
-        .append("origin_user", originUser)
-        .append("target_user", targetUser)
-        .append("type", relationship.getRelationshipType().toString())
-        .append("status", relationship.getRelationshipStatus().toString());
-
+    val document = buildDocument(relationship);
     collection.insertOne(document);
     return relationship;
   }
 
   @Override
   public Relationship update(Relationship relationship) {
-    return null;
+    val document = buildDocument(relationship);
+    collection.replaceOne(equalityConditions(relationship), document);
+    return relationship;
   }
 
   @Override
   public Relationship find(Relationship relationship) {
-    val document = collection.find(and(
-        eq("origin_user.id", relationship.getOriginUser().getId().toString()),
-        eq("target_user.id", relationship.getTargetUser().getId().toString()),
-        eq("type", relationship.getRelationshipType().toString())
-    )).first();
+    val document = collection.find(equalityConditions(relationship)).first();
 
     if (document == null) {
       return null;
@@ -69,6 +58,29 @@ public class MongoRelationshipDAO implements RelationshipDAO {
   @Override
   public Set<Relationship> getAllOriginRelationships(UUID id, RelationshipType relationshipType) {
     return null;
+  }
+
+  private Bson equalityConditions(Relationship relationship) {
+    return and(
+        eq("origin_user.id", relationship.getOriginUser().getId().toString()),
+        eq("target_user.id", relationship.getTargetUser().getId().toString()),
+        eq("type", relationship.getRelationshipType().toString())
+    );
+  }
+
+  private Document buildDocument(Relationship relationship) {
+    val originUser = new Document("id", relationship.getOriginUser().getId().toString())
+        .append("username", relationship.getOriginUser().getUsername());
+    val targetUser = new Document("id", relationship.getTargetUser().getId().toString())
+        .append("username", relationship.getTargetUser().getUsername());
+
+    val document = new Document()
+        .append("origin_user", originUser)
+        .append("target_user", targetUser)
+        .append("type", relationship.getRelationshipType().toString())
+        .append("status", relationship.getRelationshipStatus().toString());
+
+    return document;
   }
 
   private Relationship buildFromDocument(Document document) {
