@@ -65,6 +65,23 @@ public class MongoRelationshipDAOTest {
     assertEquals(relationship, foundRelationship);
   }
 
+  @Test
+  public void updateRelationship() {
+    val relationship = getRandomRelationship();
+    relationshipDAO.create(relationship);
+
+    assertEquals(relationship, relationshipDAO.find(relationship));
+
+    relationship.setRelationshipStatus(RelationshipStatus.ACEPTED);
+    assertNotEquals(relationship.getRelationshipStatus(),
+        relationshipDAO.find(relationship).getRelationshipStatus());
+
+    assertEquals(relationship, relationshipDAO.update(relationship));
+
+    assertEquals(relationship.getRelationshipStatus(),
+        relationshipDAO.find(relationship).getRelationshipStatus());
+  }
+
   private Relationship getRandomRelationship() {
     return new Relationship()
         .setOriginUser(new User().setId(UUID.randomUUID()).setUsername("originUsername"))
