@@ -5,6 +5,7 @@ import static com.mongodb.client.model.Filters.eq;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.github.fakemongo.Fongo;
 import com.mongodb.Block;
@@ -14,7 +15,10 @@ import eu.trustdemocracy.social.core.entities.RelationshipStatus;
 import eu.trustdemocracy.social.core.entities.RelationshipType;
 import eu.trustdemocracy.social.core.entities.User;
 import eu.trustdemocracy.social.gateways.RelationshipDAO;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.val;
 import org.bson.Document;
 import org.junit.jupiter.api.BeforeEach;
@@ -94,6 +98,48 @@ public class MongoRelationshipDAOTest {
 
     assertEquals(0L, collection.count());
     assertNull(relationshipDAO.find(relationship));
+  }
+
+  @Test
+  public void getAllOriginRelationships() {
+    val userId = UUID.randomUUID();
+
+    List<Relationship> relationships = new ArrayList<>();
+    for (int i = 0; i < 30; i++) {
+      val relationship = getRandomRelationship();
+      if (i % 2 == 0) {
+        relationship.setRelationshipType(RelationshipType.FOLLOW);
+      }
+      if (i % 3 == 0) {
+        relationship.getOriginUser().setId(userId);
+        relationships.add(relationship);
+      }
+      relationshipDAO.create(relationship);
+    }
+
+    val followRelationships = relationships.stream()
+        .filter(r -> r.getRelationshipType() == RelationshipType.FOLLOW)
+        .collect(Collectors.toList());
+    assertNotEquals(0, followRelationships.size());
+
+    val foundFollowRelationships = relationshipDAO
+        .getAllOriginRelationships(userId, RelationshipType.FOLLOW);
+    assertEquals(followRelationships.size(), foundFollowRelationships.size());
+    for (Relationship relationship : followRelationships) {
+      assertTrue(foundFollowRelationships.contains(relationship));
+    }
+
+    val trustRelationships = relationships.stream()
+        .filter(r -> r.getRelationshipType() == RelationshipType.TRUST)
+        .collect(Collectors.toList());
+    assertNotEquals(0, trustRelationships.size());
+
+    val foundTrustRelationships = relationshipDAO
+        .getAllOriginRelationships(userId, RelationshipType.TRUST);
+    assertEquals(trustRelationships.size(), foundTrustRelationships.size());
+    for (Relationship relationship : trustRelationships) {
+      assertTrue(foundTrustRelationships.contains(relationship));
+    }
   }
 
   private Relationship getRandomRelationship() {
