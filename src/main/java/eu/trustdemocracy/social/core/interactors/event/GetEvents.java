@@ -10,8 +10,12 @@ import eu.trustdemocracy.social.core.models.request.GetEventsRequestDTO;
 import eu.trustdemocracy.social.core.models.response.GetEventsResponseDTO;
 import eu.trustdemocracy.social.gateways.EventDAO;
 import eu.trustdemocracy.social.gateways.RelationshipDAO;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.val;
 
 public class GetEvents implements Interactor<GetEventsRequestDTO, GetEventsResponseDTO> {
@@ -30,20 +34,32 @@ public class GetEvents implements Interactor<GetEventsRequestDTO, GetEventsRespo
     val followed = relationshipDAO.getAllOriginRelationships(user.getId(), RelationshipType.FOLLOW);
     user.setFollowedUsers(followed);
 
-    return getUserEvents(user, getEventsRequestDTO.getTargetUserId());
+    val events = getEvents(user, getEventsRequestDTO.getTargetUserId());
+    return EventMapper.createResponse(events);
   }
 
-  private GetEventsResponseDTO getUserEvents(User user, UUID targetUserId) {
-    List<Event> events;
+  private List<Event> getEvents(User user, UUID targetUserId) {
     if (targetUserId == null) {
-      events = eventDAO.getUserEvents(user);
-    } else {
-      if (!user.follows(targetUserId)) {
-        return new GetEventsResponseDTO();
-      }
-      events = eventDAO.getUserEvents(user, targetUserId);
+      return getTimeline(user);
     }
 
-    return EventMapper.createResponse(events);
+    if (!user.follows(targetUserId)) {
+      return new ArrayList<>();
+    }
+
+    val targetIds = new HashSet<UUID>();
+    targetIds.add(targetUserId);
+
+    return eventDAO.getEvents(targetIds);
+  }
+
+  private List<Event> getTimeline(User user) {
+    Set<UUID> followedUsersIds = user.getFollowedUsers().stream()
+        .map(relationship -> relationship.getTargetUser().getId())
+        .collect(Collectors.toSet());
+
+    followedUsersIds.add(user.getId());
+
+    return eventDAO.getEvents(followedUsersIds);
   }
 }

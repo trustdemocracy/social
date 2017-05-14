@@ -5,10 +5,10 @@ import static com.mongodb.client.model.Filters.eq;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import eu.trustdemocracy.social.core.entities.Event;
-import eu.trustdemocracy.social.core.entities.User;
 import eu.trustdemocracy.social.gateways.EventDAO;
 import io.vertx.core.json.JsonObject;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import lombok.val;
 import org.bson.Document;
@@ -36,12 +36,7 @@ public class MongoEventDAO implements EventDAO {
   }
 
   @Override
-  public List<Event> getUserEvents(User user) {
-    return null;
-  }
-
-  @Override
-  public List<Event> getUserEvents(User user, UUID targetUserId) {
+  public List<Event> getEvents(Set<UUID> targetUsersIds) {
     return null;
   }
 
