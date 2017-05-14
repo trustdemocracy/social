@@ -10,6 +10,7 @@ import eu.trustdemocracy.social.core.entities.RelationshipStatus;
 import eu.trustdemocracy.social.core.entities.RelationshipType;
 import eu.trustdemocracy.social.core.entities.User;
 import eu.trustdemocracy.social.gateways.RelationshipDAO;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import lombok.val;
@@ -63,7 +64,17 @@ public class MongoRelationshipDAO implements RelationshipDAO {
 
   @Override
   public Set<Relationship> getAllOriginRelationships(UUID id, RelationshipType relationshipType) {
-    return null;
+    Set<Relationship> relationships = new HashSet<>();
+    val documents = collection.find(and(
+        eq("origin_user.id", id.toString()),
+        eq("type", relationshipType.toString())
+    ));
+
+    for (val document : documents) {
+      relationships.add(buildFromDocument(document));
+    }
+
+    return relationships;
   }
 
   private Bson equalityConditions(Relationship relationship) {
