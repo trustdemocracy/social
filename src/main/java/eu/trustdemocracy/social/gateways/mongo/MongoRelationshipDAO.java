@@ -91,13 +91,11 @@ public class MongoRelationshipDAO implements RelationshipDAO {
     val targetUser = new Document("id", relationship.getTargetUser().getId().toString())
         .append("username", relationship.getTargetUser().getUsername());
 
-    val document = new Document()
+    return new Document()
         .append("origin_user", originUser)
         .append("target_user", targetUser)
         .append("type", relationship.getRelationshipType().toString())
         .append("status", relationship.getRelationshipStatus().toString());
-
-    return document;
   }
 
   private Relationship buildFromDocument(Document document) {
