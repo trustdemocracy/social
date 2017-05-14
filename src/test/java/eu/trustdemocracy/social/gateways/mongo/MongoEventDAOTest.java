@@ -4,6 +4,7 @@ import static com.mongodb.client.model.Filters.eq;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.github.fakemongo.Fongo;
 import com.mongodb.Block;
@@ -11,6 +12,9 @@ import com.mongodb.client.MongoCollection;
 import eu.trustdemocracy.social.core.entities.Event;
 import eu.trustdemocracy.social.gateways.EventDAO;
 import io.vertx.core.json.JsonObject;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import lombok.val;
 import org.bson.Document;
@@ -44,6 +48,30 @@ public class MongoEventDAOTest {
 
     collection.find(eq("id", event.getId().toString()))
         .forEach(assertEqualsBlock(event));
+  }
+
+  @Test
+  public void getEvents() {
+    assertEquals(0L, collection.count());
+
+    Set<UUID> ids = new HashSet<>();
+    Set<Event> createdEvents = new HashSet<>();
+
+    for (int i = 0; i < 30; i++) {
+      val event = eventDAO.create(getRandomEvent());
+      if (i % 3 == 0) {
+        ids.add(event.getUserId());
+        createdEvents.add(event);
+      }
+    }
+    assertEquals(30L, collection.count());
+
+    List<Event> events = eventDAO.getEvents(ids);
+    assertEquals(10, events.size());
+
+    for (val event : events) {
+      assertTrue(createdEvents.remove(event));
+    }
   }
 
   private Event getRandomEvent() {
