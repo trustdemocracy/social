@@ -49,6 +49,17 @@ public class MongoRelationshipDAOTest {
     )).forEach(assertEqualsBlock(relationship));
   }
 
+  @Test
+  public void findRelationship() {
+    val relationship = getRandomRelationship();
+
+    relationshipDAO.create(relationship);
+
+    val foundRelationship = relationshipDAO.find(relationship);
+
+    assertEquals(relationship, foundRelationship);
+  }
+
   private Relationship getRandomRelationship() {
     return new Relationship()
         .setOriginUser(new User().setId(UUID.randomUUID()).setUsername("originUsername"))
