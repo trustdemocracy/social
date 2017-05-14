@@ -13,7 +13,7 @@ public interface RelationshipDAO {
 
   Relationship find(Relationship relationship);
 
-  Relationship remove(Relationship foundRelationship);
+  Relationship remove(Relationship relationship);
 
   Set<Relationship> getAllOriginRelationships(UUID id, RelationshipType relationshipType);
 }

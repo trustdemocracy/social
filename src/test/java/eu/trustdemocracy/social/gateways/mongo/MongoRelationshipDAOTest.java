@@ -82,6 +82,20 @@ public class MongoRelationshipDAOTest {
         relationshipDAO.find(relationship).getRelationshipStatus());
   }
 
+  @Test
+  public void deleteRelationship() {
+    val relationship = getRandomRelationship();
+    relationshipDAO.create(relationship);
+
+    assertEquals(relationship, relationshipDAO.find(relationship));
+
+    assertNotEquals(0L, collection.count());
+    assertEquals(relationship, relationshipDAO.remove(relationship));
+
+    assertEquals(0L, collection.count());
+    assertNull(relationshipDAO.find(relationship));
+  }
+
   private Relationship getRandomRelationship() {
     return new Relationship()
         .setOriginUser(new User().setId(UUID.randomUUID()).setUsername("originUsername"))

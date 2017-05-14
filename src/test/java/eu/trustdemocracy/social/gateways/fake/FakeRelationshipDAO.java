@@ -43,8 +43,8 @@ public class FakeRelationshipDAO implements RelationshipDAO {
   }
 
   @Override
-  public Relationship remove(Relationship foundRelationship) {
-    return relationships.remove(foundRelationship) ? foundRelationship : null;
+  public Relationship remove(Relationship relationship) {
+    return relationships.remove(relationship) ? relationship : null;
   }
 
   @Override

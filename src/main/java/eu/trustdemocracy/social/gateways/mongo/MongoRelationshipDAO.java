@@ -51,7 +51,13 @@ public class MongoRelationshipDAO implements RelationshipDAO {
   }
 
   @Override
-  public Relationship remove(Relationship foundRelationship) {
+  public Relationship remove(Relationship relationship) {
+    val result = collection.deleteOne(equalityConditions(relationship));
+
+    if (result.getDeletedCount() > 0) {
+      return relationship;
+    }
+
     return null;
   }
 
