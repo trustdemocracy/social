@@ -41,10 +41,6 @@ public class FakeEventDAO implements EventDAO {
   public List<Event> getUserEvents(User user, UUID targetUserId) {
     List<Event> userEvents = new ArrayList<>();
 
-    if (!user.follows(targetUserId)) {
-      return userEvents;
-    }
-
     for (val event : events.values()) {
       if (event.getUserId().equals(targetUserId)) {
         userEvents.add(event);

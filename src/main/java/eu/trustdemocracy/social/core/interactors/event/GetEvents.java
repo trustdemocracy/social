@@ -38,6 +38,9 @@ public class GetEvents implements Interactor<GetEventsRequestDTO, GetEventsRespo
     if (targetUserId == null) {
       events = eventDAO.getUserEvents(user);
     } else {
+      if (!user.follows(targetUserId)) {
+        return new GetEventsResponseDTO();
+      }
       events = eventDAO.getUserEvents(user, targetUserId);
     }
 
