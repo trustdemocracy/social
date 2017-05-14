@@ -4,6 +4,7 @@ import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.github.fakemongo.Fongo;
 import com.mongodb.Block;
@@ -52,6 +53,10 @@ public class MongoRelationshipDAOTest {
   @Test
   public void findRelationship() {
     val relationship = getRandomRelationship();
+
+    val nullRelationship = relationshipDAO.find(relationship);
+
+    assertNull(nullRelationship);
 
     relationshipDAO.create(relationship);
 
