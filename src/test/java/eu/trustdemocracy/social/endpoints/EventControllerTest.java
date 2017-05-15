@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -69,6 +70,7 @@ public class EventControllerTest extends ControllerTest {
 
       val responseEvents = decodeGetEventResponse(response.body().toJsonObject()).getEvents();
 
+      context.assertNotEquals(0, followedEvents.size());
       context.assertEquals(followedEvents.size(), responseEvents.size());
 
       for (val event : responseEvents) {
@@ -76,6 +78,49 @@ public class EventControllerTest extends ControllerTest {
       }
 
       context.assertEquals(0, followedEvents.size());
+
+      async.complete();
+    }, error -> {
+      context.fail(error);
+      async.complete();
+    });
+  }
+
+  @Test
+  public void getEventsByUser(TestContext context) throws InterruptedException {
+    val userId = UUID.randomUUID();
+    List<UUID> followedIds = new ArrayList<>();
+    Map<EventResponseDTO, UUID> followedEvents = new HashMap<>();
+    createEventsAndRelationships(userId, followedIds, followedEvents);
+
+    val randomAuthorId = followedEvents.values().iterator().next();
+    List<EventResponseDTO> authorEvents = followedEvents.entrySet().stream()
+        .filter(entry -> entry.getValue() == randomAuthorId)
+        .map(Entry::getKey)
+        .collect(Collectors.toList());
+
+    val async = context.async();
+    val getEventsRequest = new GetEventsRequestDTO()
+        .setUserToken(TokenUtils.createToken(userId, "username"))
+        .setTargetUserId(randomAuthorId);
+
+    val single = client.get(port, HOST, "/events/")
+        .rxSendJson(getEventsRequest);
+
+    single.subscribe(response -> {
+      context.assertEquals(response.statusCode(), 200);
+      context.assertTrue(response.headers().get("content-type").contains("application/json"));
+
+      val responseEvents = decodeGetEventResponse(response.body().toJsonObject()).getEvents();
+
+      context.assertNotEquals(0, authorEvents.size());
+      context.assertEquals(authorEvents.size(), responseEvents.size());
+
+      for (val event : responseEvents) {
+        context.assertEquals(authorEvents.remove(event), event.getUserId());
+      }
+
+      context.assertEquals(0, authorEvents.size());
 
       async.complete();
     }, error -> {
