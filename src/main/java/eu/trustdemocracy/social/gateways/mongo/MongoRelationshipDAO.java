@@ -10,6 +10,7 @@ import eu.trustdemocracy.social.core.entities.RelationshipStatus;
 import eu.trustdemocracy.social.core.entities.RelationshipType;
 import eu.trustdemocracy.social.core.entities.User;
 import eu.trustdemocracy.social.gateways.RelationshipDAO;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -81,7 +82,18 @@ public class MongoRelationshipDAO implements RelationshipDAO {
   @Override
   public List<Relationship> findByTargetId(UUID id, RelationshipType relationshipType,
       RelationshipStatus relationshipStatus) {
-    return null;
+    List<Relationship> relationships = new ArrayList<>();
+    val documents = collection.find(and(
+        eq("target_user.id", id.toString()),
+        eq("type", relationshipType.toString()),
+        eq("status", relationshipStatus.toString())
+    ));
+
+    for (val document : documents) {
+      relationships.add(buildFromDocument(document));
+    }
+
+    return relationships;
   }
 
   private Bson equalityConditions(Relationship relationship) {
