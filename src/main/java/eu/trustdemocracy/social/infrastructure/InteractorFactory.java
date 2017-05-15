@@ -5,6 +5,7 @@ import eu.trustdemocracy.social.core.interactors.event.GetEvents;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.AcceptFollow;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.CancelFollow;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.FollowUser;
+import eu.trustdemocracy.social.core.interactors.relationship.follow.GetFollowRequests;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.UnFollow;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.AcceptTrust;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.CancelTrust;
@@ -24,6 +25,8 @@ public interface InteractorFactory {
   CancelFollow createCancelFollowInteractor();
 
   UnFollow createUnFollowInteractor();
+
+  GetFollowRequests createGetFollowRequests();
 
   TrustUser createTrustUserInteractor();
 

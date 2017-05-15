@@ -19,6 +19,7 @@ public class FollowController extends Controller {
     getRouter().delete("/follow/").handler(this::unFollow);
     getRouter().post("/follow/accept").handler(this::acceptFollow);
     getRouter().post("/follow/cancel").handler(this::cancelFollow);
+    getRouter().post("/follow/requests").handler(this::getFollowRequests);
   }
 
   private void follow(RoutingContext routingContext) {
@@ -67,5 +68,17 @@ public class FollowController extends Controller {
         .putHeader("content-type", "application/json")
         .setStatusCode(200)
         .end(Json.encodePrettily(relationship));
+  }
+
+  private void getFollowRequests(RoutingContext routingContext) {
+    val targetRequest = Json.decodeValue(routingContext.getBodyAsString(),
+        TargetRelationshipRequestDTO.class);
+    val interactor = getInteractorFactory().createGetFollowRequests();
+    val relationships = interactor.execute(targetRequest);
+
+    routingContext.response()
+        .putHeader("content-type", "application/json")
+        .setStatusCode(200)
+        .end(Json.encodePrettily(relationships));
   }
 }

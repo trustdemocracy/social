@@ -5,6 +5,7 @@ import eu.trustdemocracy.social.core.interactors.event.GetEvents;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.AcceptFollow;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.CancelFollow;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.FollowUser;
+import eu.trustdemocracy.social.core.interactors.relationship.follow.GetFollowRequests;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.UnFollow;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.AcceptTrust;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.CancelTrust;
@@ -53,6 +54,11 @@ public class DefaultInteractorFactory implements InteractorFactory {
   @Override
   public UnFollow createUnFollowInteractor() {
     return new UnFollow(DAOFactory.getRelationshipDAO());
+  }
+
+  @Override
+  public GetFollowRequests createGetFollowRequests() {
+    return new GetFollowRequests(DAOFactory.getRelationshipDAO());
   }
 
   @Override
