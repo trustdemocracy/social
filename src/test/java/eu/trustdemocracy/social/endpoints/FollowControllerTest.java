@@ -140,4 +140,44 @@ public class FollowControllerTest extends ControllerTest {
       async.complete();
     });
   }
+
+  @Test
+  public void unFollow(TestContext context) {
+    val async = context.async();
+    val followRequest = new OriginRelationshipRequestDTO()
+        .setOriginUserToken(TokenUtils.createToken(originUserId, originUserUsername))
+        .setTargetUserId(targetUserId);
+
+
+    val single = client.post(port, HOST, "/follow/")
+        .rxSendJson(followRequest);
+
+    single.subscribe(followResponse -> {
+      context.assertEquals(followResponse.statusCode(), 201);
+
+      client.delete(port, HOST, "/follow/")
+          .rxSendJson(followRequest)
+          .subscribe(response -> {
+            context.assertEquals(response.statusCode(), 200);
+            context.assertTrue(response.headers().get("content-type").contains("application/json"));
+
+            val responseRelationship = Json
+                .decodeValue(response.body().toString(), RelationshipResponseDTO.class);
+            context.assertEquals(originUserId, responseRelationship.getOriginUserId());
+            context.assertEquals(originUserUsername, responseRelationship.getOriginUserUsername());
+            context.assertEquals(targetUserId, responseRelationship.getTargetUserId());
+            context.assertNull(responseRelationship.getTargetUserUsername());
+            context.assertEquals(REL_TYPE, responseRelationship.getRelationshipType().toString());
+            context
+                .assertEquals("PENDING", responseRelationship.getRelationshipStatus().toString());
+            async.complete();
+          }, error -> {
+            context.fail(error);
+            async.complete();
+          });
+    }, error -> {
+      context.fail(error);
+      async.complete();
+    });
+  }
 }
