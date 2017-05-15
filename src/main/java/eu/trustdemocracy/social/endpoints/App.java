@@ -17,8 +17,6 @@ import java.util.HashSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.val;
-import org.jose4j.jwk.RsaJwkGenerator;
-import org.jose4j.lang.JoseException;
 
 public class App extends AbstractVerticle {
 
@@ -34,11 +32,11 @@ public class App extends AbstractVerticle {
   }
 
   @Override
-  public void start() {
+  public void start() throws Exception {
     val port = config().getInteger("http.port", DEFAULT_PORT);
+    setKeys();
 
     vertx.executeBlocking(future -> {
-      setKeys();
       router = Router.router(vertx);
       router.route().handler(BodyHandler.create());
       registerControllers();
@@ -89,15 +87,9 @@ public class App extends AbstractVerticle {
     App.interactorFactory = interactorFactory;
   }
 
-  private void setKeys() {
-    try {
-      if (JWTKeyFactory.getPublicKey() == null) {
-        val rsaJsonWebKey = RsaJwkGenerator.generateJwk(2048);
-        JWTKeyFactory.setPrivateKey(rsaJsonWebKey.getPrivateKey());
-        JWTKeyFactory.setPublicKey(rsaJsonWebKey.getPublicKey());
-      }
-    } catch (JoseException e) {
-      throw new RuntimeException(e);
+  private void setKeys() throws Exception {
+    if (JWTKeyFactory.getPublicKey() == null ||JWTKeyFactory.getPrivateKey() == null) {
+      JWTKeyFactory.initKeys();
     }
   }
 }
