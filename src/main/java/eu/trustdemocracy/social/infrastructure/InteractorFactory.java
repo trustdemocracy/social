@@ -6,6 +6,10 @@ import eu.trustdemocracy.social.core.interactors.relationship.follow.AcceptFollo
 import eu.trustdemocracy.social.core.interactors.relationship.follow.CancelFollow;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.FollowUser;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.UnFollow;
+import eu.trustdemocracy.social.core.interactors.relationship.trust.AcceptTrust;
+import eu.trustdemocracy.social.core.interactors.relationship.trust.CancelTrust;
+import eu.trustdemocracy.social.core.interactors.relationship.trust.TrustUser;
+import eu.trustdemocracy.social.core.interactors.relationship.trust.UnTrust;
 
 public interface InteractorFactory {
 
@@ -20,4 +24,12 @@ public interface InteractorFactory {
   CancelFollow createCancelFollowInteractor();
 
   UnFollow createUnFollowInteractor();
+
+  TrustUser createTrustUserInteractor();
+
+  AcceptTrust createAcceptTrustInteractor();
+
+  CancelTrust createCancelTrustInteractor();
+
+  UnTrust createUnTrustnteractor();
 }

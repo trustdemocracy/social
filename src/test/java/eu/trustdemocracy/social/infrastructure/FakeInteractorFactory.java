@@ -8,6 +8,10 @@ import eu.trustdemocracy.social.core.interactors.relationship.follow.AcceptFollo
 import eu.trustdemocracy.social.core.interactors.relationship.follow.CancelFollow;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.FollowUser;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.UnFollow;
+import eu.trustdemocracy.social.core.interactors.relationship.trust.AcceptTrust;
+import eu.trustdemocracy.social.core.interactors.relationship.trust.CancelTrust;
+import eu.trustdemocracy.social.core.interactors.relationship.trust.TrustUser;
+import eu.trustdemocracy.social.core.interactors.relationship.trust.UnTrust;
 import eu.trustdemocracy.social.gateways.EventDAO;
 import eu.trustdemocracy.social.gateways.RelationshipDAO;
 import eu.trustdemocracy.social.gateways.mongo.MongoEventDAO;
@@ -46,6 +50,26 @@ public class FakeInteractorFactory implements InteractorFactory {
   @Override
   public UnFollow createUnFollowInteractor() {
     return new UnFollow(getFakeRelationshipDAO());
+  }
+
+  @Override
+  public TrustUser createTrustUserInteractor() {
+    return new TrustUser(getFakeRelationshipDAO());
+  }
+
+  @Override
+  public AcceptTrust createAcceptTrustInteractor() {
+    return new AcceptTrust(getFakeRelationshipDAO());
+  }
+
+  @Override
+  public CancelTrust createCancelTrustInteractor() {
+    return new CancelTrust(getFakeRelationshipDAO());
+  }
+
+  @Override
+  public UnTrust createUnTrustnteractor() {
+    return new UnTrust(getFakeRelationshipDAO());
   }
 
   private RelationshipDAO getFakeRelationshipDAO() {

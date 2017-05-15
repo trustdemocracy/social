@@ -6,6 +6,10 @@ import eu.trustdemocracy.social.core.interactors.relationship.follow.AcceptFollo
 import eu.trustdemocracy.social.core.interactors.relationship.follow.CancelFollow;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.FollowUser;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.UnFollow;
+import eu.trustdemocracy.social.core.interactors.relationship.trust.AcceptTrust;
+import eu.trustdemocracy.social.core.interactors.relationship.trust.CancelTrust;
+import eu.trustdemocracy.social.core.interactors.relationship.trust.TrustUser;
+import eu.trustdemocracy.social.core.interactors.relationship.trust.UnTrust;
 
 public class DefaultInteractorFactory implements InteractorFactory {
 
@@ -49,5 +53,25 @@ public class DefaultInteractorFactory implements InteractorFactory {
   @Override
   public UnFollow createUnFollowInteractor() {
     return new UnFollow(DAOFactory.getRelationshipDAO());
+  }
+
+  @Override
+  public TrustUser createTrustUserInteractor() {
+    return new TrustUser(DAOFactory.getRelationshipDAO());
+  }
+
+  @Override
+  public AcceptTrust createAcceptTrustInteractor() {
+    return new AcceptTrust(DAOFactory.getRelationshipDAO());
+  }
+
+  @Override
+  public CancelTrust createCancelTrustInteractor() {
+    return new CancelTrust(DAOFactory.getRelationshipDAO());
+  }
+
+  @Override
+  public UnTrust createUnTrustnteractor() {
+    return new UnTrust(DAOFactory.getRelationshipDAO());
   }
 }
