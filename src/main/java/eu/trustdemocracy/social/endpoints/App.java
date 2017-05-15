@@ -1,23 +1,99 @@
 package eu.trustdemocracy.social.endpoints;
 
+import eu.trustdemocracy.social.endpoints.controllers.Controller;
+import eu.trustdemocracy.social.endpoints.controllers.EventController;
+import eu.trustdemocracy.social.endpoints.util.Runner;
+import eu.trustdemocracy.social.infrastructure.DefaultInteractorFactory;
+import eu.trustdemocracy.social.infrastructure.InteractorFactory;
+import eu.trustdemocracy.social.infrastructure.JWTKeyFactory;
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
-import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
+import java.util.HashSet;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import lombok.val;
+import org.jose4j.jwk.RsaJwkGenerator;
+import org.jose4j.lang.JoseException;
 
 public class App extends AbstractVerticle {
 
+  private static final Logger LOG = LoggerFactory.getLogger(App.class);
+  private static final int DEFAULT_PORT = 8080;
+
+  private static InteractorFactory interactorFactory = DefaultInteractorFactory.getInstance();
+
+  private Router router;
+
+  public static void main(String... args) {
+    Runner.runVerticle(App.class.getName());
+  }
+
   @Override
   public void start() {
-    Router router = Router.router(vertx);
-    router.route().handler(BodyHandler.create());
-    router.get("/").handler(this::handleProposals);
+    val port = config().getInteger("http.port", DEFAULT_PORT);
 
-    vertx.createHttpServer().requestHandler(router::accept).listen(8080);
+    vertx.executeBlocking(future -> {
+      setKeys();
+      router = Router.router(vertx);
+      router.route().handler(BodyHandler.create());
+      registerControllers();
+
+      vertx.createHttpServer()
+          .requestHandler(router::accept)
+          .listen(port);
+
+      future.complete();
+    }, result -> {
+      if (result.succeeded()) {
+        LOG.info("App listening on port: " + port);
+      } else {
+        LOG.error("Failed to start verticle", result.cause());
+      }
+    });
   }
 
-  private void handleProposals(RoutingContext routingContext) {
-    routingContext.response().putHeader("content-type", "application/json").end("{'status': 'ok'}");
+  private void registerControllers() {
+    val controllers = Stream.of(
+        EventController.class
+    ).collect(Collectors.toCollection(HashSet<Class<? extends Controller>>::new));
+
+    for (val controller : controllers) {
+      try {
+        val constructor = controller.getConstructor(App.class);
+        constructor.newInstance(this);
+      } catch (Exception e) {
+        LOG.error("Failing to attach controller [" + controller.getName() + "]", e);
+      }
+    }
   }
 
+  public Router getRouter() {
+    return router;
+  }
+
+  public InteractorFactory getInteractorFactory() {
+    return interactorFactory;
+  }
+
+  public static void setInteractorFactory(InteractorFactory interactorFactory) {
+    if (interactorFactory == null) {
+      throw new NullPointerException("InteractorFactory cannot be null");
+    }
+    App.interactorFactory = interactorFactory;
+  }
+
+  private void setKeys() {
+    try {
+      if (JWTKeyFactory.getPublicKey() == null) {
+        val rsaJsonWebKey = RsaJwkGenerator.generateJwk(2048);
+        JWTKeyFactory.setPrivateKey(rsaJsonWebKey.getPrivateKey());
+        JWTKeyFactory.setPublicKey(rsaJsonWebKey.getPublicKey());
+      }
+    } catch (JoseException e) {
+      throw new RuntimeException(e);
+    }
+  }
 }
