@@ -2,7 +2,6 @@ package eu.trustdemocracy.social.endpoints;
 
 import eu.trustdemocracy.social.core.models.request.EventRequestDTO;
 import eu.trustdemocracy.social.core.models.response.EventResponseDTO;
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
@@ -26,8 +25,7 @@ public class EventControllerTest extends ControllerTest {
       context.assertEquals(response.statusCode(), 201);
       context.assertTrue(response.headers().get("content-type").contains("application/json"));
 
-      val responseEvent = Json
-          .decodeValue(response.body().toString(), EventResponseDTO.class);
+      val responseEvent = decodeValue(response.body().toJsonObject());
       context.assertEquals(inputEvent.getUserId(), responseEvent.getUserId());
       context.assertEquals(inputEvent.getTimestamp(), responseEvent.getTimestamp());
       context.assertEquals(inputEvent.getSerializedContent(), responseEvent.getSerializedContent());
@@ -40,6 +38,13 @@ public class EventControllerTest extends ControllerTest {
     });
   }
 
+  private EventResponseDTO decodeValue(JsonObject object) {
+    return new EventResponseDTO()
+        .setId(UUID.fromString(object.getString("id")))
+        .setUserId(UUID.fromString(object.getString("userId")))
+        .setTimestamp(object.getLong("timestamp"))
+        .setSerializedContent(object.getJsonObject("serializedContent"));
+  }
 
   private EventRequestDTO createRandomEvent() {
     return new EventRequestDTO()
