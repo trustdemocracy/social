@@ -40,7 +40,7 @@ public class FollowControllerTest extends ControllerTest {
       context.assertEquals(originUserUsername, responseRelationship.getOriginUserUsername());
       context.assertEquals(targetUserId, responseRelationship.getTargetUserId());
       context.assertEquals(REL_TYPE, responseRelationship.getRelationshipType().toString());
-      context.assertEquals("PENDING", responseRelationship.getRelationshipStatus());
+      context.assertEquals("PENDING", responseRelationship.getRelationshipStatus().toString());
       async.complete();
     }, error -> {
       context.fail(error);
