@@ -11,6 +11,7 @@ import eu.trustdemocracy.social.core.interactors.relationship.follow.GetFollowRe
 import eu.trustdemocracy.social.core.interactors.relationship.follow.UnFollow;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.AcceptTrust;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.CancelTrust;
+import eu.trustdemocracy.social.core.interactors.relationship.trust.GetTrustRequests;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.TrustUser;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.UnTrust;
 import eu.trustdemocracy.social.gateways.EventDAO;
@@ -76,6 +77,11 @@ public class FakeInteractorFactory implements InteractorFactory {
   @Override
   public UnTrust createUnTrustnteractor() {
     return new UnTrust(getFakeRelationshipDAO());
+  }
+
+  @Override
+  public GetTrustRequests createGetTrustRequests() {
+    return new GetTrustRequests(getFakeRelationshipDAO());
   }
 
   private RelationshipDAO getFakeRelationshipDAO() {

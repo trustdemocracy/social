@@ -19,6 +19,7 @@ public class TrustController extends Controller {
     getRouter().delete("/trust/").handler(this::unTrust);
     getRouter().post("/trust/accept").handler(this::acceptTrust);
     getRouter().post("/trust/cancel").handler(this::cancelTrust);
+    getRouter().post("/trust/requests").handler(this::getTrustRequests);
   }
 
   private void trust(RoutingContext routingContext) {
@@ -67,5 +68,17 @@ public class TrustController extends Controller {
         .putHeader("content-type", "application/json")
         .setStatusCode(200)
         .end(Json.encodePrettily(relationship));
+  }
+
+  private void getTrustRequests(RoutingContext routingContext) {
+    val targetRequest = Json.decodeValue(routingContext.getBodyAsString(),
+        TargetRelationshipRequestDTO.class);
+    val interactor = getInteractorFactory().createGetTrustRequests();
+    val relationships = interactor.execute(targetRequest);
+
+    routingContext.response()
+        .putHeader("content-type", "application/json")
+        .setStatusCode(200)
+        .end(Json.encodePrettily(relationships));
   }
 }
