@@ -41,6 +41,7 @@ public class FollowControllerTest extends ControllerTest {
       context.assertEquals(originUserId, responseRelationship.getOriginUserId());
       context.assertEquals(originUserUsername, responseRelationship.getOriginUserUsername());
       context.assertEquals(targetUserId, responseRelationship.getTargetUserId());
+      context.assertNull(responseRelationship.getTargetUserUsername());
       context.assertEquals(REL_TYPE, responseRelationship.getRelationshipType().toString());
       context.assertEquals("PENDING", responseRelationship.getRelationshipStatus().toString());
       async.complete();
@@ -49,7 +50,6 @@ public class FollowControllerTest extends ControllerTest {
       async.complete();
     });
   }
-
 
   @Test
   public void acceptFollow(TestContext context) {
@@ -85,6 +85,51 @@ public class FollowControllerTest extends ControllerTest {
             context.assertEquals(REL_TYPE, responseRelationship.getRelationshipType().toString());
             context
                 .assertEquals("ACCEPTED", responseRelationship.getRelationshipStatus().toString());
+            async.complete();
+          }, error -> {
+            context.fail(error);
+            async.complete();
+          });
+    }, error -> {
+      context.fail(error);
+      async.complete();
+    });
+  }
+
+  @Test
+  public void cancelFollow(TestContext context) {
+    val async = context.async();
+    val followRequest = new OriginRelationshipRequestDTO()
+        .setOriginUserToken(TokenUtils.createToken(originUserId, originUserUsername))
+        .setTargetUserId(targetUserId);
+
+    val cancelRequest = new TargetRelationshipRequestDTO()
+        .setOriginUserId(originUserId)
+        .setTargetUserToken(TokenUtils.createToken(targetUserId, targetUserUsername));
+
+
+    val single = client.post(port, HOST, "/follow/")
+        .rxSendJson(followRequest);
+
+    single.subscribe(followResponse -> {
+      context.assertEquals(followResponse.statusCode(), 201);
+
+      client.post(port, HOST, "/follow/cancel")
+          .rxSendJson(cancelRequest)
+          .subscribe(response -> {
+            context.assertEquals(response.statusCode(), 200);
+            context.assertTrue(response.headers().get("content-type").contains("application/json"));
+
+
+            val responseRelationship = Json
+                .decodeValue(response.body().toString(), RelationshipResponseDTO.class);
+            context.assertEquals(originUserId, responseRelationship.getOriginUserId());
+            context.assertEquals(originUserUsername, responseRelationship.getOriginUserUsername());
+            context.assertEquals(targetUserId, responseRelationship.getTargetUserId());
+            context.assertNull(responseRelationship.getTargetUserUsername());
+            context.assertEquals(REL_TYPE, responseRelationship.getRelationshipType().toString());
+            context
+                .assertEquals("PENDING", responseRelationship.getRelationshipStatus().toString());
             async.complete();
           }, error -> {
             context.fail(error);

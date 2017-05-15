@@ -5,6 +5,7 @@ import com.mongodb.client.MongoDatabase;
 import eu.trustdemocracy.social.core.interactors.event.CreateEvent;
 import eu.trustdemocracy.social.core.interactors.event.GetEvents;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.AcceptFollow;
+import eu.trustdemocracy.social.core.interactors.relationship.follow.CancelFollow;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.FollowUser;
 import eu.trustdemocracy.social.gateways.EventDAO;
 import eu.trustdemocracy.social.gateways.RelationshipDAO;
@@ -34,6 +35,11 @@ public class FakeInteractorFactory implements InteractorFactory {
   @Override
   public AcceptFollow createAcceptFollowInteractor() {
     return new AcceptFollow(getFakeRelationshipDAO());
+  }
+
+  @Override
+  public CancelFollow createCancelFollowInteractor() {
+    return new CancelFollow(getFakeRelationshipDAO());
   }
 
   private RelationshipDAO getFakeRelationshipDAO() {

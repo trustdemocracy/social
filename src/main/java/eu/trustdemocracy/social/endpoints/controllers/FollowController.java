@@ -17,6 +17,7 @@ public class FollowController extends Controller {
   public void buildRoutes() {
     getRouter().post("/follow/").handler(this::follow);
     getRouter().post("/follow/accept").handler(this::acceptFollow);
+    getRouter().post("/follow/cancel").handler(this::cancelFollow);
   }
 
   private void follow(RoutingContext routingContext) {
@@ -35,6 +36,18 @@ public class FollowController extends Controller {
     val targetRequest = Json.decodeValue(routingContext.getBodyAsString(),
         TargetRelationshipRequestDTO.class);
     val interactor = getInteractorFactory().createAcceptFollowInteractor();
+    val relationship = interactor.execute(targetRequest);
+
+    routingContext.response()
+        .putHeader("content-type", "application/json")
+        .setStatusCode(200)
+        .end(Json.encodePrettily(relationship));
+  }
+
+  private void cancelFollow(RoutingContext routingContext) {
+    val targetRequest = Json.decodeValue(routingContext.getBodyAsString(),
+        TargetRelationshipRequestDTO.class);
+    val interactor = getInteractorFactory().createCancelFollowInteractor();
     val relationship = interactor.execute(targetRequest);
 
     routingContext.response()
