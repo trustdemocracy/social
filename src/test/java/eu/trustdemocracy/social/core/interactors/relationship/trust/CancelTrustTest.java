@@ -63,7 +63,7 @@ public class CancelTrustTest {
     assertEquals(targetUserId, responseRelationship.getTargetUserId());
     assertEquals(targetUserUsername, responseRelationship.getTargetUserUsername());
     assertEquals(RelationshipType.TRUST, responseRelationship.getRelationshipType());
-    assertEquals(RelationshipStatus.ACEPTED, responseRelationship.getRelationshipStatus());
+    assertEquals(RelationshipStatus.ACCEPTED, responseRelationship.getRelationshipStatus());
   }
 
 

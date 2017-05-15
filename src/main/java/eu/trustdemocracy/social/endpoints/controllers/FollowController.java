@@ -1,6 +1,7 @@
 package eu.trustdemocracy.social.endpoints.controllers;
 
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
+import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
 import eu.trustdemocracy.social.endpoints.App;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.RoutingContext;
@@ -15,6 +16,7 @@ public class FollowController extends Controller {
   @Override
   public void buildRoutes() {
     getRouter().post("/follow/").handler(this::follow);
+    getRouter().post("/follow/accept").handler(this::acceptFollow);
   }
 
   private void follow(RoutingContext routingContext) {
@@ -26,6 +28,18 @@ public class FollowController extends Controller {
     routingContext.response()
         .putHeader("content-type", "application/json")
         .setStatusCode(201)
+        .end(Json.encodePrettily(relationship));
+  }
+
+  private void acceptFollow(RoutingContext routingContext) {
+    val targetRequest = Json.decodeValue(routingContext.getBodyAsString(),
+        TargetRelationshipRequestDTO.class);
+    val interactor = getInteractorFactory().createAcceptFollowInteractor();
+    val relationship = interactor.execute(targetRequest);
+
+    routingContext.response()
+        .putHeader("content-type", "application/json")
+        .setStatusCode(200)
         .end(Json.encodePrettily(relationship));
   }
 

@@ -31,7 +31,7 @@ public class AcceptFollow implements
     }
 
     foundRelationship.setTargetUser(relationship.getTargetUser());
-    foundRelationship.setRelationshipStatus(RelationshipStatus.ACEPTED);
+    foundRelationship.setRelationshipStatus(RelationshipStatus.ACCEPTED);
     return RelationshipMapper.createResponse(relationshipDAO.update(foundRelationship));
   }
 }

@@ -49,7 +49,7 @@ public class AcceptFollowTest {
     assertEquals(targetUserId, responseRelationship.getTargetUserId());
     assertEquals(targetUserUsername, responseRelationship.getTargetUserUsername());
     assertEquals(RelationshipType.FOLLOW, responseRelationship.getRelationshipType());
-    assertEquals(RelationshipStatus.ACEPTED, responseRelationship.getRelationshipStatus());
+    assertEquals(RelationshipStatus.ACCEPTED, responseRelationship.getRelationshipStatus());
   }
 
 

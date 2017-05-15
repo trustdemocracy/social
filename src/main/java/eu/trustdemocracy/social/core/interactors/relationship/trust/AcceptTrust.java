@@ -35,11 +35,11 @@ public class AcceptTrust implements
         .setOriginUser(foundRelationship.getOriginUser())
         .setTargetUser(foundRelationship.getTargetUser())
         .setRelationshipType(RelationshipType.FOLLOW)
-        .setRelationshipStatus(RelationshipStatus.ACEPTED);
+        .setRelationshipStatus(RelationshipStatus.ACCEPTED);
     relationshipDAO.create(followRelationship);
 
     foundRelationship.setTargetUser(relationship.getTargetUser());
-    foundRelationship.setRelationshipStatus(RelationshipStatus.ACEPTED);
+    foundRelationship.setRelationshipStatus(RelationshipStatus.ACCEPTED);
     return RelationshipMapper.createResponse(relationshipDAO.update(foundRelationship));
   }
 }

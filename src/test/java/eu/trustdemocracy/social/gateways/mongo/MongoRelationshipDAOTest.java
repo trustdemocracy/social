@@ -76,7 +76,7 @@ public class MongoRelationshipDAOTest {
 
     assertEquals(relationship, relationshipDAO.find(relationship));
 
-    relationship.setRelationshipStatus(RelationshipStatus.ACEPTED);
+    relationship.setRelationshipStatus(RelationshipStatus.ACCEPTED);
     assertNotEquals(relationship.getRelationshipStatus(),
         relationshipDAO.find(relationship).getRelationshipStatus());
 
