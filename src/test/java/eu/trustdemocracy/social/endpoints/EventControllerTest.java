@@ -104,7 +104,7 @@ public class EventControllerTest extends ControllerTest {
         .setUserToken(TokenUtils.createToken(userId, "username"))
         .setTargetUserId(randomAuthorId);
 
-    val single = client.get(port, HOST, "/events/")
+    val single = client.get(port, HOST, "/events/" + randomAuthorId)
         .rxSendJson(getEventsRequest);
 
     single.subscribe(response -> {
@@ -117,7 +117,7 @@ public class EventControllerTest extends ControllerTest {
       context.assertEquals(authorEvents.size(), responseEvents.size());
 
       for (val event : responseEvents) {
-        context.assertEquals(authorEvents.remove(event), event.getUserId());
+        context.assertTrue(authorEvents.remove(event));
       }
 
       context.assertEquals(0, authorEvents.size());

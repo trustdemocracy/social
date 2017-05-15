@@ -19,6 +19,7 @@ public class EventController extends Controller {
   public void buildRoutes() {
     getRouter().post("/events/").handler(this::createEvent);
     getRouter().get("/events/").handler(this::getEvents);
+    getRouter().get("/events/:userId").handler(this::getEventsByUser);
   }
 
   private void createEvent(RoutingContext routingContext) {
@@ -34,6 +35,18 @@ public class EventController extends Controller {
 
   private void getEvents(RoutingContext routingContext) {
     val getEventsRequest = decodeGetEventsRequest(routingContext.getBodyAsJson());
+    val interactor = getInteractorFactory().createGetEventsInteractor();
+    val events = interactor.execute(getEventsRequest);
+
+    routingContext.response()
+        .putHeader("content-type", "application/json")
+        .setStatusCode(200)
+        .end(Json.encodePrettily(events));
+  }
+
+  private void getEventsByUser(RoutingContext routingContext) {
+    val getEventsRequest = decodeGetEventsRequest(routingContext.getBodyAsJson());
+    getEventsRequest.setTargetUserId(UUID.fromString(routingContext.pathParam("userId")));
     val interactor = getInteractorFactory().createGetEventsInteractor();
     val events = interactor.execute(getEventsRequest);
 
