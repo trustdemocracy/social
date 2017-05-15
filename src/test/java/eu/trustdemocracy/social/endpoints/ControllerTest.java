@@ -2,6 +2,7 @@ package eu.trustdemocracy.social.endpoints;
 
 import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
 import eu.trustdemocracy.social.infrastructure.FakeInteractorFactory;
+import eu.trustdemocracy.social.infrastructure.InteractorFactory;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.TestContext;
@@ -21,6 +22,7 @@ public class ControllerTest {
   protected Vertx vertx;
   protected Integer port;
   protected WebClient client;
+  protected InteractorFactory interactorFactory;
 
   @Before
   public void setUp(TestContext context) throws IOException, JoseException {
@@ -35,7 +37,8 @@ public class ControllerTest {
 
     val options = new DeploymentOptions().setConfig(new JsonObject().put("http.port", port));
 
-    App.setInteractorFactory(new FakeInteractorFactory());
+    interactorFactory = new FakeInteractorFactory();
+    App.setInteractorFactory(interactorFactory);
     vertx.deployVerticle(App.class.getName(), options, context.asyncAssertSuccess());
   }
 
