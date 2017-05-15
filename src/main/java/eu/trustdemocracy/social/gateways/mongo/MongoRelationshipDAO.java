@@ -11,6 +11,7 @@ import eu.trustdemocracy.social.core.entities.RelationshipType;
 import eu.trustdemocracy.social.core.entities.User;
 import eu.trustdemocracy.social.gateways.RelationshipDAO;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import lombok.val;
@@ -75,6 +76,12 @@ public class MongoRelationshipDAO implements RelationshipDAO {
     }
 
     return relationships;
+  }
+
+  @Override
+  public List<Relationship> findByTargetId(UUID id, RelationshipType relationshipType,
+      RelationshipStatus relationshipStatus) {
+    return null;
   }
 
   private Bson equalityConditions(Relationship relationship) {
