@@ -3,10 +3,12 @@ package eu.trustdemocracy.social.core.interactors.relationship.trust;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import eu.trustdemocracy.social.core.entities.RelationshipStatus;
 import eu.trustdemocracy.social.core.entities.RelationshipType;
 import eu.trustdemocracy.social.core.entities.util.RelationshipMapper;
+import eu.trustdemocracy.social.core.interactors.exceptions.InvalidTokenException;
 import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
@@ -43,6 +45,16 @@ public class CancelTrustTest {
         .setTargetUserToken(TokenUtils.createToken(targetUserId, targetUserUsername));
 
     acceptedRelationship = new AcceptTrust(relationshipDAO).execute(toBeAcceptedRelationship);
+  }
+
+  @Test
+  public void cancelTrustNonTokenUser() {
+    val cancelTrustRelationship = new TargetRelationshipRequestDTO()
+        .setOriginUserId(acceptedRelationship.getOriginUserId())
+        .setTargetUserToken("");
+
+    assertThrows(InvalidTokenException.class,
+        () -> new CancelTrust(relationshipDAO).execute(cancelTrustRelationship));
   }
 
   @Test

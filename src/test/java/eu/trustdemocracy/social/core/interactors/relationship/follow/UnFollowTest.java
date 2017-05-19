@@ -3,10 +3,12 @@ package eu.trustdemocracy.social.core.interactors.relationship.follow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import eu.trustdemocracy.social.core.entities.RelationshipStatus;
 import eu.trustdemocracy.social.core.entities.RelationshipType;
 import eu.trustdemocracy.social.core.entities.util.RelationshipMapper;
+import eu.trustdemocracy.social.core.interactors.exceptions.InvalidTokenException;
 import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.RelationshipResponseDTO;
@@ -35,6 +37,16 @@ public class UnFollowTest {
         .execute(new OriginRelationshipRequestDTO()
             .setOriginUserToken(TokenUtils.createToken(originUserId, originUserUsername))
             .setTargetUserId(targetUserId));
+  }
+
+  @Test
+  public void unFollowUserNonTokenUser() {
+    val unFollowRelationship = new OriginRelationshipRequestDTO()
+        .setOriginUserToken("")
+        .setTargetUserId(targetUserId);
+
+    assertThrows(InvalidTokenException.class,
+        () -> new UnFollow(relationshipDAO).execute(unFollowRelationship));
   }
 
   @Test

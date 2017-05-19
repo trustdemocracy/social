@@ -1,10 +1,12 @@
 package eu.trustdemocracy.social.core.interactors.relationship.trust;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import eu.trustdemocracy.social.core.entities.RelationshipStatus;
 import eu.trustdemocracy.social.core.entities.RelationshipType;
+import eu.trustdemocracy.social.core.interactors.exceptions.InvalidTokenException;
 import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
@@ -41,6 +43,15 @@ public class GetTrustRequestsTest {
           .setTargetUserId(targetUserId));
     }
 
+  }
+
+  @Test
+  public void getTrustRequestsNonTokenUser() {
+    val targetRelationship = new TargetRelationshipRequestDTO()
+        .setTargetUserToken("");
+
+    assertThrows(InvalidTokenException.class,
+        () -> new GetTrustRequests(relationshipDAO).execute(targetRelationship));
   }
 
   @Test

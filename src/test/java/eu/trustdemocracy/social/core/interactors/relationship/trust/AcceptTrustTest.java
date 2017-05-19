@@ -3,11 +3,13 @@ package eu.trustdemocracy.social.core.interactors.relationship.trust;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import eu.trustdemocracy.social.core.entities.Relationship;
 import eu.trustdemocracy.social.core.entities.RelationshipStatus;
 import eu.trustdemocracy.social.core.entities.RelationshipType;
 import eu.trustdemocracy.social.core.entities.User;
+import eu.trustdemocracy.social.core.interactors.exceptions.InvalidTokenException;
 import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
@@ -38,6 +40,16 @@ public class AcceptTrustTest {
         .execute(new OriginRelationshipRequestDTO()
             .setOriginUserToken(TokenUtils.createToken(originUserId, originUserUsername))
             .setTargetUserId(targetUserId));
+  }
+
+  @Test
+  public void acceptTrustNonTokenUser() {
+    val toBeAcceptedRelationship = new TargetRelationshipRequestDTO()
+        .setOriginUserId(createdRelationship.getOriginUserId())
+        .setTargetUserToken("");
+
+    assertThrows(InvalidTokenException.class,
+        () -> new AcceptTrust(relationshipDAO).execute(toBeAcceptedRelationship));
   }
 
   @Test
