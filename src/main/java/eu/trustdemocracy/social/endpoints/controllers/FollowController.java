@@ -23,8 +23,15 @@ public class FollowController extends Controller {
   }
 
   private void follow(RoutingContext routingContext) {
-    val originRequest = Json.decodeValue(routingContext.getBodyAsString(),
-        OriginRelationshipRequestDTO.class);
+    OriginRelationshipRequestDTO originRequest;
+    try {
+      originRequest = Json.decodeValue(routingContext.getBodyAsString(),
+          OriginRelationshipRequestDTO.class);
+    } catch (Exception e) {
+      serveBadRequest(routingContext);
+      return;
+    }
+
     val interactor = getInteractorFactory().createFollowUserInteractor();
     val relationship = interactor.execute(originRequest);
 
@@ -35,8 +42,14 @@ public class FollowController extends Controller {
   }
 
   private void acceptFollow(RoutingContext routingContext) {
-    val targetRequest = Json.decodeValue(routingContext.getBodyAsString(),
-        TargetRelationshipRequestDTO.class);
+    TargetRelationshipRequestDTO targetRequest;
+    try {
+      targetRequest = Json.decodeValue(routingContext.getBodyAsString(),
+          TargetRelationshipRequestDTO.class);
+    } catch (Exception e) {
+      serveBadRequest(routingContext);
+      return;
+    }
     val interactor = getInteractorFactory().createAcceptFollowInteractor();
     val relationship = interactor.execute(targetRequest);
 
@@ -47,8 +60,14 @@ public class FollowController extends Controller {
   }
 
   private void cancelFollow(RoutingContext routingContext) {
-    val targetRequest = Json.decodeValue(routingContext.getBodyAsString(),
-        TargetRelationshipRequestDTO.class);
+    TargetRelationshipRequestDTO targetRequest;
+    try {
+      targetRequest = Json.decodeValue(routingContext.getBodyAsString(),
+          TargetRelationshipRequestDTO.class);
+    } catch (Exception e) {
+      serveBadRequest(routingContext);
+      return;
+    }
     val interactor = getInteractorFactory().createCancelFollowInteractor();
     val relationship = interactor.execute(targetRequest);
 
@@ -59,8 +78,15 @@ public class FollowController extends Controller {
   }
 
   private void unFollow(RoutingContext routingContext) {
-    val originRequest = Json.decodeValue(routingContext.getBodyAsString(),
-        OriginRelationshipRequestDTO.class);
+    OriginRelationshipRequestDTO originRequest;
+    try {
+      originRequest = Json.decodeValue(routingContext.getBodyAsString(),
+          OriginRelationshipRequestDTO.class);
+    } catch (Exception e) {
+      serveBadRequest(routingContext);
+      return;
+    }
+
     val interactor = getInteractorFactory().createUnFollowInteractor();
     val relationship = interactor.execute(originRequest);
 
@@ -71,8 +97,14 @@ public class FollowController extends Controller {
   }
 
   private void getFollowRequests(RoutingContext routingContext) {
-    val targetRequest = Json.decodeValue(routingContext.getBodyAsString(),
-        TargetRelationshipRequestDTO.class);
+    TargetRelationshipRequestDTO targetRequest;
+    try {
+      targetRequest = Json.decodeValue(routingContext.getBodyAsString(),
+          TargetRelationshipRequestDTO.class);
+    } catch (Exception e) {
+      serveBadRequest(routingContext);
+      return;
+    }
     val interactor = getInteractorFactory().createGetFollowRequests();
     val relationships = interactor.execute(targetRequest);
 

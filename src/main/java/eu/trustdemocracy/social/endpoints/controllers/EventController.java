@@ -23,7 +23,14 @@ public class EventController extends Controller {
   }
 
   private void createEvent(RoutingContext routingContext) {
-    val requestEvent = decodeEventRequest(routingContext.getBodyAsJson());
+    EventRequestDTO requestEvent;
+    try {
+      requestEvent = decodeEventRequest(routingContext.getBodyAsJson());
+    } catch (Exception e) {
+      serveBadRequest(routingContext);
+      return;
+    }
+
     val interactor = getInteractorFactory().createCreateEventInteractor();
     val event = interactor.execute(requestEvent);
 
@@ -34,7 +41,14 @@ public class EventController extends Controller {
   }
 
   private void getEvents(RoutingContext routingContext) {
-    val getEventsRequest = decodeGetEventsRequest(routingContext.getBodyAsJson());
+    GetEventsRequestDTO getEventsRequest;
+    try {
+      getEventsRequest = decodeGetEventsRequest(routingContext.getBodyAsJson());
+    } catch (Exception e) {
+      serveBadRequest(routingContext);
+      return;
+    }
+
     val interactor = getInteractorFactory().createGetEventsInteractor();
     val events = interactor.execute(getEventsRequest);
 
@@ -45,8 +59,14 @@ public class EventController extends Controller {
   }
 
   private void getEventsByUser(RoutingContext routingContext) {
-    val getEventsRequest = decodeGetEventsRequest(routingContext.getBodyAsJson());
-    getEventsRequest.setTargetUserId(UUID.fromString(routingContext.pathParam("userId")));
+    GetEventsRequestDTO getEventsRequest;
+    try {
+      getEventsRequest = decodeGetEventsRequest(routingContext.getBodyAsJson());
+      getEventsRequest.setTargetUserId(UUID.fromString(routingContext.pathParam("userId")));
+    } catch (Exception e) {
+      serveBadRequest(routingContext);
+      return;
+    }
     val interactor = getInteractorFactory().createGetEventsInteractor();
     val events = interactor.execute(getEventsRequest);
 

@@ -23,8 +23,15 @@ public class TrustController extends Controller {
   }
 
   private void trust(RoutingContext routingContext) {
-    val originRequest = Json.decodeValue(routingContext.getBodyAsString(),
-        OriginRelationshipRequestDTO.class);
+    OriginRelationshipRequestDTO originRequest;
+    try {
+      originRequest = Json.decodeValue(routingContext.getBodyAsString(),
+          OriginRelationshipRequestDTO.class);
+    } catch (Exception e) {
+      serveBadRequest(routingContext);
+      return;
+    }
+
     val interactor = getInteractorFactory().createTrustUserInteractor();
     val relationship = interactor.execute(originRequest);
 
@@ -35,8 +42,14 @@ public class TrustController extends Controller {
   }
 
   private void acceptTrust(RoutingContext routingContext) {
-    val targetRequest = Json.decodeValue(routingContext.getBodyAsString(),
-        TargetRelationshipRequestDTO.class);
+    TargetRelationshipRequestDTO targetRequest;
+    try {
+      targetRequest = Json.decodeValue(routingContext.getBodyAsString(),
+          TargetRelationshipRequestDTO.class);
+    } catch (Exception e) {
+      serveBadRequest(routingContext);
+      return;
+    }
     val interactor = getInteractorFactory().createAcceptTrustInteractor();
     val relationship = interactor.execute(targetRequest);
 
@@ -47,8 +60,14 @@ public class TrustController extends Controller {
   }
 
   private void cancelTrust(RoutingContext routingContext) {
-    val targetRequest = Json.decodeValue(routingContext.getBodyAsString(),
-        TargetRelationshipRequestDTO.class);
+    TargetRelationshipRequestDTO targetRequest;
+    try {
+      targetRequest = Json.decodeValue(routingContext.getBodyAsString(),
+          TargetRelationshipRequestDTO.class);
+    } catch (Exception e) {
+      serveBadRequest(routingContext);
+      return;
+    }
     val interactor = getInteractorFactory().createCancelTrustInteractor();
     val relationship = interactor.execute(targetRequest);
 
@@ -59,8 +78,15 @@ public class TrustController extends Controller {
   }
 
   private void unTrust(RoutingContext routingContext) {
-    val originRequest = Json.decodeValue(routingContext.getBodyAsString(),
-        OriginRelationshipRequestDTO.class);
+    OriginRelationshipRequestDTO originRequest;
+    try {
+      originRequest = Json.decodeValue(routingContext.getBodyAsString(),
+          OriginRelationshipRequestDTO.class);
+    } catch (Exception e) {
+      serveBadRequest(routingContext);
+      return;
+    }
+
     val interactor = getInteractorFactory().createUnTrustnteractor();
     val relationship = interactor.execute(originRequest);
 
@@ -71,8 +97,15 @@ public class TrustController extends Controller {
   }
 
   private void getTrustRequests(RoutingContext routingContext) {
-    val targetRequest = Json.decodeValue(routingContext.getBodyAsString(),
-        TargetRelationshipRequestDTO.class);
+    TargetRelationshipRequestDTO targetRequest;
+    try {
+      targetRequest = Json.decodeValue(routingContext.getBodyAsString(),
+          TargetRelationshipRequestDTO.class);
+    } catch (Exception e) {
+      serveBadRequest(routingContext);
+      return;
+    }
+
     val interactor = getInteractorFactory().createGetTrustRequests();
     val relationships = interactor.execute(targetRequest);
 
