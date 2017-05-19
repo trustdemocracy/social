@@ -33,6 +33,9 @@ public class FollowController extends Controller {
       return;
     }
 
+    val authToken = getAuthorizationToken(routingContext.request());
+    originRequest.setOriginUserToken(authToken);
+
     val interactor = getInteractorFactory().createFollowUserInteractor();
 
     try {
@@ -52,6 +55,9 @@ public class FollowController extends Controller {
       serveBadRequest(routingContext);
       return;
     }
+
+    val authToken = getAuthorizationToken(routingContext.request());
+    targetRequest.setTargetUserToken(authToken);
 
     val interactor = getInteractorFactory().createAcceptFollowInteractor();
 
@@ -73,6 +79,9 @@ public class FollowController extends Controller {
       return;
     }
 
+    val authToken = getAuthorizationToken(routingContext.request());
+    targetRequest.setTargetUserToken(authToken);
+
     val interactor = getInteractorFactory().createCancelFollowInteractor();
 
     try {
@@ -93,6 +102,9 @@ public class FollowController extends Controller {
       return;
     }
 
+    val authToken = getAuthorizationToken(routingContext.request());
+    originRequest.setOriginUserToken(authToken);
+
     val interactor = getInteractorFactory().createUnFollowInteractor();
 
     try {
@@ -112,6 +124,9 @@ public class FollowController extends Controller {
       serveBadRequest(routingContext);
       return;
     }
+
+    val authToken = getAuthorizationToken(routingContext.request());
+    targetRequest.setTargetUserToken(authToken);
 
     val interactor = getInteractorFactory().createGetFollowRequests();
 

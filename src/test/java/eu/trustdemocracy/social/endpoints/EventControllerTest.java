@@ -62,6 +62,7 @@ public class EventControllerTest extends ControllerTest {
         .setUserToken(TokenUtils.createToken(userId, "username"));
 
     val single = client.get(port, HOST, "/events/")
+        .putHeader("Authorization", "Bearer " + getEventsRequest.getUserToken())
         .rxSendJson(getEventsRequest);
 
     single.subscribe(response -> {
@@ -105,6 +106,7 @@ public class EventControllerTest extends ControllerTest {
         .setTargetUserId(randomAuthorId);
 
     val single = client.get(port, HOST, "/events/" + randomAuthorId)
+        .putHeader("Authorization", "Bearer " + getEventsRequest.getUserToken())
         .rxSendJson(getEventsRequest);
 
     single.subscribe(response -> {

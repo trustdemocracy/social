@@ -30,6 +30,7 @@ public class TrustControllerTest extends ControllerTest {
         .setTargetUserId(targetUserId);
 
     val single = client.post(port, HOST, "/trust/")
+        .putHeader("Authorization", "Bearer " + followRequest.getOriginUserToken())
         .rxSendJson(followRequest);
 
     single.subscribe(response -> {
@@ -65,12 +66,14 @@ public class TrustControllerTest extends ControllerTest {
 
 
     val single = client.post(port, HOST, "/trust/")
+        .putHeader("Authorization", "Bearer " + followRequest.getOriginUserToken())
         .rxSendJson(followRequest);
 
     single.subscribe(followResponse -> {
       context.assertEquals(followResponse.statusCode(), 201);
 
       client.post(port, HOST, "/trust/accept")
+          .putHeader("Authorization", "Bearer " + acceptRequest.getTargetUserToken())
           .rxSendJson(acceptRequest)
           .subscribe(response -> {
             context.assertEquals(response.statusCode(), 200);
@@ -110,12 +113,14 @@ public class TrustControllerTest extends ControllerTest {
 
 
     val single = client.post(port, HOST, "/trust/")
+        .putHeader("Authorization", "Bearer " + followRequest.getOriginUserToken())
         .rxSendJson(followRequest);
 
     single.subscribe(followResponse -> {
       context.assertEquals(followResponse.statusCode(), 201);
 
       client.post(port, HOST, "/trust/cancel")
+          .putHeader("Authorization", "Bearer " + cancelRequest.getTargetUserToken())
           .rxSendJson(cancelRequest)
           .subscribe(response -> {
             context.assertEquals(response.statusCode(), 200);
@@ -151,12 +156,14 @@ public class TrustControllerTest extends ControllerTest {
 
 
     val single = client.post(port, HOST, "/trust/")
+        .putHeader("Authorization", "Bearer " + followRequest.getOriginUserToken())
         .rxSendJson(followRequest);
 
     single.subscribe(followResponse -> {
       context.assertEquals(followResponse.statusCode(), 201);
 
       client.delete(port, HOST, "/trust/")
+          .putHeader("Authorization", "Bearer " + followRequest.getOriginUserToken())
           .rxSendJson(followRequest)
           .subscribe(response -> {
             context.assertEquals(response.statusCode(), 200);
@@ -194,12 +201,14 @@ public class TrustControllerTest extends ControllerTest {
 
 
     val single = client.post(port, HOST, "/trust/")
+        .putHeader("Authorization", "Bearer " + followRequest.getOriginUserToken())
         .rxSendJson(followRequest);
 
     single.subscribe(followResponse -> {
       context.assertEquals(followResponse.statusCode(), 201);
 
       client.post(port, HOST, "/trust/requests")
+          .putHeader("Authorization", "Bearer " + getRequest.getTargetUserToken())
           .rxSendJson(getRequest)
           .subscribe(response -> {
             context.assertEquals(response.statusCode(), 200);

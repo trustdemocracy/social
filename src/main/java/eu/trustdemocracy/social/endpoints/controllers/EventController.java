@@ -47,6 +47,9 @@ public class EventController extends Controller {
       return;
     }
 
+    val authToken = getAuthorizationToken(routingContext.request());
+    getEventsRequest.setUserToken(authToken);
+
     val interactor = getInteractorFactory().createGetEventsInteractor();
 
     try {
@@ -66,6 +69,9 @@ public class EventController extends Controller {
       serveBadRequest(routingContext);
       return;
     }
+
+    val authToken = getAuthorizationToken(routingContext.request());
+    getEventsRequest.setUserToken(authToken);
 
     val interactor = getInteractorFactory().createGetEventsInteractor();
 
