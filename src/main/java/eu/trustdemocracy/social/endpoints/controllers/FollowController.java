@@ -1,5 +1,6 @@
 package eu.trustdemocracy.social.endpoints.controllers;
 
+import eu.trustdemocracy.social.core.interactors.exceptions.InvalidTokenException;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
 import eu.trustdemocracy.social.endpoints.App;
@@ -33,9 +34,13 @@ public class FollowController extends Controller {
     }
 
     val interactor = getInteractorFactory().createFollowUserInteractor();
-    val relationship = interactor.execute(originRequest);
 
-    serveJsonResponse(routingContext, 201, Json.encodePrettily(relationship));
+    try {
+      val relationship = interactor.execute(originRequest);
+      serveJsonResponse(routingContext, 201, Json.encodePrettily(relationship));
+    } catch (InvalidTokenException e) {
+      serveBadCredentials(routingContext);
+    }
   }
 
   private void acceptFollow(RoutingContext routingContext) {
@@ -47,10 +52,15 @@ public class FollowController extends Controller {
       serveBadRequest(routingContext);
       return;
     }
-    val interactor = getInteractorFactory().createAcceptFollowInteractor();
-    val relationship = interactor.execute(targetRequest);
 
-    serveJsonResponse(routingContext, 200, Json.encodePrettily(relationship));
+    val interactor = getInteractorFactory().createAcceptFollowInteractor();
+
+    try {
+      val relationship = interactor.execute(targetRequest);
+      serveJsonResponse(routingContext, 200, Json.encodePrettily(relationship));
+    } catch (InvalidTokenException e) {
+      serveBadCredentials(routingContext);
+    }
   }
 
   private void cancelFollow(RoutingContext routingContext) {
@@ -62,10 +72,15 @@ public class FollowController extends Controller {
       serveBadRequest(routingContext);
       return;
     }
-    val interactor = getInteractorFactory().createCancelFollowInteractor();
-    val relationship = interactor.execute(targetRequest);
 
-    serveJsonResponse(routingContext, 200, Json.encodePrettily(relationship));
+    val interactor = getInteractorFactory().createCancelFollowInteractor();
+
+    try {
+      val relationship = interactor.execute(targetRequest);
+      serveJsonResponse(routingContext, 200, Json.encodePrettily(relationship));
+    } catch (InvalidTokenException e) {
+      serveBadCredentials(routingContext);
+    }
   }
 
   private void unFollow(RoutingContext routingContext) {
@@ -79,9 +94,13 @@ public class FollowController extends Controller {
     }
 
     val interactor = getInteractorFactory().createUnFollowInteractor();
-    val relationship = interactor.execute(originRequest);
 
-    serveJsonResponse(routingContext, 200, Json.encodePrettily(relationship));
+    try {
+      val relationship = interactor.execute(originRequest);
+      serveJsonResponse(routingContext, 200, Json.encodePrettily(relationship));
+    } catch (InvalidTokenException e) {
+      serveBadCredentials(routingContext);
+    }
   }
 
   private void getFollowRequests(RoutingContext routingContext) {
@@ -93,9 +112,14 @@ public class FollowController extends Controller {
       serveBadRequest(routingContext);
       return;
     }
-    val interactor = getInteractorFactory().createGetFollowRequests();
-    val relationships = interactor.execute(targetRequest);
 
-    serveJsonResponse(routingContext, 200, Json.encodePrettily(relationships));
+    val interactor = getInteractorFactory().createGetFollowRequests();
+
+    try {
+      val relationships = interactor.execute(targetRequest);
+      serveJsonResponse(routingContext, 200, Json.encodePrettily(relationships));
+    } catch (InvalidTokenException e) {
+      serveBadCredentials(routingContext);
+    }
   }
 }

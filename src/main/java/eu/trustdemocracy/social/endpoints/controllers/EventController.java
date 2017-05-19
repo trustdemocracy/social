@@ -1,5 +1,6 @@
 package eu.trustdemocracy.social.endpoints.controllers;
 
+import eu.trustdemocracy.social.core.interactors.exceptions.InvalidTokenException;
 import eu.trustdemocracy.social.core.models.request.EventRequestDTO;
 import eu.trustdemocracy.social.core.models.request.GetEventsRequestDTO;
 import eu.trustdemocracy.social.endpoints.App;
@@ -47,9 +48,13 @@ public class EventController extends Controller {
     }
 
     val interactor = getInteractorFactory().createGetEventsInteractor();
-    val events = interactor.execute(getEventsRequest);
 
-    serveJsonResponse(routingContext, 200, Json.encodePrettily(events));
+    try {
+      val events = interactor.execute(getEventsRequest);
+      serveJsonResponse(routingContext, 200, Json.encodePrettily(events));
+    } catch (InvalidTokenException e) {
+      serveBadCredentials(routingContext);
+    }
   }
 
   private void getEventsByUser(RoutingContext routingContext) {
@@ -61,10 +66,15 @@ public class EventController extends Controller {
       serveBadRequest(routingContext);
       return;
     }
-    val interactor = getInteractorFactory().createGetEventsInteractor();
-    val events = interactor.execute(getEventsRequest);
 
-    serveJsonResponse(routingContext, 200, Json.encodePrettily(events));
+    val interactor = getInteractorFactory().createGetEventsInteractor();
+
+    try {
+      val events = interactor.execute(getEventsRequest);
+      serveJsonResponse(routingContext, 200, Json.encodePrettily(events));
+    } catch (InvalidTokenException e) {
+      serveBadCredentials(routingContext);
+    }
   }
 
   private EventRequestDTO decodeEventRequest(JsonObject object) {

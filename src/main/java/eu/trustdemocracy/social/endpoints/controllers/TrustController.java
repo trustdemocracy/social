@@ -1,5 +1,6 @@
 package eu.trustdemocracy.social.endpoints.controllers;
 
+import eu.trustdemocracy.social.core.interactors.exceptions.InvalidTokenException;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
 import eu.trustdemocracy.social.endpoints.App;
@@ -33,9 +34,13 @@ public class TrustController extends Controller {
     }
 
     val interactor = getInteractorFactory().createTrustUserInteractor();
-    val relationship = interactor.execute(originRequest);
 
-    serveJsonResponse(routingContext, 201, Json.encodePrettily(relationship));
+    try {
+      val relationship = interactor.execute(originRequest);
+      serveJsonResponse(routingContext, 201, Json.encodePrettily(relationship));
+    } catch (InvalidTokenException e) {
+      serveBadCredentials(routingContext);
+    }
   }
 
   private void acceptTrust(RoutingContext routingContext) {
@@ -47,10 +52,15 @@ public class TrustController extends Controller {
       serveBadRequest(routingContext);
       return;
     }
-    val interactor = getInteractorFactory().createAcceptTrustInteractor();
-    val relationship = interactor.execute(targetRequest);
 
-    serveJsonResponse(routingContext, 200, Json.encodePrettily(relationship));
+    val interactor = getInteractorFactory().createAcceptTrustInteractor();
+
+    try {
+      val relationship = interactor.execute(targetRequest);
+      serveJsonResponse(routingContext, 200, Json.encodePrettily(relationship));
+    } catch (InvalidTokenException e) {
+      serveBadCredentials(routingContext);
+    }
   }
 
   private void cancelTrust(RoutingContext routingContext) {
@@ -62,10 +72,15 @@ public class TrustController extends Controller {
       serveBadRequest(routingContext);
       return;
     }
-    val interactor = getInteractorFactory().createCancelTrustInteractor();
-    val relationship = interactor.execute(targetRequest);
 
-    serveJsonResponse(routingContext, 200, Json.encodePrettily(relationship));
+    val interactor = getInteractorFactory().createCancelTrustInteractor();
+
+    try {
+      val relationship = interactor.execute(targetRequest);
+      serveJsonResponse(routingContext, 200, Json.encodePrettily(relationship));
+    } catch (InvalidTokenException e) {
+      serveBadCredentials(routingContext);
+    }
   }
 
   private void unTrust(RoutingContext routingContext) {
@@ -79,9 +94,13 @@ public class TrustController extends Controller {
     }
 
     val interactor = getInteractorFactory().createUnTrustnteractor();
-    val relationship = interactor.execute(originRequest);
 
-    serveJsonResponse(routingContext, 200, Json.encodePrettily(relationship));
+    try {
+      val relationship = interactor.execute(originRequest);
+      serveJsonResponse(routingContext, 200, Json.encodePrettily(relationship));
+    } catch (InvalidTokenException e) {
+      serveBadCredentials(routingContext);
+    }
   }
 
   private void getTrustRequests(RoutingContext routingContext) {
@@ -95,8 +114,12 @@ public class TrustController extends Controller {
     }
 
     val interactor = getInteractorFactory().createGetTrustRequests();
-    val relationships = interactor.execute(targetRequest);
 
-    serveJsonResponse(routingContext, 200, Json.encodePrettily(relationships));
+    try {
+      val relationships = interactor.execute(targetRequest);
+      serveJsonResponse(routingContext, 200, Json.encodePrettily(relationships));
+    } catch (InvalidTokenException e) {
+      serveBadCredentials(routingContext);
+    }
   }
 }
