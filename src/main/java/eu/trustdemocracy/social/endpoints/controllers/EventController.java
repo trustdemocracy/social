@@ -1,5 +1,6 @@
 package eu.trustdemocracy.social.endpoints.controllers;
 
+import eu.trustdemocracy.social.core.interactors.exceptions.InvalidTokenException;
 import eu.trustdemocracy.social.core.models.request.EventRequestDTO;
 import eu.trustdemocracy.social.core.models.request.GetEventsRequestDTO;
 import eu.trustdemocracy.social.endpoints.App;
@@ -23,37 +24,63 @@ public class EventController extends Controller {
   }
 
   private void createEvent(RoutingContext routingContext) {
-    val requestEvent = decodeEventRequest(routingContext.getBodyAsJson());
+    EventRequestDTO requestEvent;
+    try {
+      requestEvent = decodeEventRequest(routingContext.getBodyAsJson());
+    } catch (Exception e) {
+      serveBadRequest(routingContext);
+      return;
+    }
+
     val interactor = getInteractorFactory().createCreateEventInteractor();
     val event = interactor.execute(requestEvent);
 
-    routingContext.response()
-        .putHeader("content-type", "application/json")
-        .setStatusCode(201)
-        .end(Json.encodePrettily(event));
+    serveJsonResponse(routingContext, 201, Json.encodePrettily(event));
   }
 
   private void getEvents(RoutingContext routingContext) {
-    val getEventsRequest = decodeGetEventsRequest(routingContext.getBodyAsJson());
-    val interactor = getInteractorFactory().createGetEventsInteractor();
-    val events = interactor.execute(getEventsRequest);
+    GetEventsRequestDTO getEventsRequest;
+    try {
+      getEventsRequest = decodeGetEventsRequest(routingContext.getBodyAsJson());
+    } catch (Exception e) {
+      serveBadRequest(routingContext);
+      return;
+    }
 
-    routingContext.response()
-        .putHeader("content-type", "application/json")
-        .setStatusCode(200)
-        .end(Json.encodePrettily(events));
+    val authToken = getAuthorizationToken(routingContext.request());
+    getEventsRequest.setUserToken(authToken);
+
+    val interactor = getInteractorFactory().createGetEventsInteractor();
+
+    try {
+      val events = interactor.execute(getEventsRequest);
+      serveJsonResponse(routingContext, 200, Json.encodePrettily(events));
+    } catch (InvalidTokenException e) {
+      serveBadCredentials(routingContext);
+    }
   }
 
   private void getEventsByUser(RoutingContext routingContext) {
-    val getEventsRequest = decodeGetEventsRequest(routingContext.getBodyAsJson());
-    getEventsRequest.setTargetUserId(UUID.fromString(routingContext.pathParam("userId")));
-    val interactor = getInteractorFactory().createGetEventsInteractor();
-    val events = interactor.execute(getEventsRequest);
+    GetEventsRequestDTO getEventsRequest;
+    try {
+      getEventsRequest = decodeGetEventsRequest(routingContext.getBodyAsJson());
+      getEventsRequest.setTargetUserId(UUID.fromString(routingContext.pathParam("userId")));
+    } catch (Exception e) {
+      serveBadRequest(routingContext);
+      return;
+    }
 
-    routingContext.response()
-        .putHeader("content-type", "application/json")
-        .setStatusCode(200)
-        .end(Json.encodePrettily(events));
+    val authToken = getAuthorizationToken(routingContext.request());
+    getEventsRequest.setUserToken(authToken);
+
+    val interactor = getInteractorFactory().createGetEventsInteractor();
+
+    try {
+      val events = interactor.execute(getEventsRequest);
+      serveJsonResponse(routingContext, 200, Json.encodePrettily(events));
+    } catch (InvalidTokenException e) {
+      serveBadCredentials(routingContext);
+    }
   }
 
   private EventRequestDTO decodeEventRequest(JsonObject object) {

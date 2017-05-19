@@ -1,5 +1,6 @@
 package eu.trustdemocracy.social.endpoints.controllers;
 
+import eu.trustdemocracy.social.core.interactors.exceptions.InvalidTokenException;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
 import eu.trustdemocracy.social.endpoints.App;
@@ -23,62 +24,117 @@ public class TrustController extends Controller {
   }
 
   private void trust(RoutingContext routingContext) {
-    val originRequest = Json.decodeValue(routingContext.getBodyAsString(),
-        OriginRelationshipRequestDTO.class);
-    val interactor = getInteractorFactory().createTrustUserInteractor();
-    val relationship = interactor.execute(originRequest);
+    OriginRelationshipRequestDTO originRequest;
+    try {
+      originRequest = Json.decodeValue(routingContext.getBodyAsString(),
+          OriginRelationshipRequestDTO.class);
+    } catch (Exception e) {
+      serveBadRequest(routingContext);
+      return;
+    }
 
-    routingContext.response()
-        .putHeader("content-type", "application/json")
-        .setStatusCode(201)
-        .end(Json.encodePrettily(relationship));
+    val authToken = getAuthorizationToken(routingContext.request());
+    originRequest.setOriginUserToken(authToken);
+
+    val interactor = getInteractorFactory().createTrustUserInteractor();
+
+    try {
+      val relationship = interactor.execute(originRequest);
+      serveJsonResponse(routingContext, 201, Json.encodePrettily(relationship));
+    } catch (InvalidTokenException e) {
+      serveBadCredentials(routingContext);
+    }
   }
 
   private void acceptTrust(RoutingContext routingContext) {
-    val targetRequest = Json.decodeValue(routingContext.getBodyAsString(),
-        TargetRelationshipRequestDTO.class);
-    val interactor = getInteractorFactory().createAcceptTrustInteractor();
-    val relationship = interactor.execute(targetRequest);
+    TargetRelationshipRequestDTO targetRequest;
+    try {
+      targetRequest = Json.decodeValue(routingContext.getBodyAsString(),
+          TargetRelationshipRequestDTO.class);
+    } catch (Exception e) {
+      serveBadRequest(routingContext);
+      return;
+    }
 
-    routingContext.response()
-        .putHeader("content-type", "application/json")
-        .setStatusCode(200)
-        .end(Json.encodePrettily(relationship));
+    val authToken = getAuthorizationToken(routingContext.request());
+    targetRequest.setTargetUserToken(authToken);
+
+    val interactor = getInteractorFactory().createAcceptTrustInteractor();
+
+    try {
+      val relationship = interactor.execute(targetRequest);
+      serveJsonResponse(routingContext, 200, Json.encodePrettily(relationship));
+    } catch (InvalidTokenException e) {
+      serveBadCredentials(routingContext);
+    }
   }
 
   private void cancelTrust(RoutingContext routingContext) {
-    val targetRequest = Json.decodeValue(routingContext.getBodyAsString(),
-        TargetRelationshipRequestDTO.class);
-    val interactor = getInteractorFactory().createCancelTrustInteractor();
-    val relationship = interactor.execute(targetRequest);
+    TargetRelationshipRequestDTO targetRequest;
+    try {
+      targetRequest = Json.decodeValue(routingContext.getBodyAsString(),
+          TargetRelationshipRequestDTO.class);
+    } catch (Exception e) {
+      serveBadRequest(routingContext);
+      return;
+    }
 
-    routingContext.response()
-        .putHeader("content-type", "application/json")
-        .setStatusCode(200)
-        .end(Json.encodePrettily(relationship));
+    val authToken = getAuthorizationToken(routingContext.request());
+    targetRequest.setTargetUserToken(authToken);
+
+    val interactor = getInteractorFactory().createCancelTrustInteractor();
+
+    try {
+      val relationship = interactor.execute(targetRequest);
+      serveJsonResponse(routingContext, 200, Json.encodePrettily(relationship));
+    } catch (InvalidTokenException e) {
+      serveBadCredentials(routingContext);
+    }
   }
 
   private void unTrust(RoutingContext routingContext) {
-    val originRequest = Json.decodeValue(routingContext.getBodyAsString(),
-        OriginRelationshipRequestDTO.class);
-    val interactor = getInteractorFactory().createUnTrustnteractor();
-    val relationship = interactor.execute(originRequest);
+    OriginRelationshipRequestDTO originRequest;
+    try {
+      originRequest = Json.decodeValue(routingContext.getBodyAsString(),
+          OriginRelationshipRequestDTO.class);
+    } catch (Exception e) {
+      serveBadRequest(routingContext);
+      return;
+    }
 
-    routingContext.response()
-        .putHeader("content-type", "application/json")
-        .setStatusCode(200)
-        .end(Json.encodePrettily(relationship));
+    val authToken = getAuthorizationToken(routingContext.request());
+    originRequest.setOriginUserToken(authToken);
+
+    val interactor = getInteractorFactory().createUnTrustnteractor();
+
+    try {
+      val relationship = interactor.execute(originRequest);
+      serveJsonResponse(routingContext, 200, Json.encodePrettily(relationship));
+    } catch (InvalidTokenException e) {
+      serveBadCredentials(routingContext);
+    }
   }
 
   private void getTrustRequests(RoutingContext routingContext) {
-    val targetRequest = Json.decodeValue(routingContext.getBodyAsString(),
-        TargetRelationshipRequestDTO.class);
-    val interactor = getInteractorFactory().createGetTrustRequests();
-    val relationships = interactor.execute(targetRequest);
+    TargetRelationshipRequestDTO targetRequest;
+    try {
+      targetRequest = Json.decodeValue(routingContext.getBodyAsString(),
+          TargetRelationshipRequestDTO.class);
+    } catch (Exception e) {
+      serveBadRequest(routingContext);
+      return;
+    }
 
-    routingContext.response()
-        .putHeader("content-type", "application/json")
-        .setStatusCode(200)
-        .end(Json.encodePrettily(relationships));
+    val authToken = getAuthorizationToken(routingContext.request());
+    targetRequest.setTargetUserToken(authToken);
+
+    val interactor = getInteractorFactory().createGetTrustRequests();
+
+    try {
+      val relationships = interactor.execute(targetRequest);
+      serveJsonResponse(routingContext, 200, Json.encodePrettily(relationships));
+    } catch (InvalidTokenException e) {
+      serveBadCredentials(routingContext);
+    }
   }
 }

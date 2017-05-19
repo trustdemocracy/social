@@ -1,9 +1,11 @@
 package eu.trustdemocracy.social.core.interactors.relationship.follow;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import eu.trustdemocracy.social.core.entities.RelationshipStatus;
 import eu.trustdemocracy.social.core.entities.RelationshipType;
+import eu.trustdemocracy.social.core.interactors.exceptions.InvalidTokenException;
 import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.gateways.RelationshipDAO;
@@ -35,6 +37,15 @@ public class FollowUserTest {
           .setOriginUserToken(TokenUtils.createToken(originUserId, originUserUsername))
           .setTargetUserId(UUID.randomUUID()));
     }
+  }
+
+  @Test
+  public void followUserNonTokenUser() {
+    val inputRelationship = inputRelationships.get(0)
+        .setOriginUserToken("");
+
+    assertThrows(InvalidTokenException.class,
+        () -> new FollowUser(relationshipDAO).execute(inputRelationship));
   }
 
   @Test

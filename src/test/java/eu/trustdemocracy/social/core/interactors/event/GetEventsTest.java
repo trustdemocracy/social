@@ -2,7 +2,9 @@ package eu.trustdemocracy.social.core.interactors.event;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import eu.trustdemocracy.social.core.interactors.exceptions.InvalidTokenException;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.AcceptFollow;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.FollowUser;
 import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
@@ -87,6 +89,15 @@ public class GetEventsTest {
   }
 
   @Test
+  public void getUserEventsNonTokenUser() {
+    val getEventsRequest = new GetEventsRequestDTO()
+        .setUserToken("");
+
+    assertThrows(InvalidTokenException.class,
+        () -> new GetEvents(eventDAO, relationshipDAO).execute(getEventsRequest));
+  }
+
+  @Test
   public void getTimeline() {
     val getEventsRequest = new GetEventsRequestDTO()
         .setUserToken(TokenUtils.createToken(userId, "originUsername"));
@@ -143,7 +154,6 @@ public class GetEventsTest {
     }
     assert followedUserId != null;
 
-
     val getEventsRequest = new GetEventsRequestDTO()
         .setUserToken(TokenUtils.createToken(userId, "originUsername"))
         .setTargetUserId(followedUserId);
@@ -175,7 +185,6 @@ public class GetEventsTest {
       }
     }
     assert followedUserId != null;
-
 
     val getEventsRequest = new GetEventsRequestDTO()
         .setUserToken(TokenUtils.createToken(userId, "originUsername"))
