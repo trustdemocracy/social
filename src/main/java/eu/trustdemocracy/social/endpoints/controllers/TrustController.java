@@ -35,10 +35,7 @@ public class TrustController extends Controller {
     val interactor = getInteractorFactory().createTrustUserInteractor();
     val relationship = interactor.execute(originRequest);
 
-    routingContext.response()
-        .putHeader("content-type", "application/json")
-        .setStatusCode(201)
-        .end(Json.encodePrettily(relationship));
+    serveJsonResponse(routingContext, 201, Json.encodePrettily(relationship));
   }
 
   private void acceptTrust(RoutingContext routingContext) {
@@ -53,10 +50,7 @@ public class TrustController extends Controller {
     val interactor = getInteractorFactory().createAcceptTrustInteractor();
     val relationship = interactor.execute(targetRequest);
 
-    routingContext.response()
-        .putHeader("content-type", "application/json")
-        .setStatusCode(200)
-        .end(Json.encodePrettily(relationship));
+    serveJsonResponse(routingContext, 200, Json.encodePrettily(relationship));
   }
 
   private void cancelTrust(RoutingContext routingContext) {
@@ -71,10 +65,7 @@ public class TrustController extends Controller {
     val interactor = getInteractorFactory().createCancelTrustInteractor();
     val relationship = interactor.execute(targetRequest);
 
-    routingContext.response()
-        .putHeader("content-type", "application/json")
-        .setStatusCode(200)
-        .end(Json.encodePrettily(relationship));
+    serveJsonResponse(routingContext, 200, Json.encodePrettily(relationship));
   }
 
   private void unTrust(RoutingContext routingContext) {
@@ -90,10 +81,7 @@ public class TrustController extends Controller {
     val interactor = getInteractorFactory().createUnTrustnteractor();
     val relationship = interactor.execute(originRequest);
 
-    routingContext.response()
-        .putHeader("content-type", "application/json")
-        .setStatusCode(200)
-        .end(Json.encodePrettily(relationship));
+    serveJsonResponse(routingContext, 200, Json.encodePrettily(relationship));
   }
 
   private void getTrustRequests(RoutingContext routingContext) {
@@ -109,9 +97,6 @@ public class TrustController extends Controller {
     val interactor = getInteractorFactory().createGetTrustRequests();
     val relationships = interactor.execute(targetRequest);
 
-    routingContext.response()
-        .putHeader("content-type", "application/json")
-        .setStatusCode(200)
-        .end(Json.encodePrettily(relationships));
+    serveJsonResponse(routingContext, 200, Json.encodePrettily(relationships));
   }
 }

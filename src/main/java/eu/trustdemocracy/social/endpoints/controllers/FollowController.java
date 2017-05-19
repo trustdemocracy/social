@@ -35,10 +35,7 @@ public class FollowController extends Controller {
     val interactor = getInteractorFactory().createFollowUserInteractor();
     val relationship = interactor.execute(originRequest);
 
-    routingContext.response()
-        .putHeader("content-type", "application/json")
-        .setStatusCode(201)
-        .end(Json.encodePrettily(relationship));
+    serveJsonResponse(routingContext, 201, Json.encodePrettily(relationship));
   }
 
   private void acceptFollow(RoutingContext routingContext) {
@@ -53,10 +50,7 @@ public class FollowController extends Controller {
     val interactor = getInteractorFactory().createAcceptFollowInteractor();
     val relationship = interactor.execute(targetRequest);
 
-    routingContext.response()
-        .putHeader("content-type", "application/json")
-        .setStatusCode(200)
-        .end(Json.encodePrettily(relationship));
+    serveJsonResponse(routingContext, 200, Json.encodePrettily(relationship));
   }
 
   private void cancelFollow(RoutingContext routingContext) {
@@ -71,10 +65,7 @@ public class FollowController extends Controller {
     val interactor = getInteractorFactory().createCancelFollowInteractor();
     val relationship = interactor.execute(targetRequest);
 
-    routingContext.response()
-        .putHeader("content-type", "application/json")
-        .setStatusCode(200)
-        .end(Json.encodePrettily(relationship));
+    serveJsonResponse(routingContext, 200, Json.encodePrettily(relationship));
   }
 
   private void unFollow(RoutingContext routingContext) {
@@ -90,10 +81,7 @@ public class FollowController extends Controller {
     val interactor = getInteractorFactory().createUnFollowInteractor();
     val relationship = interactor.execute(originRequest);
 
-    routingContext.response()
-        .putHeader("content-type", "application/json")
-        .setStatusCode(200)
-        .end(Json.encodePrettily(relationship));
+    serveJsonResponse(routingContext, 200, Json.encodePrettily(relationship));
   }
 
   private void getFollowRequests(RoutingContext routingContext) {
@@ -108,9 +96,6 @@ public class FollowController extends Controller {
     val interactor = getInteractorFactory().createGetFollowRequests();
     val relationships = interactor.execute(targetRequest);
 
-    routingContext.response()
-        .putHeader("content-type", "application/json")
-        .setStatusCode(200)
-        .end(Json.encodePrettily(relationships));
+    serveJsonResponse(routingContext, 200, Json.encodePrettily(relationships));
   }
 }

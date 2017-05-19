@@ -34,10 +34,7 @@ public class EventController extends Controller {
     val interactor = getInteractorFactory().createCreateEventInteractor();
     val event = interactor.execute(requestEvent);
 
-    routingContext.response()
-        .putHeader("content-type", "application/json")
-        .setStatusCode(201)
-        .end(Json.encodePrettily(event));
+    serveJsonResponse(routingContext, 201, Json.encodePrettily(event));
   }
 
   private void getEvents(RoutingContext routingContext) {
@@ -52,10 +49,7 @@ public class EventController extends Controller {
     val interactor = getInteractorFactory().createGetEventsInteractor();
     val events = interactor.execute(getEventsRequest);
 
-    routingContext.response()
-        .putHeader("content-type", "application/json")
-        .setStatusCode(200)
-        .end(Json.encodePrettily(events));
+    serveJsonResponse(routingContext, 200, Json.encodePrettily(events));
   }
 
   private void getEventsByUser(RoutingContext routingContext) {
@@ -70,10 +64,7 @@ public class EventController extends Controller {
     val interactor = getInteractorFactory().createGetEventsInteractor();
     val events = interactor.execute(getEventsRequest);
 
-    routingContext.response()
-        .putHeader("content-type", "application/json")
-        .setStatusCode(200)
-        .end(Json.encodePrettily(events));
+    serveJsonResponse(routingContext, 200, Json.encodePrettily(events));
   }
 
   private EventRequestDTO decodeEventRequest(JsonObject object) {
