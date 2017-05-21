@@ -83,6 +83,21 @@ public class MongoRelationshipDAO implements RelationshipDAO {
   }
 
   @Override
+  public List<Relationship> getRelationships(UUID userId) {
+    List<Relationship> relationships = new ArrayList<>();
+    val documents = collection.find(or(
+        eq("origin_user.id", userId.toString()),
+        eq("target_user.id", userId.toString())
+    ));
+
+    for (val document : documents) {
+      relationships.add(buildFromDocument(document));
+    }
+
+    return relationships;
+  }
+
+  @Override
   public List<Relationship> getRelationships(UUID originId, UUID targetId) {
     List<Relationship> relationships = new ArrayList<>();
     val documents = collection.find(or(
