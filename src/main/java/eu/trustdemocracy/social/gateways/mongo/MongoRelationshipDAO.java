@@ -5,6 +5,7 @@ import static com.mongodb.client.model.Filters.eq;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.UpdateOptions;
 import eu.trustdemocracy.social.core.entities.Relationship;
 import eu.trustdemocracy.social.core.entities.RelationshipStatus;
 import eu.trustdemocracy.social.core.entities.RelationshipType;
@@ -31,7 +32,8 @@ public class MongoRelationshipDAO implements RelationshipDAO {
   @Override
   public Relationship create(Relationship relationship) {
     val document = buildDocument(relationship);
-    collection.insertOne(document);
+    val options = new UpdateOptions().upsert(true);
+    collection.replaceOne(equalityConditions(relationship), document, options);
     return relationship;
   }
 
