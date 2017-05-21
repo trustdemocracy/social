@@ -12,6 +12,8 @@ public class EventMapper {
   public static Event createEntity(EventRequestDTO eventRequestDTO) {
     return new Event()
         .setUserId(eventRequestDTO.getUserId())
+        .setUsername(eventRequestDTO.getUsername())
+        .setType(eventRequestDTO.getType())
         .setTimestamp(eventRequestDTO.getTimestamp())
         .setSerializedContent(eventRequestDTO.getSerializedContent());
   }
@@ -20,6 +22,8 @@ public class EventMapper {
     return new EventResponseDTO()
         .setId(event.getId())
         .setUserId(event.getUserId())
+        .setUsername(event.getUsername())
+        .setType(event.getType())
         .setTimestamp(event.getTimestamp())
         .setSerializedContent(event.getSerializedContent());
   }

@@ -11,6 +11,8 @@ public class Event {
 
   private UUID id;
   private UUID userId;
+  private String username;
+  private String type;
   private long timestamp;
   private JsonObject serializedContent;
 }
