@@ -31,7 +31,7 @@ public class RelationshipsController extends Controller {
     val authToken = getAuthorizationToken(routingContext.request());
     originDTO.setOriginUserToken(authToken);
 
-    val interactor = getInteractorFactory().createGetRelationships();
+    val interactor = getInteractorFactory().getGetRelationships();
 
     try {
       val relationships = interactor.execute(originDTO);

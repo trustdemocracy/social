@@ -36,7 +36,7 @@ public class TrustController extends Controller {
     val authToken = getAuthorizationToken(routingContext.request());
     originRequest.setOriginUserToken(authToken);
 
-    val interactor = getInteractorFactory().createTrustUserInteractor();
+    val interactor = getInteractorFactory().getTrustUser();
 
     try {
       val relationship = interactor.execute(originRequest);
@@ -59,7 +59,7 @@ public class TrustController extends Controller {
     val authToken = getAuthorizationToken(routingContext.request());
     targetRequest.setTargetUserToken(authToken);
 
-    val interactor = getInteractorFactory().createAcceptTrustInteractor();
+    val interactor = getInteractorFactory().getAcceptTrust();
 
     try {
       val relationship = interactor.execute(targetRequest);
@@ -82,7 +82,7 @@ public class TrustController extends Controller {
     val authToken = getAuthorizationToken(routingContext.request());
     targetRequest.setTargetUserToken(authToken);
 
-    val interactor = getInteractorFactory().createCancelTrustInteractor();
+    val interactor = getInteractorFactory().getCancelTrust();
 
     try {
       val relationship = interactor.execute(targetRequest);
@@ -105,7 +105,7 @@ public class TrustController extends Controller {
     val authToken = getAuthorizationToken(routingContext.request());
     originRequest.setOriginUserToken(authToken);
 
-    val interactor = getInteractorFactory().createUnTrustnteractor();
+    val interactor = getInteractorFactory().getUnTrust();
 
     try {
       val relationship = interactor.execute(originRequest);
@@ -128,7 +128,7 @@ public class TrustController extends Controller {
     val authToken = getAuthorizationToken(routingContext.request());
     targetRequest.setTargetUserToken(authToken);
 
-    val interactor = getInteractorFactory().createGetTrustRequests();
+    val interactor = getInteractorFactory().getGetTrustRequests();
 
     try {
       val relationships = interactor.execute(targetRequest);

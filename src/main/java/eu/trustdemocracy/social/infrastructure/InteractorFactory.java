@@ -16,29 +16,29 @@ import eu.trustdemocracy.social.core.interactors.relationship.trust.UnTrust;
 
 public interface InteractorFactory {
 
-  CreateEvent createCreateEventInteractor();
+  CreateEvent getCreateEvent();
 
-  GetEvents createGetEventsInteractor();
+  GetEvents getGetEvents();
 
-  FollowUser createFollowUserInteractor();
+  FollowUser getFollowUser();
 
-  AcceptFollow createAcceptFollowInteractor();
+  AcceptFollow getAcceptFollow();
 
-  CancelFollow createCancelFollowInteractor();
+  CancelFollow getCancelFollow();
 
-  UnFollow createUnFollowInteractor();
+  UnFollow getUnFollow();
 
-  GetFollowRequests createGetFollowRequests();
+  GetFollowRequests getGetFollow();
 
-  TrustUser createTrustUserInteractor();
+  TrustUser getTrustUser();
 
-  AcceptTrust createAcceptTrustInteractor();
+  AcceptTrust getAcceptTrust();
 
-  CancelTrust createCancelTrustInteractor();
+  CancelTrust getCancelTrust();
 
-  UnTrust createUnTrustnteractor();
+  UnTrust getUnTrust();
 
-  GetTrustRequests createGetTrustRequests();
+  GetTrustRequests getGetTrustRequests();
 
-  GetRelationships createGetRelationships();
+  GetRelationships getGetRelationships();
 }

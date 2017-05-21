@@ -32,7 +32,7 @@ public class EventController extends Controller {
       return;
     }
 
-    val interactor = getInteractorFactory().createCreateEventInteractor();
+    val interactor = getInteractorFactory().getCreateEvent();
     val event = interactor.execute(requestEvent);
 
     serveJsonResponse(routingContext, 201, Json.encodePrettily(event));
@@ -50,7 +50,7 @@ public class EventController extends Controller {
     val authToken = getAuthorizationToken(routingContext.request());
     getEventsRequest.setUserToken(authToken);
 
-    val interactor = getInteractorFactory().createGetEventsInteractor();
+    val interactor = getInteractorFactory().getGetEvents();
 
     try {
       val events = interactor.execute(getEventsRequest);
@@ -73,7 +73,7 @@ public class EventController extends Controller {
     val authToken = getAuthorizationToken(routingContext.request());
     getEventsRequest.setUserToken(authToken);
 
-    val interactor = getInteractorFactory().createGetEventsInteractor();
+    val interactor = getInteractorFactory().getGetEvents();
 
     try {
       val events = interactor.execute(getEventsRequest);

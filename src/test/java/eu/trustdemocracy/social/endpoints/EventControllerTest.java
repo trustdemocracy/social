@@ -156,9 +156,9 @@ public class EventControllerTest extends ControllerTest {
 
   private void createEventsAndRelationships(UUID userId, List<UUID> followedUsers,
       Map<EventResponseDTO, UUID> followedEvents) throws InterruptedException {
-    val createEvent = interactorFactory.createCreateEventInteractor();
-    val followUser = interactorFactory.createFollowUserInteractor();
-    val acceptFollow = interactorFactory.createAcceptFollowInteractor();
+    val createEvent = interactorFactory.getCreateEvent();
+    val followUser = interactorFactory.getFollowUser();
+    val acceptFollow = interactorFactory.getAcceptFollow();
 
     followedUsers.add(userId);
 

@@ -26,67 +26,67 @@ public class FakeInteractorFactory implements InteractorFactory {
   private MongoDatabase db;
 
   @Override
-  public CreateEvent createCreateEventInteractor() {
+  public CreateEvent getCreateEvent() {
     return new CreateEvent(getFakeEventDAO());
   }
 
   @Override
-  public GetEvents createGetEventsInteractor() {
+  public GetEvents getGetEvents() {
     return new GetEvents(getFakeEventDAO(), getFakeRelationshipDAO());
   }
 
   @Override
-  public FollowUser createFollowUserInteractor() {
+  public FollowUser getFollowUser() {
     return new FollowUser(getFakeRelationshipDAO());
   }
 
   @Override
-  public AcceptFollow createAcceptFollowInteractor() {
+  public AcceptFollow getAcceptFollow() {
     return new AcceptFollow(getFakeRelationshipDAO());
   }
 
   @Override
-  public CancelFollow createCancelFollowInteractor() {
+  public CancelFollow getCancelFollow() {
     return new CancelFollow(getFakeRelationshipDAO());
   }
 
   @Override
-  public UnFollow createUnFollowInteractor() {
+  public UnFollow getUnFollow() {
     return new UnFollow(getFakeRelationshipDAO());
   }
 
   @Override
-  public GetFollowRequests createGetFollowRequests() {
+  public GetFollowRequests getGetFollow() {
     return new GetFollowRequests(getFakeRelationshipDAO());
   }
 
   @Override
-  public TrustUser createTrustUserInteractor() {
+  public TrustUser getTrustUser() {
     return new TrustUser(getFakeRelationshipDAO());
   }
 
   @Override
-  public AcceptTrust createAcceptTrustInteractor() {
+  public AcceptTrust getAcceptTrust() {
     return new AcceptTrust(getFakeRelationshipDAO());
   }
 
   @Override
-  public CancelTrust createCancelTrustInteractor() {
+  public CancelTrust getCancelTrust() {
     return new CancelTrust(getFakeRelationshipDAO());
   }
 
   @Override
-  public UnTrust createUnTrustnteractor() {
+  public UnTrust getUnTrust() {
     return new UnTrust(getFakeRelationshipDAO());
   }
 
   @Override
-  public GetTrustRequests createGetTrustRequests() {
+  public GetTrustRequests getGetTrustRequests() {
     return new GetTrustRequests(getFakeRelationshipDAO());
   }
 
   @Override
-  public GetRelationships createGetRelationships() {
+  public GetRelationships getGetRelationships() {
     return new GetRelationships(getFakeRelationshipDAO());
   }
 
