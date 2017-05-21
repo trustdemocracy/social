@@ -39,4 +39,8 @@ public class Relationship {
     result = 31 * result + relationshipType.hashCode();
     return result;
   }
+
+  public boolean isAccepted() {
+    return RelationshipStatus.ACCEPTED.equals(relationshipStatus);
+  }
 }
