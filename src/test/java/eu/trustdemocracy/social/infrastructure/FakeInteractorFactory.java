@@ -4,6 +4,7 @@ import com.github.fakemongo.Fongo;
 import com.mongodb.client.MongoDatabase;
 import eu.trustdemocracy.social.core.interactors.event.CreateEvent;
 import eu.trustdemocracy.social.core.interactors.event.GetEvents;
+import eu.trustdemocracy.social.core.interactors.relationship.GetRelationships;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.AcceptFollow;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.CancelFollow;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.FollowUser;
@@ -82,6 +83,11 @@ public class FakeInteractorFactory implements InteractorFactory {
   @Override
   public GetTrustRequests createGetTrustRequests() {
     return new GetTrustRequests(getFakeRelationshipDAO());
+  }
+
+  @Override
+  public GetRelationships createGetRelationships() {
+    return new GetRelationships(getFakeRelationshipDAO());
   }
 
   private RelationshipDAO getFakeRelationshipDAO() {

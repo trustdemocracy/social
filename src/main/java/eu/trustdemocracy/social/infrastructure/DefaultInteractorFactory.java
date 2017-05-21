@@ -2,6 +2,7 @@ package eu.trustdemocracy.social.infrastructure;
 
 import eu.trustdemocracy.social.core.interactors.event.CreateEvent;
 import eu.trustdemocracy.social.core.interactors.event.GetEvents;
+import eu.trustdemocracy.social.core.interactors.relationship.GetRelationships;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.AcceptFollow;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.CancelFollow;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.FollowUser;
@@ -85,5 +86,10 @@ public class DefaultInteractorFactory implements InteractorFactory {
   @Override
   public GetTrustRequests createGetTrustRequests() {
     return new GetTrustRequests(DAOFactory.getRelationshipDAO());
+  }
+
+  @Override
+  public GetRelationships createGetRelationships() {
+    return new GetRelationships(DAOFactory.getRelationshipDAO());
   }
 }

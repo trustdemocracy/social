@@ -3,6 +3,7 @@ package eu.trustdemocracy.social.endpoints;
 import eu.trustdemocracy.social.endpoints.controllers.Controller;
 import eu.trustdemocracy.social.endpoints.controllers.EventController;
 import eu.trustdemocracy.social.endpoints.controllers.FollowController;
+import eu.trustdemocracy.social.endpoints.controllers.RelationshipsController;
 import eu.trustdemocracy.social.endpoints.controllers.TrustController;
 import eu.trustdemocracy.social.endpoints.util.Runner;
 import eu.trustdemocracy.social.infrastructure.DefaultInteractorFactory;
@@ -59,7 +60,8 @@ public class App extends AbstractVerticle {
     val controllers = Stream.of(
         EventController.class,
         FollowController.class,
-        TrustController.class
+        TrustController.class,
+        RelationshipsController.class
     ).collect(Collectors.toCollection(HashSet<Class<? extends Controller>>::new));
 
     for (val controller : controllers) {
