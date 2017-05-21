@@ -37,6 +37,22 @@ public class GetRelationshipsTest {
         .setOriginUserToken(TokenUtils.createToken(targetUserId, "username"))
         .setTargetUserId(originUserId));
 
+
+    follow.execute(new OriginRelationshipRequestDTO()
+        .setOriginUserToken(TokenUtils.createToken(targetUserId, "username"))
+        .setTargetUserId(UUID.randomUUID()));
+    follow.execute(new OriginRelationshipRequestDTO()
+        .setOriginUserToken(TokenUtils.createToken(originUserId, "username"))
+        .setTargetUserId(UUID.randomUUID()));
+
+
+    follow.execute(new OriginRelationshipRequestDTO()
+        .setOriginUserToken(TokenUtils.createToken(UUID.randomUUID(), "username"))
+        .setTargetUserId(targetUserId));
+    follow.execute(new OriginRelationshipRequestDTO()
+        .setOriginUserToken(TokenUtils.createToken(UUID.randomUUID(), "username"))
+        .setTargetUserId(originUserId));
+
     val trust = new TrustUser(relationshipDAO);
 
     trust.execute(new OriginRelationshipRequestDTO()
