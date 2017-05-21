@@ -1,6 +1,7 @@
 package eu.trustdemocracy.social.core.interactors.event;
 
 import eu.trustdemocracy.social.core.entities.Event;
+import eu.trustdemocracy.social.core.entities.RelationshipStatus;
 import eu.trustdemocracy.social.core.entities.RelationshipType;
 import eu.trustdemocracy.social.core.entities.User;
 import eu.trustdemocracy.social.core.entities.util.EventMapper;
@@ -55,6 +56,8 @@ public class GetEvents implements Interactor<GetEventsRequestDTO, GetEventsRespo
 
   private List<Event> getTimeline(User user) {
     Set<UUID> followedUsersIds = user.getFollowedUsers().stream()
+        .filter(relationship ->
+            relationship.getRelationshipStatus().equals(RelationshipStatus.ACCEPTED))
         .map(relationship -> relationship.getTargetUser().getId())
         .collect(Collectors.toSet());
 
