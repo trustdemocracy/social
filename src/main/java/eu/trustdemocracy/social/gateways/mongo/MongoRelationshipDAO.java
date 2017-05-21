@@ -2,6 +2,7 @@ package eu.trustdemocracy.social.gateways.mongo;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.or;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -83,7 +84,23 @@ public class MongoRelationshipDAO implements RelationshipDAO {
 
   @Override
   public List<Relationship> getRelationships(UUID originId, UUID targetId) {
-    return null;
+    List<Relationship> relationships = new ArrayList<>();
+    val documents = collection.find(or(
+        and(
+            eq("origin_user.id", originId.toString()),
+            eq("target_user.id", targetId.toString())
+        ),
+        and(
+            eq("origin_user.id", targetId.toString()),
+            eq("target_user.id", originId.toString())
+        )
+    ));
+
+    for (val document : documents) {
+      relationships.add(buildFromDocument(document));
+    }
+
+    return relationships;
   }
 
   @Override
