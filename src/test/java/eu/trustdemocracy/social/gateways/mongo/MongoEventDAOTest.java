@@ -76,11 +76,12 @@ public class MongoEventDAOTest {
 
   private Event getRandomEvent() {
     val content = new JsonObject()
-        .put("type", "PROPOSAL")
         .put("brief", "Brief of the proposal")
         .put("title", "Title of the proposal");
     return new Event()
         .setUserId(UUID.randomUUID())
+        .setUsername("testUsername")
+        .setType("PROPOSAL")
         .setTimestamp(System.currentTimeMillis())
         .setSerializedContent(content);
   }
@@ -89,6 +90,8 @@ public class MongoEventDAOTest {
     return document -> {
       assertNotNull(document.get("id"));
       assertEquals(event.getUserId(), UUID.fromString(document.getString("user_id")));
+      assertEquals(event.getUsername(), document.getString("user_username"));
+      assertEquals(event.getType(), document.getString("type"));
       assertEquals(new Long(event.getTimestamp()), document.getLong("timestamp"));
       assertEquals(event.getSerializedContent().encode(), document.getString("serialized_content"));
     };

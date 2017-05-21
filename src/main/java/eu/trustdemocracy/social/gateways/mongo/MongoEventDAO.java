@@ -31,6 +31,8 @@ public class MongoEventDAO implements EventDAO {
 
     val document = new Document("id", event.getId().toString())
         .append("user_id", event.getUserId().toString())
+        .append("user_username", event.getUsername())
+        .append("type", event.getType())
         .append("timestamp", event.getTimestamp())
         .append("serialized_content", event.getSerializedContent().encode());
 
@@ -76,6 +78,8 @@ public class MongoEventDAO implements EventDAO {
     return new Event()
         .setId(UUID.fromString(document.getString("id")))
         .setUserId(UUID.fromString(document.getString("user_id")))
+        .setUsername(document.getString("user_username"))
+        .setType(document.getString("type"))
         .setTimestamp(document.getLong("timestamp"))
         .setSerializedContent(new JsonObject(document.getString("serialized_content")));
   }

@@ -25,9 +25,11 @@ public class CreateEventTest {
     for (int i = 0; i < 10; i++) {
       inputEvents.add(new EventRequestDTO()
           .setUserId(UUID.randomUUID())
+          .setUsername("username")
+          .setType("PROPOSAL")
           .setTimestamp(System.currentTimeMillis())
           .setSerializedContent(
-              new JsonObject().put("type", "PROPOSAL").put("brief", "Brief of the proposal")));
+              new JsonObject().put("brief", "Brief of the proposal")));
     }
   }
 
@@ -40,6 +42,7 @@ public class CreateEventTest {
 
     assertNotNull(responseEvent.getId());
     assertEquals(inputEvent.getUserId(), responseEvent.getUserId());
+    assertEquals(inputEvent.getUsername(), responseEvent.getUsername());
     assertEquals(inputEvent.getTimestamp(), responseEvent.getTimestamp());
     assertEquals(inputEvent.getSerializedContent(), responseEvent.getSerializedContent());
   }

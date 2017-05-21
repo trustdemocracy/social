@@ -10,6 +10,8 @@ import lombok.experimental.Accessors;
 public class EventRequestDTO {
 
   private UUID userId;
+  private String username;
+  private String type;
   private long timestamp;
   private JsonObject serializedContent;
 }
