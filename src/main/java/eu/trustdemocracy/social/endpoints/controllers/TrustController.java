@@ -17,7 +17,7 @@ public class TrustController extends Controller {
   @Override
   public void buildRoutes() {
     getRouter().post("/trust/").handler(this::trust);
-    getRouter().delete("/trust/").handler(this::unTrust);
+    getRouter().post("/trust/untrust").handler(this::unTrust);
     getRouter().post("/trust/accept").handler(this::acceptTrust);
     getRouter().post("/trust/cancel").handler(this::cancelTrust);
     getRouter().get("/trust/requests").handler(this::getTrustRequests);

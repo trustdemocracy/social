@@ -162,7 +162,7 @@ public class FollowControllerTest extends ControllerTest {
     single.subscribe(followResponse -> {
       context.assertEquals(followResponse.statusCode(), 201);
 
-      client.delete(port, HOST, "/follow/")
+      client.post(port, HOST, "/follow/unfollow")
           .putHeader("Authorization", "Bearer " + followRequest.getOriginUserToken())
           .rxSendJson(followRequest)
           .subscribe(response -> {

@@ -17,7 +17,7 @@ public class FollowController extends Controller {
   @Override
   public void buildRoutes() {
     getRouter().post("/follow/").handler(this::follow);
-    getRouter().delete("/follow/").handler(this::unFollow);
+    getRouter().post("/follow/unfollow").handler(this::unFollow);
     getRouter().post("/follow/accept").handler(this::acceptFollow);
     getRouter().post("/follow/cancel").handler(this::cancelFollow);
     getRouter().get("/follow/requests").handler(this::getFollowRequests);
