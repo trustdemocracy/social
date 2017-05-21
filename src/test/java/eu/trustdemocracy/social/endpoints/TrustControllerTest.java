@@ -207,7 +207,7 @@ public class TrustControllerTest extends ControllerTest {
     single.subscribe(followResponse -> {
       context.assertEquals(followResponse.statusCode(), 201);
 
-      client.post(port, HOST, "/trust/requests")
+      client.get(port, HOST, "/trust/requests")
           .putHeader("Authorization", "Bearer " + getRequest.getTargetUserToken())
           .rxSendJson(getRequest)
           .subscribe(response -> {

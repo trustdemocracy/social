@@ -20,7 +20,7 @@ public class TrustController extends Controller {
     getRouter().delete("/trust/").handler(this::unTrust);
     getRouter().post("/trust/accept").handler(this::acceptTrust);
     getRouter().post("/trust/cancel").handler(this::cancelTrust);
-    getRouter().post("/trust/requests").handler(this::getTrustRequests);
+    getRouter().get("/trust/requests").handler(this::getTrustRequests);
   }
 
   private void trust(RoutingContext routingContext) {

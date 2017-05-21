@@ -20,7 +20,7 @@ public class FollowController extends Controller {
     getRouter().delete("/follow/").handler(this::unFollow);
     getRouter().post("/follow/accept").handler(this::acceptFollow);
     getRouter().post("/follow/cancel").handler(this::cancelFollow);
-    getRouter().post("/follow/requests").handler(this::getFollowRequests);
+    getRouter().get("/follow/requests").handler(this::getFollowRequests);
   }
 
   private void follow(RoutingContext routingContext) {

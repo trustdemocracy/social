@@ -207,7 +207,7 @@ public class FollowControllerTest extends ControllerTest {
     single.subscribe(followResponse -> {
       context.assertEquals(followResponse.statusCode(), 201);
 
-      client.post(port, HOST, "/follow/requests")
+      client.get(port, HOST, "/follow/requests")
           .putHeader("Authorization", "Bearer " + getRequest.getTargetUserToken())
           .rxSendJson(getRequest)
           .subscribe(response -> {
