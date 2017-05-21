@@ -82,6 +82,11 @@ public class MongoRelationshipDAO implements RelationshipDAO {
   }
 
   @Override
+  public List<Relationship> getRelationships(UUID originId, UUID targetId) {
+    return null;
+  }
+
+  @Override
   public List<Relationship> findByTargetId(UUID id, RelationshipType relationshipType,
       RelationshipStatus relationshipStatus) {
     List<Relationship> relationships = new ArrayList<>();

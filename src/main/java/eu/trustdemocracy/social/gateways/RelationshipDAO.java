@@ -19,6 +19,8 @@ public interface RelationshipDAO {
 
   Set<Relationship> getAllOriginRelationships(UUID id, RelationshipType relationshipType);
 
+  List<Relationship> getRelationships(UUID originId, UUID targetId);
+
   List<Relationship> findByTargetId(UUID id, RelationshipType relationshipType,
       RelationshipStatus relationshipStatus);
 }

@@ -61,6 +61,23 @@ public class FakeRelationshipDAO implements RelationshipDAO {
   }
 
   @Override
+  public List<Relationship> getRelationships(UUID originId, UUID targetId) {
+    List<Relationship> result = new ArrayList<>();
+
+    for (val relationship : relationships) {
+      if ((relationship.getOriginUser().getId().equals(originId)
+          && relationship.getTargetUser().getId().equals(targetId))
+          || (relationship.getOriginUser().getId().equals(targetId)
+          && relationship.getTargetUser().getId().equals(originId))) {
+        result.add(relationship);
+      }
+    }
+
+
+    return result;
+  }
+
+  @Override
   public List<Relationship> findByTargetId(UUID id, RelationshipType relationshipType,
       RelationshipStatus relationshipStatus) {
     List<Relationship> relationshipsList = new ArrayList<>();

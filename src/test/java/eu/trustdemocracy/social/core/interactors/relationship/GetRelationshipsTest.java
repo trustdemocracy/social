@@ -59,7 +59,8 @@ public class GetRelationshipsTest {
   @Test
   public void getRelationships() {
     val originRelationship = new OriginRelationshipRequestDTO()
-        .setOriginUserToken(TokenUtils.createToken(originUserId, "username"));
+        .setOriginUserToken(TokenUtils.createToken(originUserId, "username"))
+        .setTargetUserId(targetUserId);
 
     val responseRelationships = new GetRelationships(relationshipDAO)
         .execute(originRelationship)
