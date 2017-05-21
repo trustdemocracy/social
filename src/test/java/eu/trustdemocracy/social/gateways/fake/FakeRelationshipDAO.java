@@ -66,8 +66,8 @@ public class FakeRelationshipDAO implements RelationshipDAO {
 
     for (val relationship : relationships) {
       if ((relationship.getOriginUser().getId().equals(originId)
-          && relationship.getTargetUser().getId().equals(targetId))
-          || (relationship.getOriginUser().getId().equals(targetId)
+          && (targetId == null || relationship.getTargetUser().getId().equals(targetId)))
+          || ((targetId == null || relationship.getOriginUser().getId().equals(targetId))
           && relationship.getTargetUser().getId().equals(originId))) {
         result.add(relationship);
       }
