@@ -116,14 +116,7 @@ public class FollowController extends Controller {
   }
 
   private void getFollowRequests(RoutingContext routingContext) {
-    TargetRelationshipRequestDTO targetRequest;
-    try {
-      targetRequest = Json.decodeValue(routingContext.getBodyAsString(),
-          TargetRelationshipRequestDTO.class);
-    } catch (Exception e) {
-      serveBadRequest(routingContext);
-      return;
-    }
+    TargetRelationshipRequestDTO targetRequest = new TargetRelationshipRequestDTO();
 
     val authToken = getAuthorizationToken(routingContext.request());
     targetRequest.setTargetUserToken(authToken);
