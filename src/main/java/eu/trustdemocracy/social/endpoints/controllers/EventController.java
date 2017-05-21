@@ -86,6 +86,8 @@ public class EventController extends Controller {
   private EventRequestDTO decodeEventRequest(JsonObject object) {
     return new EventRequestDTO()
         .setUserId(UUID.fromString(object.getString("userId")))
+        .setUsername(object.getString("username"))
+        .setType(object.getString("type"))
         .setTimestamp(object.getLong("timestamp"))
         .setSerializedContent(object.getJsonObject("serializedContent"));
   }
