@@ -20,7 +20,7 @@ public class User {
     }
 
     for (val relationship : followedUsers) {
-      if (relationship.getTargetUser().getId().equals(userId)) {
+      if (relationship.isAccepted() && relationship.getTargetUser().getId().equals(userId)) {
         return true;
       }
     }

@@ -2,9 +2,11 @@ package eu.trustdemocracy.social.gateways.mongo;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.or;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.UpdateOptions;
 import eu.trustdemocracy.social.core.entities.Relationship;
 import eu.trustdemocracy.social.core.entities.RelationshipStatus;
 import eu.trustdemocracy.social.core.entities.RelationshipType;
@@ -31,7 +33,8 @@ public class MongoRelationshipDAO implements RelationshipDAO {
   @Override
   public Relationship create(Relationship relationship) {
     val document = buildDocument(relationship);
-    collection.insertOne(document);
+    val options = new UpdateOptions().upsert(true);
+    collection.replaceOne(equalityConditions(relationship), document, options);
     return relationship;
   }
 
@@ -70,6 +73,27 @@ public class MongoRelationshipDAO implements RelationshipDAO {
     val documents = collection.find(and(
         eq("origin_user.id", id.toString()),
         eq("type", relationshipType.toString())
+    ));
+
+    for (val document : documents) {
+      relationships.add(buildFromDocument(document));
+    }
+
+    return relationships;
+  }
+
+  @Override
+  public List<Relationship> getRelationships(UUID originId, UUID targetId) {
+    List<Relationship> relationships = new ArrayList<>();
+    val documents = collection.find(or(
+        and(
+            eq("origin_user.id", originId.toString()),
+            eq("target_user.id", targetId.toString())
+        ),
+        and(
+            eq("origin_user.id", targetId.toString()),
+            eq("target_user.id", originId.toString())
+        )
     ));
 
     for (val document : documents) {

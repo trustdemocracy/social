@@ -143,6 +143,31 @@ public class MongoRelationshipDAOTest {
   }
 
   @Test
+  public void getRelationships() {
+    val originUser = new User().setId(UUID.randomUUID());
+    val targetUser = new User().setId(UUID.randomUUID());
+
+    val relationship = getRandomRelationship()
+        .setOriginUser(originUser)
+        .setTargetUser(targetUser)
+        .setRelationshipType(RelationshipType.FOLLOW);
+    relationshipDAO.create(relationship);
+
+    relationship.setOriginUser(targetUser).setTargetUser(originUser);
+    relationshipDAO.create(relationship);
+
+    relationship.setRelationshipType(RelationshipType.TRUST);
+    relationshipDAO.create(relationship);
+
+    relationship.setOriginUser(originUser).setTargetUser(targetUser);
+    relationshipDAO.create(relationship);
+
+    val relationships = relationshipDAO.getRelationships(originUser.getId(), targetUser.getId());
+
+    assertEquals(4, relationships.size());
+  }
+
+  @Test
   public void findByTargetId() {
     val userId = UUID.randomUUID();
 
@@ -158,7 +183,6 @@ public class MongoRelationshipDAOTest {
       }
       relationshipDAO.create(relationship);
     }
-
 
     val followRelationships = relationships.stream()
         .filter(r -> r.getRelationshipType() == RelationshipType.FOLLOW)

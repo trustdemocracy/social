@@ -51,7 +51,7 @@ public class GetFollowRequestsTest {
         .setTargetUserToken("");
 
     assertThrows(InvalidTokenException.class,
-        () -> new CancelFollow(relationshipDAO).execute(targetRelationship));
+        () -> new GetFollowRequests(relationshipDAO).execute(targetRelationship));
   }
 
   @Test

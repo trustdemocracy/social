@@ -17,7 +17,7 @@ public class FollowController extends Controller {
   @Override
   public void buildRoutes() {
     getRouter().post("/follow/").handler(this::follow);
-    getRouter().delete("/follow/").handler(this::unFollow);
+    getRouter().post("/follow/unfollow").handler(this::unFollow);
     getRouter().post("/follow/accept").handler(this::acceptFollow);
     getRouter().post("/follow/cancel").handler(this::cancelFollow);
     getRouter().get("/follow/requests").handler(this::getFollowRequests);
@@ -36,7 +36,7 @@ public class FollowController extends Controller {
     val authToken = getAuthorizationToken(routingContext.request());
     originRequest.setOriginUserToken(authToken);
 
-    val interactor = getInteractorFactory().createFollowUserInteractor();
+    val interactor = getInteractorFactory().getFollowUser();
 
     try {
       val relationship = interactor.execute(originRequest);
@@ -59,7 +59,7 @@ public class FollowController extends Controller {
     val authToken = getAuthorizationToken(routingContext.request());
     targetRequest.setTargetUserToken(authToken);
 
-    val interactor = getInteractorFactory().createAcceptFollowInteractor();
+    val interactor = getInteractorFactory().getAcceptFollow();
 
     try {
       val relationship = interactor.execute(targetRequest);
@@ -82,7 +82,7 @@ public class FollowController extends Controller {
     val authToken = getAuthorizationToken(routingContext.request());
     targetRequest.setTargetUserToken(authToken);
 
-    val interactor = getInteractorFactory().createCancelFollowInteractor();
+    val interactor = getInteractorFactory().getCancelFollow();
 
     try {
       val relationship = interactor.execute(targetRequest);
@@ -105,7 +105,7 @@ public class FollowController extends Controller {
     val authToken = getAuthorizationToken(routingContext.request());
     originRequest.setOriginUserToken(authToken);
 
-    val interactor = getInteractorFactory().createUnFollowInteractor();
+    val interactor = getInteractorFactory().getUnFollow();
 
     try {
       val relationship = interactor.execute(originRequest);
@@ -128,7 +128,7 @@ public class FollowController extends Controller {
     val authToken = getAuthorizationToken(routingContext.request());
     targetRequest.setTargetUserToken(authToken);
 
-    val interactor = getInteractorFactory().createGetFollowRequests();
+    val interactor = getInteractorFactory().getGetFollow();
 
     try {
       val relationships = interactor.execute(targetRequest);

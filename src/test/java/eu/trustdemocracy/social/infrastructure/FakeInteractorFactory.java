@@ -4,6 +4,7 @@ import com.github.fakemongo.Fongo;
 import com.mongodb.client.MongoDatabase;
 import eu.trustdemocracy.social.core.interactors.event.CreateEvent;
 import eu.trustdemocracy.social.core.interactors.event.GetEvents;
+import eu.trustdemocracy.social.core.interactors.relationship.GetRelationships;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.AcceptFollow;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.CancelFollow;
 import eu.trustdemocracy.social.core.interactors.relationship.follow.FollowUser;
@@ -25,63 +26,68 @@ public class FakeInteractorFactory implements InteractorFactory {
   private MongoDatabase db;
 
   @Override
-  public CreateEvent createCreateEventInteractor() {
+  public CreateEvent getCreateEvent() {
     return new CreateEvent(getFakeEventDAO());
   }
 
   @Override
-  public GetEvents createGetEventsInteractor() {
+  public GetEvents getGetEvents() {
     return new GetEvents(getFakeEventDAO(), getFakeRelationshipDAO());
   }
 
   @Override
-  public FollowUser createFollowUserInteractor() {
+  public FollowUser getFollowUser() {
     return new FollowUser(getFakeRelationshipDAO());
   }
 
   @Override
-  public AcceptFollow createAcceptFollowInteractor() {
+  public AcceptFollow getAcceptFollow() {
     return new AcceptFollow(getFakeRelationshipDAO());
   }
 
   @Override
-  public CancelFollow createCancelFollowInteractor() {
+  public CancelFollow getCancelFollow() {
     return new CancelFollow(getFakeRelationshipDAO());
   }
 
   @Override
-  public UnFollow createUnFollowInteractor() {
+  public UnFollow getUnFollow() {
     return new UnFollow(getFakeRelationshipDAO());
   }
 
   @Override
-  public GetFollowRequests createGetFollowRequests() {
+  public GetFollowRequests getGetFollow() {
     return new GetFollowRequests(getFakeRelationshipDAO());
   }
 
   @Override
-  public TrustUser createTrustUserInteractor() {
+  public TrustUser getTrustUser() {
     return new TrustUser(getFakeRelationshipDAO());
   }
 
   @Override
-  public AcceptTrust createAcceptTrustInteractor() {
+  public AcceptTrust getAcceptTrust() {
     return new AcceptTrust(getFakeRelationshipDAO());
   }
 
   @Override
-  public CancelTrust createCancelTrustInteractor() {
+  public CancelTrust getCancelTrust() {
     return new CancelTrust(getFakeRelationshipDAO());
   }
 
   @Override
-  public UnTrust createUnTrustnteractor() {
+  public UnTrust getUnTrust() {
     return new UnTrust(getFakeRelationshipDAO());
   }
 
   @Override
-  public GetTrustRequests createGetTrustRequests() {
+  public GetTrustRequests getGetTrustRequests() {
     return new GetTrustRequests(getFakeRelationshipDAO());
+  }
+
+  @Override
+  public GetRelationships getGetRelationships() {
+    return new GetRelationships(getFakeRelationshipDAO());
   }
 
   private RelationshipDAO getFakeRelationshipDAO() {
