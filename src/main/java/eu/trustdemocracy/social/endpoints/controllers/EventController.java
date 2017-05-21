@@ -41,7 +41,7 @@ public class EventController extends Controller {
   private void getEvents(RoutingContext routingContext) {
     GetEventsRequestDTO getEventsRequest;
     try {
-      getEventsRequest = decodeGetEventsRequest(routingContext.getBodyAsJson());
+      getEventsRequest = new GetEventsRequestDTO();
     } catch (Exception e) {
       serveBadRequest(routingContext);
       return;
@@ -63,7 +63,7 @@ public class EventController extends Controller {
   private void getEventsByUser(RoutingContext routingContext) {
     GetEventsRequestDTO getEventsRequest;
     try {
-      getEventsRequest = decodeGetEventsRequest(routingContext.getBodyAsJson());
+      getEventsRequest = new GetEventsRequestDTO();
       getEventsRequest.setTargetUserId(UUID.fromString(routingContext.pathParam("userId")));
     } catch (Exception e) {
       serveBadRequest(routingContext);
@@ -88,10 +88,5 @@ public class EventController extends Controller {
         .setUserId(UUID.fromString(object.getString("userId")))
         .setTimestamp(object.getLong("timestamp"))
         .setSerializedContent(object.getJsonObject("serializedContent"));
-  }
-
-  private GetEventsRequestDTO decodeGetEventsRequest(JsonObject object) {
-    return new GetEventsRequestDTO()
-        .setUserToken(object.getString("userToken"));
   }
 }
