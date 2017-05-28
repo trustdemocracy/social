@@ -5,6 +5,7 @@ import eu.trustdemocracy.social.core.entities.RelationshipStatus;
 import eu.trustdemocracy.social.core.entities.RelationshipType;
 import eu.trustdemocracy.social.core.entities.util.RelationshipMapper;
 import eu.trustdemocracy.social.core.interactors.Interactor;
+import eu.trustdemocracy.social.core.interactors.exceptions.ResourceNotFoundException;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.RelationshipResponseDTO;
 import eu.trustdemocracy.social.gateways.RelationshipRepository;
@@ -28,7 +29,7 @@ public class AcceptTrust implements
     val foundRelationship = relationshipRepository.find(relationship);
 
     if (foundRelationship == null) {
-      throw new RuntimeException("The relationship must exist to be accepted");
+      throw new ResourceNotFoundException("The relationship must exist to be accepted");
     }
 
     val followRelationship = new Relationship()

@@ -1,6 +1,7 @@
 package eu.trustdemocracy.social.endpoints.controllers;
 
 import eu.trustdemocracy.social.core.interactors.exceptions.InvalidTokenException;
+import eu.trustdemocracy.social.core.interactors.exceptions.ResourceNotFoundException;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
 import eu.trustdemocracy.social.endpoints.App;
@@ -66,6 +67,8 @@ public class TrustController extends Controller {
       serveJsonResponse(routingContext, 200, Json.encodePrettily(relationship));
     } catch (InvalidTokenException e) {
       serveBadCredentials(routingContext);
+    } catch (ResourceNotFoundException e) {
+      serveNotFound(routingContext);
     }
   }
 
@@ -89,6 +92,8 @@ public class TrustController extends Controller {
       serveJsonResponse(routingContext, 200, Json.encodePrettily(relationship));
     } catch (InvalidTokenException e) {
       serveBadCredentials(routingContext);
+    } catch (ResourceNotFoundException e) {
+      serveNotFound(routingContext);
     }
   }
 
@@ -112,6 +117,8 @@ public class TrustController extends Controller {
       serveJsonResponse(routingContext, 200, Json.encodePrettily(relationship));
     } catch (InvalidTokenException e) {
       serveBadCredentials(routingContext);
+    } catch (ResourceNotFoundException e) {
+      serveNotFound(routingContext);
     }
   }
 
