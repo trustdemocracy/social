@@ -8,8 +8,8 @@ import eu.trustdemocracy.social.core.entities.RelationshipType;
 import eu.trustdemocracy.social.core.interactors.exceptions.InvalidTokenException;
 import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
-import eu.trustdemocracy.social.gateways.RelationshipDAO;
-import eu.trustdemocracy.social.gateways.fake.FakeRelationshipDAO;
+import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
+import eu.trustdemocracy.social.gateways.repositories.fake.FakeRelationshipRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 public class FollowUserTest {
 
   private static List<OriginRelationshipRequestDTO> inputRelationships;
-  private RelationshipDAO relationshipDAO;
+  private RelationshipRepository relationshipRepository;
   private UUID originUserId = UUID.randomUUID();
   private String originUserUsername = "username";
 
@@ -29,7 +29,7 @@ public class FollowUserTest {
   public void init() throws JoseException {
     TokenUtils.generateKeys();
 
-    relationshipDAO = new FakeRelationshipDAO();
+    relationshipRepository = new FakeRelationshipRepository();
     inputRelationships = new ArrayList<>();
 
     for (int i = 0; i < 10; i++) {
@@ -45,14 +45,14 @@ public class FollowUserTest {
         .setOriginUserToken("");
 
     assertThrows(InvalidTokenException.class,
-        () -> new FollowUser(relationshipDAO).execute(inputRelationship));
+        () -> new FollowUser(relationshipRepository).execute(inputRelationship));
   }
 
   @Test
   public void followUser() {
     val inputRelationship = inputRelationships.get(0);
 
-    val responseRelationship = new FollowUser(relationshipDAO).execute(inputRelationship);
+    val responseRelationship = new FollowUser(relationshipRepository).execute(inputRelationship);
 
     assertEquals(originUserId, responseRelationship.getOriginUserId());
     assertEquals(originUserUsername, responseRelationship.getOriginUserUsername());

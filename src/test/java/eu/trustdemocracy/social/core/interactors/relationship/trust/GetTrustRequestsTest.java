@@ -10,8 +10,8 @@ import eu.trustdemocracy.social.core.interactors.exceptions.InvalidTokenExceptio
 import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
-import eu.trustdemocracy.social.gateways.RelationshipDAO;
-import eu.trustdemocracy.social.gateways.fake.FakeRelationshipDAO;
+import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
+import eu.trustdemocracy.social.gateways.repositories.fake.FakeRelationshipRepository;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 
 public class GetTrustRequestsTest {
 
-  private RelationshipDAO relationshipDAO;
+  private RelationshipRepository relationshipRepository;
   private Set<UUID> originUserIds = new HashSet<>();
   private UUID targetUserId = UUID.randomUUID();
   private String targetUserUsername = "targetUsername";
@@ -33,8 +33,8 @@ public class GetTrustRequestsTest {
   public void init() throws JoseException {
     TokenUtils.generateKeys();
 
-    relationshipDAO = new FakeRelationshipDAO();
-    val interactor = new TrustUser(relationshipDAO);
+    relationshipRepository = new FakeRelationshipRepository();
+    val interactor = new TrustUser(relationshipRepository);
     for (int i = 0; i < REQUESTS_COUNT; i++) {
       val userId = UUID.randomUUID();
       originUserIds.add(userId);
@@ -51,7 +51,7 @@ public class GetTrustRequestsTest {
         .setTargetUserToken("");
 
     assertThrows(InvalidTokenException.class,
-        () -> new GetTrustRequests(relationshipDAO).execute(targetRelationship));
+        () -> new GetTrustRequests(relationshipRepository).execute(targetRelationship));
   }
 
   @Test
@@ -59,7 +59,7 @@ public class GetTrustRequestsTest {
     val targetRelationship = new TargetRelationshipRequestDTO()
         .setTargetUserToken(TokenUtils.createToken(targetUserId, targetUserUsername));
 
-    val responseRelationships = new GetTrustRequests(relationshipDAO)
+    val responseRelationships = new GetTrustRequests(relationshipRepository)
         .execute(targetRelationship)
         .getRelationships();
 

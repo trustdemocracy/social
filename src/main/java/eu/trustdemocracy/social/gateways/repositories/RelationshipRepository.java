@@ -1,4 +1,4 @@
-package eu.trustdemocracy.social.gateways;
+package eu.trustdemocracy.social.gateways.repositories;
 
 import eu.trustdemocracy.social.core.entities.Relationship;
 import eu.trustdemocracy.social.core.entities.RelationshipStatus;
@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public interface RelationshipDAO {
+public interface RelationshipRepository {
 
   Relationship create(Relationship relationship);
 

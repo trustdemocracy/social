@@ -6,15 +6,15 @@ import eu.trustdemocracy.social.core.entities.util.RelationshipMapper;
 import eu.trustdemocracy.social.core.interactors.Interactor;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.RelationshipResponseDTO;
-import eu.trustdemocracy.social.gateways.RelationshipDAO;
+import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
 import lombok.val;
 
 public class TrustUser implements Interactor<OriginRelationshipRequestDTO, RelationshipResponseDTO> {
 
-  private RelationshipDAO relationshipDAO;
+  private RelationshipRepository relationshipRepository;
 
-  public TrustUser(RelationshipDAO relationshipDAO) {
-    this.relationshipDAO = relationshipDAO;
+  public TrustUser(RelationshipRepository relationshipRepository) {
+    this.relationshipRepository = relationshipRepository;
   }
 
   @Override
@@ -23,6 +23,6 @@ public class TrustUser implements Interactor<OriginRelationshipRequestDTO, Relat
     val relationship = RelationshipMapper.createEntity(originRelationshipRequestDTO);
     relationship.setRelationshipType(RelationshipType.TRUST);
     relationship.setRelationshipStatus(RelationshipStatus.PENDING);
-    return RelationshipMapper.createResponse(relationshipDAO.create(relationship));
+    return RelationshipMapper.createResponse(relationshipRepository.create(relationship));
   }
 }

@@ -3,17 +3,18 @@ package eu.trustdemocracy.social.core.interactors.relationship.follow;
 import eu.trustdemocracy.social.core.entities.RelationshipType;
 import eu.trustdemocracy.social.core.entities.util.RelationshipMapper;
 import eu.trustdemocracy.social.core.interactors.Interactor;
+import eu.trustdemocracy.social.core.interactors.exceptions.ResourceNotFoundException;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.RelationshipResponseDTO;
-import eu.trustdemocracy.social.gateways.RelationshipDAO;
+import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
 import lombok.val;
 
 public class UnFollow implements Interactor<OriginRelationshipRequestDTO, RelationshipResponseDTO> {
 
-  private RelationshipDAO relationshipDAO;
+  private RelationshipRepository relationshipRepository;
 
-  public UnFollow(RelationshipDAO relationshipDAO) {
-    this.relationshipDAO = relationshipDAO;
+  public UnFollow(RelationshipRepository relationshipRepository) {
+    this.relationshipRepository = relationshipRepository;
   }
 
   @Override
@@ -22,12 +23,12 @@ public class UnFollow implements Interactor<OriginRelationshipRequestDTO, Relati
     val relationship = RelationshipMapper.createEntity(originRelationshipRequestDTO);
     relationship.setRelationshipType(RelationshipType.FOLLOW);
 
-    val foundRelationship = relationshipDAO.find(relationship);
+    val foundRelationship = relationshipRepository.find(relationship);
 
     if (foundRelationship == null) {
-      throw new RuntimeException("The relationship must exist to be removed");
+      throw new ResourceNotFoundException("The relationship must exist to be removed");
     }
 
-    return RelationshipMapper.createResponse(relationshipDAO.remove(foundRelationship));
+    return RelationshipMapper.createResponse(relationshipRepository.remove(foundRelationship));
   }
 }

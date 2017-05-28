@@ -9,8 +9,8 @@ import eu.trustdemocracy.social.core.entities.util.UserMapper;
 import eu.trustdemocracy.social.core.interactors.Interactor;
 import eu.trustdemocracy.social.core.models.request.GetEventsRequestDTO;
 import eu.trustdemocracy.social.core.models.response.GetEventsResponseDTO;
-import eu.trustdemocracy.social.gateways.EventDAO;
-import eu.trustdemocracy.social.gateways.RelationshipDAO;
+import eu.trustdemocracy.social.gateways.repositories.EventRepository;
+import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -21,18 +21,18 @@ import lombok.val;
 
 public class GetEvents implements Interactor<GetEventsRequestDTO, GetEventsResponseDTO> {
 
-  private EventDAO eventDAO;
-  private RelationshipDAO relationshipDAO;
+  private EventRepository eventRepository;
+  private RelationshipRepository relationshipRepository;
 
-  public GetEvents(EventDAO eventDAO, RelationshipDAO relationshipDAO) {
-    this.eventDAO = eventDAO;
-    this.relationshipDAO = relationshipDAO;
+  public GetEvents(EventRepository eventRepository, RelationshipRepository relationshipRepository) {
+    this.eventRepository = eventRepository;
+    this.relationshipRepository = relationshipRepository;
   }
 
   @Override
   public GetEventsResponseDTO execute(GetEventsRequestDTO getEventsRequestDTO) {
     val user = UserMapper.createEntity(getEventsRequestDTO.getUserToken());
-    val followed = relationshipDAO.getAllOriginRelationships(user.getId(), RelationshipType.FOLLOW);
+    val followed = relationshipRepository.getAllOriginRelationships(user.getId(), RelationshipType.FOLLOW);
     user.setFollowedUsers(followed);
 
     val events = getEvents(user, getEventsRequestDTO.getTargetUserId());
@@ -51,7 +51,7 @@ public class GetEvents implements Interactor<GetEventsRequestDTO, GetEventsRespo
     val targetIds = new HashSet<UUID>();
     targetIds.add(targetUserId);
 
-    return eventDAO.getEvents(targetIds);
+    return eventRepository.getEvents(targetIds);
   }
 
   private List<Event> getTimeline(User user) {
@@ -63,6 +63,6 @@ public class GetEvents implements Interactor<GetEventsRequestDTO, GetEventsRespo
 
     followedUsersIds.add(user.getId());
 
-    return eventDAO.getEvents(followedUsersIds);
+    return eventRepository.getEvents(followedUsersIds);
   }
 }

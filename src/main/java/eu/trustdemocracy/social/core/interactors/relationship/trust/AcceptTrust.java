@@ -5,18 +5,22 @@ import eu.trustdemocracy.social.core.entities.RelationshipStatus;
 import eu.trustdemocracy.social.core.entities.RelationshipType;
 import eu.trustdemocracy.social.core.entities.util.RelationshipMapper;
 import eu.trustdemocracy.social.core.interactors.Interactor;
+import eu.trustdemocracy.social.core.interactors.exceptions.ResourceNotFoundException;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.RelationshipResponseDTO;
-import eu.trustdemocracy.social.gateways.RelationshipDAO;
+import eu.trustdemocracy.social.gateways.out.RankerGateway;
+import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
 import lombok.val;
 
 public class AcceptTrust implements
     Interactor<TargetRelationshipRequestDTO, RelationshipResponseDTO> {
 
-  private RelationshipDAO relationshipDAO;
+  private RelationshipRepository relationshipRepository;
+  private RankerGateway rankerGateway;
 
-  public AcceptTrust(RelationshipDAO relationshipDAO) {
-    this.relationshipDAO = relationshipDAO;
+  public AcceptTrust(RelationshipRepository relationshipRepository, RankerGateway rankerGateway) {
+    this.relationshipRepository = relationshipRepository;
+    this.rankerGateway = rankerGateway;
   }
 
   @Override
@@ -25,21 +29,23 @@ public class AcceptTrust implements
     val relationship = RelationshipMapper.createEntity(targetRelationshipRequestDTO);
     relationship.setRelationshipType(RelationshipType.TRUST);
 
-    val foundRelationship = relationshipDAO.find(relationship);
+    val foundRelationship = relationshipRepository.find(relationship);
 
     if (foundRelationship == null) {
-      throw new RuntimeException("The relationship must exist to be accepted");
+      throw new ResourceNotFoundException("The relationship must exist to be accepted");
     }
+
+    rankerGateway.addRelationship(foundRelationship);
 
     val followRelationship = new Relationship()
         .setOriginUser(foundRelationship.getOriginUser())
         .setTargetUser(foundRelationship.getTargetUser())
         .setRelationshipType(RelationshipType.FOLLOW)
         .setRelationshipStatus(RelationshipStatus.ACCEPTED);
-    relationshipDAO.create(followRelationship);
+    relationshipRepository.create(followRelationship);
 
     foundRelationship.setTargetUser(relationship.getTargetUser());
     foundRelationship.setRelationshipStatus(RelationshipStatus.ACCEPTED);
-    return RelationshipMapper.createResponse(relationshipDAO.update(foundRelationship));
+    return RelationshipMapper.createResponse(relationshipRepository.update(foundRelationship));
   }
 }

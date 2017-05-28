@@ -13,8 +13,9 @@ import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.RelationshipResponseDTO;
-import eu.trustdemocracy.social.gateways.RelationshipDAO;
-import eu.trustdemocracy.social.gateways.fake.FakeRelationshipDAO;
+import eu.trustdemocracy.social.gateways.out.FakeRankerGateway;
+import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
+import eu.trustdemocracy.social.gateways.repositories.fake.FakeRelationshipRepository;
 import java.util.UUID;
 import lombok.val;
 import org.jose4j.lang.JoseException;
@@ -24,7 +25,8 @@ import org.junit.jupiter.api.Test;
 public class CancelTrustTest {
 
   private static RelationshipResponseDTO acceptedRelationship;
-  private RelationshipDAO relationshipDAO;
+  private RelationshipRepository relationshipRepository;
+  private FakeRankerGateway rankerGateway;
   private UUID originUserId = UUID.randomUUID();
   private String originUserUsername = "username";
   private UUID targetUserId = UUID.randomUUID();
@@ -34,8 +36,9 @@ public class CancelTrustTest {
   public void init() throws JoseException {
     TokenUtils.generateKeys();
 
-    relationshipDAO = new FakeRelationshipDAO();
-    val createdRelationship = new TrustUser(relationshipDAO)
+    relationshipRepository = new FakeRelationshipRepository();
+    rankerGateway = new FakeRankerGateway();
+    val createdRelationship = new TrustUser(relationshipRepository)
         .execute(new OriginRelationshipRequestDTO()
             .setOriginUserToken(TokenUtils.createToken(originUserId, originUserUsername))
             .setTargetUserId(targetUserId));
@@ -44,7 +47,8 @@ public class CancelTrustTest {
         .setOriginUserId(createdRelationship.getOriginUserId())
         .setTargetUserToken(TokenUtils.createToken(targetUserId, targetUserUsername));
 
-    acceptedRelationship = new AcceptTrust(relationshipDAO).execute(toBeAcceptedRelationship);
+    acceptedRelationship = new AcceptTrust(relationshipRepository, rankerGateway)
+        .execute(toBeAcceptedRelationship);
   }
 
   @Test
@@ -54,7 +58,8 @@ public class CancelTrustTest {
         .setTargetUserToken("");
 
     assertThrows(InvalidTokenException.class,
-        () -> new CancelTrust(relationshipDAO).execute(cancelTrustRelationship));
+        () -> new CancelTrust(relationshipRepository, rankerGateway)
+            .execute(cancelTrustRelationship));
   }
 
   @Test
@@ -63,12 +68,12 @@ public class CancelTrustTest {
         .setOriginUserId(acceptedRelationship.getOriginUserId())
         .setTargetUserToken(TokenUtils.createToken(targetUserId, targetUserUsername));
 
-
     val relationship = RelationshipMapper.createEntity(cancelTrustRelationship);
     relationship.setRelationshipType(RelationshipType.TRUST);
-    assertNotNull(relationshipDAO.find(relationship));
-    val responseRelationship = new CancelTrust(relationshipDAO).execute(cancelTrustRelationship);
-    assertNull(relationshipDAO.find(relationship));
+    assertNotNull(relationshipRepository.find(relationship));
+    val responseRelationship = new CancelTrust(relationshipRepository, rankerGateway)
+        .execute(cancelTrustRelationship);
+    assertNull(relationshipRepository.find(relationship));
 
     assertEquals(originUserId, responseRelationship.getOriginUserId());
     assertEquals(originUserUsername, responseRelationship.getOriginUserUsername());
