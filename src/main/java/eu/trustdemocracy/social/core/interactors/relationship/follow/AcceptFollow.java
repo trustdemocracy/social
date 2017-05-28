@@ -8,7 +8,6 @@ import eu.trustdemocracy.social.core.interactors.exceptions.ResourceNotFoundExce
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.RelationshipResponseDTO;
 import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
-import eu.trustdemocracy.social.gateways.out.RankerGateway;
 import lombok.val;
 
 public class AcceptFollow implements
@@ -16,7 +15,7 @@ public class AcceptFollow implements
 
   private RelationshipRepository relationshipRepository;
 
-  public AcceptFollow(RelationshipRepository relationshipRepository, RankerGateway rankerGateway) {
+  public AcceptFollow(RelationshipRepository relationshipRepository) {
     this.relationshipRepository = relationshipRepository;
   }
 
@@ -34,6 +33,7 @@ public class AcceptFollow implements
 
     foundRelationship.setTargetUser(relationship.getTargetUser());
     foundRelationship.setRelationshipStatus(RelationshipStatus.ACCEPTED);
+
     return RelationshipMapper.createResponse(relationshipRepository.update(foundRelationship));
   }
 }

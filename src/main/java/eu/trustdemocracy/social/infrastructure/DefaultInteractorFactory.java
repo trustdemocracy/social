@@ -14,6 +14,7 @@ import eu.trustdemocracy.social.core.interactors.relationship.trust.GetTrustRequ
 import eu.trustdemocracy.social.core.interactors.relationship.trust.TrustUser;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.UnTrust;
 import eu.trustdemocracy.social.gateways.out.RankerGateway;
+import eu.trustdemocracy.social.gateways.out.RankerGatewayImpl;
 import eu.trustdemocracy.social.gateways.repositories.EventRepository;
 import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
 
@@ -48,12 +49,12 @@ public class DefaultInteractorFactory implements InteractorFactory {
 
   @Override
   public AcceptFollow getAcceptFollow() {
-    return new AcceptFollow(getRelationshipRepository(), getRankerGateway() );
+    return new AcceptFollow(getRelationshipRepository());
   }
 
   @Override
   public CancelFollow getCancelFollow() {
-    return new CancelFollow(getRelationshipRepository(), getRankerGateway() );
+    return new CancelFollow(getRelationshipRepository());
   }
 
   @Override
@@ -105,6 +106,6 @@ public class DefaultInteractorFactory implements InteractorFactory {
   }
 
   private RankerGateway getRankerGateway() {
-    return null;
+    return new RankerGatewayImpl();
   }
 }

@@ -7,7 +7,6 @@ import eu.trustdemocracy.social.core.interactors.exceptions.ResourceNotFoundExce
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.RelationshipResponseDTO;
 import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
-import eu.trustdemocracy.social.gateways.out.RankerGateway;
 import lombok.val;
 
 public class CancelFollow implements
@@ -15,7 +14,7 @@ public class CancelFollow implements
 
   private RelationshipRepository relationshipRepository;
 
-  public CancelFollow(RelationshipRepository relationshipRepository, RankerGateway rankerGateway) {
+  public CancelFollow(RelationshipRepository relationshipRepository) {
     this.relationshipRepository = relationshipRepository;
   }
 

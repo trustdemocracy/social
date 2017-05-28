@@ -15,6 +15,7 @@ import eu.trustdemocracy.social.core.interactors.relationship.trust.CancelTrust;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.GetTrustRequests;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.TrustUser;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.UnTrust;
+import eu.trustdemocracy.social.gateways.out.FakeRankerGateway;
 import eu.trustdemocracy.social.gateways.out.RankerGateway;
 import eu.trustdemocracy.social.gateways.repositories.EventRepository;
 import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
@@ -43,12 +44,12 @@ public class FakeInteractorFactory implements InteractorFactory {
 
   @Override
   public AcceptFollow getAcceptFollow() {
-    return new AcceptFollow(getFakeRelationshipRepository(), getRankerGateway());
+    return new AcceptFollow(getFakeRelationshipRepository());
   }
 
   @Override
   public CancelFollow getCancelFollow() {
-    return new CancelFollow(getFakeRelationshipRepository(), getRankerGateway());
+    return new CancelFollow(getFakeRelationshipRepository());
   }
 
   @Override
@@ -100,7 +101,7 @@ public class FakeInteractorFactory implements InteractorFactory {
   }
 
   private RankerGateway getRankerGateway() {
-    return null;
+    return new FakeRankerGateway();
   }
 
   private MongoDatabase getDB() {

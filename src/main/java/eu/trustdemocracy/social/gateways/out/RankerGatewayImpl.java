@@ -2,7 +2,7 @@ package eu.trustdemocracy.social.gateways.out;
 
 import eu.trustdemocracy.social.core.entities.Relationship;
 
-public class FakeRankerGateway implements RankerGateway {
+public class RankerGatewayImpl implements RankerGateway {
 
   @Override
   public void addRelationship(Relationship relationship) {

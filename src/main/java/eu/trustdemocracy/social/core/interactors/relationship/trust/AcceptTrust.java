@@ -8,17 +8,19 @@ import eu.trustdemocracy.social.core.interactors.Interactor;
 import eu.trustdemocracy.social.core.interactors.exceptions.ResourceNotFoundException;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.RelationshipResponseDTO;
-import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
 import eu.trustdemocracy.social.gateways.out.RankerGateway;
+import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
 import lombok.val;
 
 public class AcceptTrust implements
     Interactor<TargetRelationshipRequestDTO, RelationshipResponseDTO> {
 
   private RelationshipRepository relationshipRepository;
+  private RankerGateway rankerGateway;
 
   public AcceptTrust(RelationshipRepository relationshipRepository, RankerGateway rankerGateway) {
     this.relationshipRepository = relationshipRepository;
+    this.rankerGateway = rankerGateway;
   }
 
   @Override
@@ -32,6 +34,8 @@ public class AcceptTrust implements
     if (foundRelationship == null) {
       throw new ResourceNotFoundException("The relationship must exist to be accepted");
     }
+
+    rankerGateway.addRelationship(foundRelationship);
 
     val followRelationship = new Relationship()
         .setOriginUser(foundRelationship.getOriginUser())

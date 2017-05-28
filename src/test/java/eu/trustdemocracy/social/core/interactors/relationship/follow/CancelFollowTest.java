@@ -13,7 +13,6 @@ import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.RelationshipResponseDTO;
-import eu.trustdemocracy.social.gateways.out.FakeRankerGateway;
 import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
 import eu.trustdemocracy.social.gateways.repositories.fake.FakeRelationshipRepository;
 import java.util.UUID;
@@ -26,7 +25,6 @@ public class CancelFollowTest {
 
   private static RelationshipResponseDTO acceptedRelationship;
   private RelationshipRepository relationshipRepository;
-  private FakeRankerGateway rankerGateway;
   private UUID originUserId = UUID.randomUUID();
   private String originUserUsername = "username";
   private UUID targetUserId = UUID.randomUUID();
@@ -37,7 +35,6 @@ public class CancelFollowTest {
     TokenUtils.generateKeys();
 
     relationshipRepository = new FakeRelationshipRepository();
-    rankerGateway = new FakeRankerGateway();
     val createdRelationship = new FollowUser(relationshipRepository)
         .execute(new OriginRelationshipRequestDTO()
             .setOriginUserToken(TokenUtils.createToken(originUserId, originUserUsername))
@@ -47,7 +44,7 @@ public class CancelFollowTest {
         .setOriginUserId(createdRelationship.getOriginUserId())
         .setTargetUserToken(TokenUtils.createToken(targetUserId, targetUserUsername));
 
-    acceptedRelationship = new AcceptFollow(relationshipRepository, rankerGateway)
+    acceptedRelationship = new AcceptFollow(relationshipRepository)
         .execute(toBeAcceptedRelationship);
   }
 
@@ -58,7 +55,7 @@ public class CancelFollowTest {
         .setTargetUserToken("");
 
     assertThrows(InvalidTokenException.class,
-        () -> new CancelFollow(relationshipRepository, rankerGateway)
+        () -> new CancelFollow(relationshipRepository)
             .execute(cancelFollowRelationship));
   }
 
@@ -71,7 +68,7 @@ public class CancelFollowTest {
     val relationship = RelationshipMapper.createEntity(cancelFollowRelationship);
     relationship.setRelationshipType(RelationshipType.FOLLOW);
     assertNotNull(relationshipRepository.find(relationship));
-    val responseRelationship = new CancelFollow(relationshipRepository, rankerGateway)
+    val responseRelationship = new CancelFollow(relationshipRepository)
         .execute(cancelFollowRelationship);
     assertNull(relationshipRepository.find(relationship));
 
