@@ -6,16 +6,16 @@ import eu.trustdemocracy.social.core.entities.util.UserMapper;
 import eu.trustdemocracy.social.core.interactors.Interactor;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.GetRelationshipsResponseDTO;
-import eu.trustdemocracy.social.gateways.RelationshipDAO;
+import eu.trustdemocracy.social.gateways.RelationshipRepository;
 import java.util.List;
 import lombok.val;
 
 public class GetRelationships implements Interactor<OriginRelationshipRequestDTO, GetRelationshipsResponseDTO> {
 
-  private RelationshipDAO relationshipDAO;
+  private RelationshipRepository relationshipRepository;
 
-  public GetRelationships(RelationshipDAO relationshipDAO) {
-    this.relationshipDAO = relationshipDAO;
+  public GetRelationships(RelationshipRepository relationshipRepository) {
+    this.relationshipRepository = relationshipRepository;
   }
 
   @Override
@@ -25,9 +25,9 @@ public class GetRelationships implements Interactor<OriginRelationshipRequestDTO
     val targetId = requestDTO.getTargetUserId();
     List<Relationship> relationships;
     if (targetId != null) {
-      relationships = relationshipDAO.getRelationships(user.getId(), requestDTO.getTargetUserId());
+      relationships = relationshipRepository.getRelationships(user.getId(), requestDTO.getTargetUserId());
     } else {
-      relationships = relationshipDAO.getRelationships(user.getId());
+      relationships = relationshipRepository.getRelationships(user.getId());
     }
 
     return RelationshipMapper.createResponse(relationships);

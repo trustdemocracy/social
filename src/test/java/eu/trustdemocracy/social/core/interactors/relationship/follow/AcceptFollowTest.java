@@ -10,8 +10,8 @@ import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.RelationshipResponseDTO;
-import eu.trustdemocracy.social.gateways.RelationshipDAO;
-import eu.trustdemocracy.social.gateways.fake.FakeRelationshipDAO;
+import eu.trustdemocracy.social.gateways.RelationshipRepository;
+import eu.trustdemocracy.social.gateways.fake.FakeRelationshipRepository;
 import java.util.UUID;
 import lombok.val;
 import org.jose4j.lang.JoseException;
@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 public class AcceptFollowTest {
 
   private static RelationshipResponseDTO createdRelationship;
-  private RelationshipDAO relationshipDAO;
+  private RelationshipRepository relationshipRepository;
   private UUID originUserId = UUID.randomUUID();
   private String originUserUsername = "username";
   private UUID targetUserId = UUID.randomUUID();
@@ -31,8 +31,8 @@ public class AcceptFollowTest {
   public void init() throws JoseException {
     TokenUtils.generateKeys();
 
-    relationshipDAO = new FakeRelationshipDAO();
-    createdRelationship = new FollowUser(relationshipDAO)
+    relationshipRepository = new FakeRelationshipRepository();
+    createdRelationship = new FollowUser(relationshipRepository)
         .execute(new OriginRelationshipRequestDTO()
             .setOriginUserToken(TokenUtils.createToken(originUserId, originUserUsername))
             .setTargetUserId(targetUserId));
@@ -45,7 +45,7 @@ public class AcceptFollowTest {
         .setTargetUserToken("");
 
     assertThrows(InvalidTokenException.class,
-        () -> new AcceptFollow(relationshipDAO).execute(toBeAcceptedRelationship));
+        () -> new AcceptFollow(relationshipRepository).execute(toBeAcceptedRelationship));
   }
 
   @Test
@@ -54,7 +54,7 @@ public class AcceptFollowTest {
         .setOriginUserId(createdRelationship.getOriginUserId())
         .setTargetUserToken(TokenUtils.createToken(targetUserId, targetUserUsername));
 
-    val responseRelationship = new AcceptFollow(relationshipDAO).execute(toBeAcceptedRelationship);
+    val responseRelationship = new AcceptFollow(relationshipRepository).execute(toBeAcceptedRelationship);
 
     assertEquals(originUserId, responseRelationship.getOriginUserId());
     assertEquals(originUserUsername, responseRelationship.getOriginUserUsername());

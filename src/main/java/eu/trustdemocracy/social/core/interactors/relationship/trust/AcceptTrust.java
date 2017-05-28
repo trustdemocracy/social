@@ -7,16 +7,16 @@ import eu.trustdemocracy.social.core.entities.util.RelationshipMapper;
 import eu.trustdemocracy.social.core.interactors.Interactor;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.RelationshipResponseDTO;
-import eu.trustdemocracy.social.gateways.RelationshipDAO;
+import eu.trustdemocracy.social.gateways.RelationshipRepository;
 import lombok.val;
 
 public class AcceptTrust implements
     Interactor<TargetRelationshipRequestDTO, RelationshipResponseDTO> {
 
-  private RelationshipDAO relationshipDAO;
+  private RelationshipRepository relationshipRepository;
 
-  public AcceptTrust(RelationshipDAO relationshipDAO) {
-    this.relationshipDAO = relationshipDAO;
+  public AcceptTrust(RelationshipRepository relationshipRepository) {
+    this.relationshipRepository = relationshipRepository;
   }
 
   @Override
@@ -25,7 +25,7 @@ public class AcceptTrust implements
     val relationship = RelationshipMapper.createEntity(targetRelationshipRequestDTO);
     relationship.setRelationshipType(RelationshipType.TRUST);
 
-    val foundRelationship = relationshipDAO.find(relationship);
+    val foundRelationship = relationshipRepository.find(relationship);
 
     if (foundRelationship == null) {
       throw new RuntimeException("The relationship must exist to be accepted");
@@ -36,10 +36,10 @@ public class AcceptTrust implements
         .setTargetUser(foundRelationship.getTargetUser())
         .setRelationshipType(RelationshipType.FOLLOW)
         .setRelationshipStatus(RelationshipStatus.ACCEPTED);
-    relationshipDAO.create(followRelationship);
+    relationshipRepository.create(followRelationship);
 
     foundRelationship.setTargetUser(relationship.getTargetUser());
     foundRelationship.setRelationshipStatus(RelationshipStatus.ACCEPTED);
-    return RelationshipMapper.createResponse(relationshipDAO.update(foundRelationship));
+    return RelationshipMapper.createResponse(relationshipRepository.update(foundRelationship));
   }
 }

@@ -10,7 +10,7 @@ import com.github.fakemongo.Fongo;
 import com.mongodb.Block;
 import com.mongodb.client.MongoCollection;
 import eu.trustdemocracy.social.core.entities.Event;
-import eu.trustdemocracy.social.gateways.EventDAO;
+import eu.trustdemocracy.social.gateways.EventRepository;
 import io.vertx.core.json.JsonObject;
 import java.util.HashSet;
 import java.util.List;
@@ -21,17 +21,17 @@ import org.bson.Document;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class MongoEventDAOTest {
+public class MongoEventRepositoryTest {
 
   private MongoCollection<Document> collection;
-  private EventDAO eventDAO;
+  private EventRepository eventRepository;
 
   @BeforeEach
   public void init() {
     val fongo = new Fongo("test server");
     val db = fongo.getDatabase("test_database");
     collection = db.getCollection("events");
-    eventDAO = new MongoEventDAO(db);
+    eventRepository = new MongoEventRepository(db);
   }
 
   @Test
@@ -40,7 +40,7 @@ public class MongoEventDAOTest {
 
     assertEquals(0L, collection.count());
 
-    val createdEvent = eventDAO.create(event);
+    val createdEvent = eventRepository.create(event);
     event.setId(createdEvent.getId());
     assertEquals(event, createdEvent);
     assertNotEquals(0L, collection.count(eq("id", event.getId().toString())));
@@ -58,7 +58,7 @@ public class MongoEventDAOTest {
     Set<Event> createdEvents = new HashSet<>();
 
     for (int i = 0; i < 30; i++) {
-      val event = eventDAO.create(getRandomEvent());
+      val event = eventRepository.create(getRandomEvent());
       if (i % 3 == 0) {
         ids.add(event.getUserId());
         createdEvents.add(event);
@@ -66,7 +66,7 @@ public class MongoEventDAOTest {
     }
     assertEquals(30L, collection.count());
 
-    List<Event> events = eventDAO.getEvents(ids);
+    List<Event> events = eventRepository.getEvents(ids);
     assertEquals(10, events.size());
 
     for (val event : events) {

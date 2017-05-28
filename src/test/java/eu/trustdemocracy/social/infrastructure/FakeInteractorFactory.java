@@ -15,10 +15,10 @@ import eu.trustdemocracy.social.core.interactors.relationship.trust.CancelTrust;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.GetTrustRequests;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.TrustUser;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.UnTrust;
-import eu.trustdemocracy.social.gateways.EventDAO;
-import eu.trustdemocracy.social.gateways.RelationshipDAO;
-import eu.trustdemocracy.social.gateways.mongo.MongoEventDAO;
-import eu.trustdemocracy.social.gateways.mongo.MongoRelationshipDAO;
+import eu.trustdemocracy.social.gateways.EventRepository;
+import eu.trustdemocracy.social.gateways.RelationshipRepository;
+import eu.trustdemocracy.social.gateways.mongo.MongoEventRepository;
+import eu.trustdemocracy.social.gateways.mongo.MongoRelationshipRepository;
 import lombok.val;
 
 public class FakeInteractorFactory implements InteractorFactory {
@@ -27,75 +27,75 @@ public class FakeInteractorFactory implements InteractorFactory {
 
   @Override
   public CreateEvent getCreateEvent() {
-    return new CreateEvent(getFakeEventDAO());
+    return new CreateEvent(getFakeEventRepository());
   }
 
   @Override
   public GetEvents getGetEvents() {
-    return new GetEvents(getFakeEventDAO(), getFakeRelationshipDAO());
+    return new GetEvents(getFakeEventRepository(), getFakeRelationshipRepository());
   }
 
   @Override
   public FollowUser getFollowUser() {
-    return new FollowUser(getFakeRelationshipDAO());
+    return new FollowUser(getFakeRelationshipRepository());
   }
 
   @Override
   public AcceptFollow getAcceptFollow() {
-    return new AcceptFollow(getFakeRelationshipDAO());
+    return new AcceptFollow(getFakeRelationshipRepository());
   }
 
   @Override
   public CancelFollow getCancelFollow() {
-    return new CancelFollow(getFakeRelationshipDAO());
+    return new CancelFollow(getFakeRelationshipRepository());
   }
 
   @Override
   public UnFollow getUnFollow() {
-    return new UnFollow(getFakeRelationshipDAO());
+    return new UnFollow(getFakeRelationshipRepository());
   }
 
   @Override
   public GetFollowRequests getGetFollow() {
-    return new GetFollowRequests(getFakeRelationshipDAO());
+    return new GetFollowRequests(getFakeRelationshipRepository());
   }
 
   @Override
   public TrustUser getTrustUser() {
-    return new TrustUser(getFakeRelationshipDAO());
+    return new TrustUser(getFakeRelationshipRepository());
   }
 
   @Override
   public AcceptTrust getAcceptTrust() {
-    return new AcceptTrust(getFakeRelationshipDAO());
+    return new AcceptTrust(getFakeRelationshipRepository());
   }
 
   @Override
   public CancelTrust getCancelTrust() {
-    return new CancelTrust(getFakeRelationshipDAO());
+    return new CancelTrust(getFakeRelationshipRepository());
   }
 
   @Override
   public UnTrust getUnTrust() {
-    return new UnTrust(getFakeRelationshipDAO());
+    return new UnTrust(getFakeRelationshipRepository());
   }
 
   @Override
   public GetTrustRequests getGetTrustRequests() {
-    return new GetTrustRequests(getFakeRelationshipDAO());
+    return new GetTrustRequests(getFakeRelationshipRepository());
   }
 
   @Override
   public GetRelationships getGetRelationships() {
-    return new GetRelationships(getFakeRelationshipDAO());
+    return new GetRelationships(getFakeRelationshipRepository());
   }
 
-  private RelationshipDAO getFakeRelationshipDAO() {
-    return new MongoRelationshipDAO(getDB());
+  private RelationshipRepository getFakeRelationshipRepository() {
+    return new MongoRelationshipRepository(getDB());
   }
 
-  private EventDAO getFakeEventDAO() {
-    return new MongoEventDAO(getDB());
+  private EventRepository getFakeEventRepository() {
+    return new MongoEventRepository(getDB());
   }
 
   private MongoDatabase getDB() {

@@ -3,7 +3,7 @@ package eu.trustdemocracy.social.gateways.fake;
 import eu.trustdemocracy.social.core.entities.Relationship;
 import eu.trustdemocracy.social.core.entities.RelationshipStatus;
 import eu.trustdemocracy.social.core.entities.RelationshipType;
-import eu.trustdemocracy.social.gateways.RelationshipDAO;
+import eu.trustdemocracy.social.gateways.RelationshipRepository;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.UUID;
 import lombok.val;
 
-public class FakeRelationshipDAO implements RelationshipDAO {
+public class FakeRelationshipRepository implements RelationshipRepository {
 
   private List<Relationship> relationships = new ArrayList<>();
 

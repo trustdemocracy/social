@@ -13,6 +13,8 @@ import eu.trustdemocracy.social.core.interactors.relationship.trust.CancelTrust;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.GetTrustRequests;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.TrustUser;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.UnTrust;
+import eu.trustdemocracy.social.gateways.EventRepository;
+import eu.trustdemocracy.social.gateways.RelationshipRepository;
 
 public class DefaultInteractorFactory implements InteractorFactory {
 
@@ -30,66 +32,75 @@ public class DefaultInteractorFactory implements InteractorFactory {
 
   @Override
   public CreateEvent getCreateEvent() {
-    return new CreateEvent(DAOFactory.getEventDAO());
+    return new CreateEvent(getEventRepository());
   }
 
   @Override
   public GetEvents getGetEvents() {
-    return new GetEvents(DAOFactory.getEventDAO(), DAOFactory.getRelationshipDAO());
+    return new GetEvents(getEventRepository(), getRelationshipRepository());
   }
 
   @Override
   public FollowUser getFollowUser() {
-    return new FollowUser(DAOFactory.getRelationshipDAO());
+    return new FollowUser(getRelationshipRepository());
   }
 
   @Override
   public AcceptFollow getAcceptFollow() {
-    return new AcceptFollow(DAOFactory.getRelationshipDAO());
+    return new AcceptFollow(getRelationshipRepository());
   }
 
   @Override
   public CancelFollow getCancelFollow() {
-    return new CancelFollow(DAOFactory.getRelationshipDAO());
+    return new CancelFollow(getRelationshipRepository());
   }
 
   @Override
   public UnFollow getUnFollow() {
-    return new UnFollow(DAOFactory.getRelationshipDAO());
+    return new UnFollow(getRelationshipRepository());
   }
 
   @Override
   public GetFollowRequests getGetFollow() {
-    return new GetFollowRequests(DAOFactory.getRelationshipDAO());
+    return new GetFollowRequests(getRelationshipRepository());
   }
 
   @Override
   public TrustUser getTrustUser() {
-    return new TrustUser(DAOFactory.getRelationshipDAO());
+    return new TrustUser(getRelationshipRepository());
   }
 
   @Override
   public AcceptTrust getAcceptTrust() {
-    return new AcceptTrust(DAOFactory.getRelationshipDAO());
+    return new AcceptTrust(getRelationshipRepository());
   }
 
   @Override
   public CancelTrust getCancelTrust() {
-    return new CancelTrust(DAOFactory.getRelationshipDAO());
+    return new CancelTrust(getRelationshipRepository());
   }
 
   @Override
   public UnTrust getUnTrust() {
-    return new UnTrust(DAOFactory.getRelationshipDAO());
+    return new UnTrust(getRelationshipRepository());
   }
 
   @Override
   public GetTrustRequests getGetTrustRequests() {
-    return new GetTrustRequests(DAOFactory.getRelationshipDAO());
+    return new GetTrustRequests(getRelationshipRepository());
   }
 
   @Override
   public GetRelationships getGetRelationships() {
-    return new GetRelationships(DAOFactory.getRelationshipDAO());
+    return new GetRelationships(getRelationshipRepository());
   }
+
+  private EventRepository getEventRepository() {
+    return RepositoryFactory.getEventRepository();
+  }
+
+  private RelationshipRepository getRelationshipRepository() {
+    return RepositoryFactory.getRelationshipRepository();
+  }
+
 }

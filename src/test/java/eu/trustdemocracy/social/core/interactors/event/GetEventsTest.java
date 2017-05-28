@@ -13,8 +13,8 @@ import eu.trustdemocracy.social.core.models.request.GetEventsRequestDTO;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.EventResponseDTO;
-import eu.trustdemocracy.social.gateways.fake.FakeEventDAO;
-import eu.trustdemocracy.social.gateways.fake.FakeRelationshipDAO;
+import eu.trustdemocracy.social.gateways.fake.FakeEventRepository;
+import eu.trustdemocracy.social.gateways.fake.FakeRelationshipRepository;
 import io.vertx.core.json.JsonObject;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,16 +29,16 @@ import org.junit.jupiter.api.Test;
 public class GetEventsTest {
 
   private static List<EventResponseDTO> createdEvents;
-  private FakeEventDAO eventDAO;
-  private FakeRelationshipDAO relationshipDAO;
+  private FakeEventRepository eventRepository;
+  private FakeRelationshipRepository relationshipRepository;
   private UUID userId = UUID.randomUUID();
   private Map<UUID, Boolean> followedUsersIds;
 
   @BeforeEach
   public void init() throws InterruptedException, JoseException {
     TokenUtils.generateKeys();
-    eventDAO = new FakeEventDAO();
-    relationshipDAO = new FakeRelationshipDAO();
+    eventRepository = new FakeEventRepository();
+    relationshipRepository = new FakeRelationshipRepository();
     createdEvents = new ArrayList<>();
     followedUsersIds = new HashMap<>();
 
@@ -50,7 +50,7 @@ public class GetEventsTest {
       followedUsersIds.put(id, i < 10);
     }
 
-    val createEvent = new CreateEvent(eventDAO);
+    val createEvent = new CreateEvent(eventRepository);
     for (int i = 0; i < 5; i++) {
       val event = new EventRequestDTO()
           .setUserId(userId)
@@ -73,8 +73,8 @@ public class GetEventsTest {
       Thread.sleep(100);
     }
 
-    val followUser = new FollowUser(relationshipDAO);
-    val acceptFollow = new AcceptFollow(relationshipDAO);
+    val followUser = new FollowUser(relationshipRepository);
+    val acceptFollow = new AcceptFollow(relationshipRepository);
 
     for (val followedUserId : followedUsersIds.keySet()) {
       if (followedUsersIds.get(followedUserId)) {
@@ -94,7 +94,7 @@ public class GetEventsTest {
         .setUserToken("");
 
     assertThrows(InvalidTokenException.class,
-        () -> new GetEvents(eventDAO, relationshipDAO).execute(getEventsRequest));
+        () -> new GetEvents(eventRepository, relationshipRepository).execute(getEventsRequest));
   }
 
   @Test
@@ -102,7 +102,7 @@ public class GetEventsTest {
     val getEventsRequest = new GetEventsRequestDTO()
         .setUserToken(TokenUtils.createToken(userId, "originUsername"));
 
-    val eventsDTO = new GetEvents(eventDAO, relationshipDAO).execute(getEventsRequest);
+    val eventsDTO = new GetEvents(eventRepository, relationshipRepository).execute(getEventsRequest);
     val events = eventsDTO.getEvents();
 
     assertNotEquals(0, createdEvents.size());
@@ -126,7 +126,7 @@ public class GetEventsTest {
         .setUserToken(TokenUtils.createToken(userId, "originUsername"))
         .setTargetUserId(userId);
 
-    val eventsDTO = new GetEvents(eventDAO, relationshipDAO).execute(getEventsRequest);
+    val eventsDTO = new GetEvents(eventRepository, relationshipRepository).execute(getEventsRequest);
     val events = eventsDTO.getEvents();
 
     assertNotEquals(0, createdEvents.size());
@@ -158,7 +158,7 @@ public class GetEventsTest {
         .setUserToken(TokenUtils.createToken(userId, "originUsername"))
         .setTargetUserId(followedUserId);
 
-    val eventsDTO = new GetEvents(eventDAO, relationshipDAO).execute(getEventsRequest);
+    val eventsDTO = new GetEvents(eventRepository, relationshipRepository).execute(getEventsRequest);
     val events = eventsDTO.getEvents();
 
     assertNotEquals(0, createdEvents.size());
@@ -190,7 +190,7 @@ public class GetEventsTest {
         .setUserToken(TokenUtils.createToken(userId, "originUsername"))
         .setTargetUserId(followedUserId);
 
-    val eventsDTO = new GetEvents(eventDAO, relationshipDAO).execute(getEventsRequest);
+    val eventsDTO = new GetEvents(eventRepository, relationshipRepository).execute(getEventsRequest);
     val events = eventsDTO.getEvents();
 
     assertNotEquals(0, createdEvents.size());

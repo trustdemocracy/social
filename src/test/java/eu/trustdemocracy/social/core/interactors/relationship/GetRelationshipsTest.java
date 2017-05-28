@@ -8,8 +8,8 @@ import eu.trustdemocracy.social.core.interactors.relationship.follow.FollowUser;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.TrustUser;
 import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
-import eu.trustdemocracy.social.gateways.RelationshipDAO;
-import eu.trustdemocracy.social.gateways.fake.FakeRelationshipDAO;
+import eu.trustdemocracy.social.gateways.RelationshipRepository;
+import eu.trustdemocracy.social.gateways.fake.FakeRelationshipRepository;
 import java.util.UUID;
 import lombok.val;
 import org.jose4j.lang.JoseException;
@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 
 public class GetRelationshipsTest {
 
-  private RelationshipDAO relationshipDAO;
+  private RelationshipRepository relationshipRepository;
   private UUID originUserId = UUID.randomUUID();
   private UUID targetUserId = UUID.randomUUID();
 
@@ -26,9 +26,9 @@ public class GetRelationshipsTest {
   public void init() throws JoseException {
     TokenUtils.generateKeys();
 
-    relationshipDAO = new FakeRelationshipDAO();
+    relationshipRepository = new FakeRelationshipRepository();
 
-    val follow = new FollowUser(relationshipDAO);
+    val follow = new FollowUser(relationshipRepository);
 
     follow.execute(new OriginRelationshipRequestDTO()
         .setOriginUserToken(TokenUtils.createToken(originUserId, "username"))
@@ -53,7 +53,7 @@ public class GetRelationshipsTest {
         .setOriginUserToken(TokenUtils.createToken(UUID.randomUUID(), "username"))
         .setTargetUserId(originUserId));
 
-    val trust = new TrustUser(relationshipDAO);
+    val trust = new TrustUser(relationshipRepository);
 
     trust.execute(new OriginRelationshipRequestDTO()
         .setOriginUserToken(TokenUtils.createToken(originUserId, "username"))
@@ -69,7 +69,7 @@ public class GetRelationshipsTest {
         .setOriginUserToken("");
 
     assertThrows(InvalidTokenException.class,
-        () -> new GetRelationships(relationshipDAO).execute(originRelationship));
+        () -> new GetRelationships(relationshipRepository).execute(originRelationship));
   }
 
   @Test
@@ -77,7 +77,7 @@ public class GetRelationshipsTest {
     val originRelationship = new OriginRelationshipRequestDTO()
         .setOriginUserToken(TokenUtils.createToken(originUserId, "username"));
 
-    val responseRelationships = new GetRelationships(relationshipDAO)
+    val responseRelationships = new GetRelationships(relationshipRepository)
         .execute(originRelationship)
         .getRelationships();
 
@@ -90,7 +90,7 @@ public class GetRelationshipsTest {
         .setOriginUserToken(TokenUtils.createToken(originUserId, "username"))
         .setTargetUserId(targetUserId);
 
-    val responseRelationships = new GetRelationships(relationshipDAO)
+    val responseRelationships = new GetRelationships(relationshipRepository)
         .execute(originRelationship)
         .getRelationships();
 

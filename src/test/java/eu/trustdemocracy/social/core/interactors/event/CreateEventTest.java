@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import eu.trustdemocracy.social.core.models.request.EventRequestDTO;
-import eu.trustdemocracy.social.gateways.fake.FakeEventDAO;
+import eu.trustdemocracy.social.gateways.fake.FakeEventRepository;
 import io.vertx.core.json.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +16,11 @@ import org.junit.jupiter.api.Test;
 public class CreateEventTest {
 
   private static List<EventRequestDTO> inputEvents;
-  private FakeEventDAO eventDAO;
+  private FakeEventRepository eventRepository;
 
   @BeforeEach
   public void init() {
-    eventDAO = new FakeEventDAO();
+    eventRepository = new FakeEventRepository();
     inputEvents = new ArrayList<>();
     for (int i = 0; i < 10; i++) {
       inputEvents.add(new EventRequestDTO()
@@ -37,7 +37,7 @@ public class CreateEventTest {
   public void createEvent() {
     val inputEvent = inputEvents.get(0);
 
-    val interactor = new CreateEvent(eventDAO);
+    val interactor = new CreateEvent(eventRepository);
     val responseEvent = interactor.execute(inputEvent);
 
     assertNotNull(responseEvent.getId());

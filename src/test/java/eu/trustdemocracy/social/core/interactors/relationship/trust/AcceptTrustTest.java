@@ -14,8 +14,8 @@ import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.RelationshipResponseDTO;
-import eu.trustdemocracy.social.gateways.RelationshipDAO;
-import eu.trustdemocracy.social.gateways.fake.FakeRelationshipDAO;
+import eu.trustdemocracy.social.gateways.RelationshipRepository;
+import eu.trustdemocracy.social.gateways.fake.FakeRelationshipRepository;
 import java.util.UUID;
 import lombok.val;
 import org.jose4j.lang.JoseException;
@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 public class AcceptTrustTest {
 
   private static RelationshipResponseDTO createdRelationship;
-  private RelationshipDAO relationshipDAO;
+  private RelationshipRepository relationshipRepository;
   private UUID originUserId = UUID.randomUUID();
   private String originUserUsername = "username";
   private UUID targetUserId = UUID.randomUUID();
@@ -35,8 +35,8 @@ public class AcceptTrustTest {
   public void init() throws JoseException {
     TokenUtils.generateKeys();
 
-    relationshipDAO = new FakeRelationshipDAO();
-    createdRelationship = new TrustUser(relationshipDAO)
+    relationshipRepository = new FakeRelationshipRepository();
+    createdRelationship = new TrustUser(relationshipRepository)
         .execute(new OriginRelationshipRequestDTO()
             .setOriginUserToken(TokenUtils.createToken(originUserId, originUserUsername))
             .setTargetUserId(targetUserId));
@@ -49,7 +49,7 @@ public class AcceptTrustTest {
         .setTargetUserToken("");
 
     assertThrows(InvalidTokenException.class,
-        () -> new AcceptTrust(relationshipDAO).execute(toBeAcceptedRelationship));
+        () -> new AcceptTrust(relationshipRepository).execute(toBeAcceptedRelationship));
   }
 
   @Test
@@ -63,9 +63,9 @@ public class AcceptTrustTest {
         .setOriginUser(new User().setId(originUserId).setUsername(originUserUsername))
         .setTargetUser(new User().setId(targetUserId).setUsername(targetUserUsername))
         .setRelationshipType(RelationshipType.FOLLOW);
-    assertNull(relationshipDAO.find(followRelationship));
+    assertNull(relationshipRepository.find(followRelationship));
 
-    val responseRelationship = new AcceptTrust(relationshipDAO).execute(toBeAcceptedRelationship);
+    val responseRelationship = new AcceptTrust(relationshipRepository).execute(toBeAcceptedRelationship);
 
     assertEquals(originUserId, responseRelationship.getOriginUserId());
     assertEquals(originUserUsername, responseRelationship.getOriginUserUsername());
@@ -75,7 +75,7 @@ public class AcceptTrustTest {
     assertEquals(RelationshipStatus.ACCEPTED, responseRelationship.getRelationshipStatus());
 
 
-    val foundRelationship = relationshipDAO.find(followRelationship);
+    val foundRelationship = relationshipRepository.find(followRelationship);
     assertNotNull(foundRelationship);
     assertEquals(RelationshipStatus.ACCEPTED, foundRelationship.getRelationshipStatus());
   }

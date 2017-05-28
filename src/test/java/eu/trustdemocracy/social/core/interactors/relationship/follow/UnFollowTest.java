@@ -12,8 +12,8 @@ import eu.trustdemocracy.social.core.interactors.exceptions.InvalidTokenExceptio
 import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.RelationshipResponseDTO;
-import eu.trustdemocracy.social.gateways.RelationshipDAO;
-import eu.trustdemocracy.social.gateways.fake.FakeRelationshipDAO;
+import eu.trustdemocracy.social.gateways.RelationshipRepository;
+import eu.trustdemocracy.social.gateways.fake.FakeRelationshipRepository;
 import java.util.UUID;
 import lombok.val;
 import org.jose4j.lang.JoseException;
@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 public class UnFollowTest {
 
   private static RelationshipResponseDTO createdRelationship;
-  private RelationshipDAO relationshipDAO;
+  private RelationshipRepository relationshipRepository;
   private UUID originUserId = UUID.randomUUID();
   private String originUserUsername = "username";
   private UUID targetUserId = UUID.randomUUID();
@@ -32,8 +32,8 @@ public class UnFollowTest {
   public void init() throws JoseException {
     TokenUtils.generateKeys();
 
-    relationshipDAO = new FakeRelationshipDAO();
-    createdRelationship = new FollowUser(relationshipDAO)
+    relationshipRepository = new FakeRelationshipRepository();
+    createdRelationship = new FollowUser(relationshipRepository)
         .execute(new OriginRelationshipRequestDTO()
             .setOriginUserToken(TokenUtils.createToken(originUserId, originUserUsername))
             .setTargetUserId(targetUserId));
@@ -46,7 +46,7 @@ public class UnFollowTest {
         .setTargetUserId(targetUserId);
 
     assertThrows(InvalidTokenException.class,
-        () -> new UnFollow(relationshipDAO).execute(unFollowRelationship));
+        () -> new UnFollow(relationshipRepository).execute(unFollowRelationship));
   }
 
   @Test
@@ -58,9 +58,9 @@ public class UnFollowTest {
 
     val relationship = RelationshipMapper.createEntity(unFollowRelationship);
     relationship.setRelationshipType(RelationshipType.FOLLOW);
-    assertNotNull(relationshipDAO.find(relationship));
-    val responseRelationship = new UnFollow(relationshipDAO).execute(unFollowRelationship);
-    assertNull(relationshipDAO.find(relationship));
+    assertNotNull(relationshipRepository.find(relationship));
+    val responseRelationship = new UnFollow(relationshipRepository).execute(unFollowRelationship);
+    assertNull(relationshipRepository.find(relationship));
 
     assertEquals(originUserId, responseRelationship.getOriginUserId());
     assertEquals(originUserUsername, responseRelationship.getOriginUserUsername());

@@ -10,8 +10,8 @@ import eu.trustdemocracy.social.core.interactors.exceptions.InvalidTokenExceptio
 import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
-import eu.trustdemocracy.social.gateways.RelationshipDAO;
-import eu.trustdemocracy.social.gateways.fake.FakeRelationshipDAO;
+import eu.trustdemocracy.social.gateways.RelationshipRepository;
+import eu.trustdemocracy.social.gateways.fake.FakeRelationshipRepository;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 
 public class GetFollowRequestsTest {
 
-  private RelationshipDAO relationshipDAO;
+  private RelationshipRepository relationshipRepository;
   private Set<UUID> originUserIds = new HashSet<>();
   private UUID targetUserId = UUID.randomUUID();
   private String targetUserUsername = "targetUsername";
@@ -33,8 +33,8 @@ public class GetFollowRequestsTest {
   public void init() throws JoseException {
     TokenUtils.generateKeys();
 
-    relationshipDAO = new FakeRelationshipDAO();
-    val interactor = new FollowUser(relationshipDAO);
+    relationshipRepository = new FakeRelationshipRepository();
+    val interactor = new FollowUser(relationshipRepository);
     for (int i = 0; i < REQUESTS_COUNT; i++) {
       val userId = UUID.randomUUID();
       originUserIds.add(userId);
@@ -51,7 +51,7 @@ public class GetFollowRequestsTest {
         .setTargetUserToken("");
 
     assertThrows(InvalidTokenException.class,
-        () -> new GetFollowRequests(relationshipDAO).execute(targetRelationship));
+        () -> new GetFollowRequests(relationshipRepository).execute(targetRelationship));
   }
 
   @Test
@@ -59,7 +59,7 @@ public class GetFollowRequestsTest {
     val targetRelationship = new TargetRelationshipRequestDTO()
         .setTargetUserToken(TokenUtils.createToken(targetUserId, targetUserUsername));
 
-    val responseRelationships = new GetFollowRequests(relationshipDAO)
+    val responseRelationships = new GetFollowRequests(relationshipRepository)
         .execute(targetRelationship)
         .getRelationships();
 

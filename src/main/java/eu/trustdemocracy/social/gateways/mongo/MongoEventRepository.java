@@ -6,7 +6,7 @@ import static com.mongodb.client.model.Filters.in;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import eu.trustdemocracy.social.core.entities.Event;
-import eu.trustdemocracy.social.gateways.EventDAO;
+import eu.trustdemocracy.social.gateways.EventRepository;
 import io.vertx.core.json.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +16,12 @@ import java.util.stream.Collectors;
 import lombok.val;
 import org.bson.Document;
 
-public class MongoEventDAO implements EventDAO {
+public class MongoEventRepository implements EventRepository {
 
   private static final String EVENTS_COLLECTION = "events";
   private MongoCollection<Document> collection;
 
-  public MongoEventDAO(MongoDatabase db) {
+  public MongoEventRepository(MongoDatabase db) {
     this.collection = db.getCollection(EVENTS_COLLECTION);
   }
 

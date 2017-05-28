@@ -11,7 +11,7 @@ import eu.trustdemocracy.social.core.entities.Relationship;
 import eu.trustdemocracy.social.core.entities.RelationshipStatus;
 import eu.trustdemocracy.social.core.entities.RelationshipType;
 import eu.trustdemocracy.social.core.entities.User;
-import eu.trustdemocracy.social.gateways.RelationshipDAO;
+import eu.trustdemocracy.social.gateways.RelationshipRepository;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -21,12 +21,12 @@ import lombok.val;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
-public class MongoRelationshipDAO implements RelationshipDAO {
+public class MongoRelationshipRepository implements RelationshipRepository {
 
   private static final String RELATIONSHIPS_COLLECTION = "relationships";
   private MongoCollection<Document> collection;
 
-  public MongoRelationshipDAO(MongoDatabase db) {
+  public MongoRelationshipRepository(MongoDatabase db) {
     this.collection = db.getCollection(RELATIONSHIPS_COLLECTION);
   }
 

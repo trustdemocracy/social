@@ -14,7 +14,7 @@ import eu.trustdemocracy.social.core.entities.Relationship;
 import eu.trustdemocracy.social.core.entities.RelationshipStatus;
 import eu.trustdemocracy.social.core.entities.RelationshipType;
 import eu.trustdemocracy.social.core.entities.User;
-import eu.trustdemocracy.social.gateways.RelationshipDAO;
+import eu.trustdemocracy.social.gateways.RelationshipRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -24,17 +24,17 @@ import org.bson.Document;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class MongoRelationshipDAOTest {
+public class MongoRelationshipRepositoryTest {
 
   private MongoCollection<Document> collection;
-  private RelationshipDAO relationshipDAO;
+  private RelationshipRepository relationshipRepository;
 
   @BeforeEach
   public void init() {
     val fongo = new Fongo("test server");
     val db = fongo.getDatabase("test_database");
     collection = db.getCollection("relationships");
-    relationshipDAO = new MongoRelationshipDAO(db);
+    relationshipRepository = new MongoRelationshipRepository(db);
   }
 
   @Test
@@ -43,7 +43,7 @@ public class MongoRelationshipDAOTest {
 
     assertEquals(0L, collection.count());
 
-    val createdRelationship = relationshipDAO.create(relationship);
+    val createdRelationship = relationshipRepository.create(relationship);
     assertEquals(relationship, createdRelationship);
     assertNotEquals(0L, collection.count());
 
@@ -58,13 +58,13 @@ public class MongoRelationshipDAOTest {
   public void findRelationship() {
     val relationship = getRandomRelationship();
 
-    val nullRelationship = relationshipDAO.find(relationship);
+    val nullRelationship = relationshipRepository.find(relationship);
 
     assertNull(nullRelationship);
 
-    relationshipDAO.create(relationship);
+    relationshipRepository.create(relationship);
 
-    val foundRelationship = relationshipDAO.find(relationship);
+    val foundRelationship = relationshipRepository.find(relationship);
 
     assertEquals(relationship, foundRelationship);
   }
@@ -72,32 +72,32 @@ public class MongoRelationshipDAOTest {
   @Test
   public void updateRelationship() {
     val relationship = getRandomRelationship();
-    relationshipDAO.create(relationship);
+    relationshipRepository.create(relationship);
 
-    assertEquals(relationship, relationshipDAO.find(relationship));
+    assertEquals(relationship, relationshipRepository.find(relationship));
 
     relationship.setRelationshipStatus(RelationshipStatus.ACCEPTED);
     assertNotEquals(relationship.getRelationshipStatus(),
-        relationshipDAO.find(relationship).getRelationshipStatus());
+        relationshipRepository.find(relationship).getRelationshipStatus());
 
-    assertEquals(relationship, relationshipDAO.update(relationship));
+    assertEquals(relationship, relationshipRepository.update(relationship));
 
     assertEquals(relationship.getRelationshipStatus(),
-        relationshipDAO.find(relationship).getRelationshipStatus());
+        relationshipRepository.find(relationship).getRelationshipStatus());
   }
 
   @Test
   public void deleteRelationship() {
     val relationship = getRandomRelationship();
-    relationshipDAO.create(relationship);
+    relationshipRepository.create(relationship);
 
-    assertEquals(relationship, relationshipDAO.find(relationship));
+    assertEquals(relationship, relationshipRepository.find(relationship));
 
     assertNotEquals(0L, collection.count());
-    assertEquals(relationship, relationshipDAO.remove(relationship));
+    assertEquals(relationship, relationshipRepository.remove(relationship));
 
     assertEquals(0L, collection.count());
-    assertNull(relationshipDAO.find(relationship));
+    assertNull(relationshipRepository.find(relationship));
   }
 
   @Test
@@ -114,7 +114,7 @@ public class MongoRelationshipDAOTest {
         relationship.getOriginUser().setId(userId);
         relationships.add(relationship);
       }
-      relationshipDAO.create(relationship);
+      relationshipRepository.create(relationship);
     }
 
     val followRelationships = relationships.stream()
@@ -122,7 +122,7 @@ public class MongoRelationshipDAOTest {
         .collect(Collectors.toList());
     assertNotEquals(0, followRelationships.size());
 
-    val foundFollowRelationships = relationshipDAO
+    val foundFollowRelationships = relationshipRepository
         .getAllOriginRelationships(userId, RelationshipType.FOLLOW);
     assertEquals(followRelationships.size(), foundFollowRelationships.size());
     for (Relationship relationship : followRelationships) {
@@ -134,7 +134,7 @@ public class MongoRelationshipDAOTest {
         .collect(Collectors.toList());
     assertNotEquals(0, trustRelationships.size());
 
-    val foundTrustRelationships = relationshipDAO
+    val foundTrustRelationships = relationshipRepository
         .getAllOriginRelationships(userId, RelationshipType.TRUST);
     assertEquals(trustRelationships.size(), foundTrustRelationships.size());
     for (Relationship relationship : trustRelationships) {
@@ -149,20 +149,20 @@ public class MongoRelationshipDAOTest {
     val relationship = getRandomRelationship()
         .setOriginUser(originUser)
         .setRelationshipType(RelationshipType.FOLLOW);
-    relationshipDAO.create(relationship);
+    relationshipRepository.create(relationship);
 
     relationship
         .setOriginUser(new User().setId(UUID.randomUUID()))
         .setTargetUser(originUser);
-    relationshipDAO.create(relationship);
+    relationshipRepository.create(relationship);
 
     relationship.setRelationshipType(RelationshipType.TRUST);
-    relationshipDAO.create(relationship);
+    relationshipRepository.create(relationship);
 
     relationship.setOriginUser(originUser).setTargetUser(new User().setId(UUID.randomUUID()));
-    relationshipDAO.create(relationship);
+    relationshipRepository.create(relationship);
 
-    val relationships = relationshipDAO.getRelationships(originUser.getId());
+    val relationships = relationshipRepository.getRelationships(originUser.getId());
 
     assertEquals(4, relationships.size());
   }
@@ -176,29 +176,29 @@ public class MongoRelationshipDAOTest {
         .setOriginUser(originUser)
         .setTargetUser(targetUser)
         .setRelationshipType(RelationshipType.FOLLOW);
-    relationshipDAO.create(relationship);
+    relationshipRepository.create(relationship);
 
     relationship
         .setOriginUser(new User().setId(UUID.randomUUID()))
         .setTargetUser(originUser);
-    relationshipDAO.create(relationship);
+    relationshipRepository.create(relationship);
 
     relationship.setOriginUser(targetUser).setTargetUser(originUser);
-    relationshipDAO.create(relationship);
+    relationshipRepository.create(relationship);
 
     relationship.setRelationshipType(RelationshipType.TRUST);
-    relationshipDAO.create(relationship);
+    relationshipRepository.create(relationship);
 
 
     relationship.setOriginUser(originUser).setTargetUser(targetUser);
-    relationshipDAO.create(relationship);
+    relationshipRepository.create(relationship);
 
     relationship
         .setTargetUser(new User().setId(UUID.randomUUID()))
         .setOriginUser(originUser);
-    relationshipDAO.create(relationship);
+    relationshipRepository.create(relationship);
 
-    val relationships = relationshipDAO.getRelationships(originUser.getId(), targetUser.getId());
+    val relationships = relationshipRepository.getRelationships(originUser.getId(), targetUser.getId());
 
     assertEquals(4, relationships.size());
   }
@@ -217,7 +217,7 @@ public class MongoRelationshipDAOTest {
         relationship.getTargetUser().setId(userId);
         relationships.add(relationship);
       }
-      relationshipDAO.create(relationship);
+      relationshipRepository.create(relationship);
     }
 
     val followRelationships = relationships.stream()
@@ -225,7 +225,7 @@ public class MongoRelationshipDAOTest {
         .collect(Collectors.toList());
     assertNotEquals(0, followRelationships.size());
 
-    val foundFollowRelationships = relationshipDAO
+    val foundFollowRelationships = relationshipRepository
         .findByTargetId(userId, RelationshipType.FOLLOW, RelationshipStatus.PENDING);
     assertEquals(followRelationships.size(), foundFollowRelationships.size());
     for (Relationship relationship : followRelationships) {
@@ -237,7 +237,7 @@ public class MongoRelationshipDAOTest {
         .collect(Collectors.toList());
     assertNotEquals(0, trustRelationships.size());
 
-    val foundTrustRelationships = relationshipDAO
+    val foundTrustRelationships = relationshipRepository
         .findByTargetId(userId, RelationshipType.TRUST, RelationshipStatus.PENDING);
     assertEquals(trustRelationships.size(), foundTrustRelationships.size());
     for (Relationship relationship : trustRelationships) {

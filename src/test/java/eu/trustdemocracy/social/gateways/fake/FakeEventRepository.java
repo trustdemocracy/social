@@ -1,7 +1,7 @@
 package eu.trustdemocracy.social.gateways.fake;
 
 import eu.trustdemocracy.social.core.entities.Event;
-import eu.trustdemocracy.social.gateways.EventDAO;
+import eu.trustdemocracy.social.gateways.EventRepository;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.UUID;
 import lombok.val;
 
-public class FakeEventDAO implements EventDAO {
+public class FakeEventRepository implements EventRepository {
 
   private Map<UUID, Event> events = new HashMap<>();
 

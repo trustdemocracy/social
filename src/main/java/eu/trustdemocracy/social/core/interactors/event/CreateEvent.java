@@ -4,20 +4,20 @@ import eu.trustdemocracy.social.core.entities.util.EventMapper;
 import eu.trustdemocracy.social.core.interactors.Interactor;
 import eu.trustdemocracy.social.core.models.request.EventRequestDTO;
 import eu.trustdemocracy.social.core.models.response.EventResponseDTO;
-import eu.trustdemocracy.social.gateways.EventDAO;
+import eu.trustdemocracy.social.gateways.EventRepository;
 import lombok.val;
 
 public class CreateEvent implements Interactor<EventRequestDTO, EventResponseDTO> {
 
-  private EventDAO eventDAO;
+  private EventRepository eventRepository;
 
-  public CreateEvent(EventDAO eventDAO) {
-    this.eventDAO = eventDAO;
+  public CreateEvent(EventRepository eventRepository) {
+    this.eventRepository = eventRepository;
   }
 
   @Override
   public EventResponseDTO execute(EventRequestDTO eventRequestDTO) {
     val event = EventMapper.createEntity(eventRequestDTO);
-    return EventMapper.createResponse(eventDAO.create(event));
+    return EventMapper.createResponse(eventRepository.create(event));
   }
 }
