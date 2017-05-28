@@ -2,10 +2,10 @@ package eu.trustdemocracy.social.infrastructure;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
-import eu.trustdemocracy.social.gateways.EventRepository;
-import eu.trustdemocracy.social.gateways.RelationshipRepository;
-import eu.trustdemocracy.social.gateways.mongo.MongoEventRepository;
-import eu.trustdemocracy.social.gateways.mongo.MongoRelationshipRepository;
+import eu.trustdemocracy.social.gateways.repositories.EventRepository;
+import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
+import eu.trustdemocracy.social.gateways.repositories.mongo.MongoEventRepository;
+import eu.trustdemocracy.social.gateways.repositories.mongo.MongoRelationshipRepository;
 import java.util.Properties;
 import lombok.val;
 

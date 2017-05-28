@@ -1,9 +1,9 @@
-package eu.trustdemocracy.social.gateways.fake;
+package eu.trustdemocracy.social.gateways.repositories.fake;
 
 import eu.trustdemocracy.social.core.entities.Relationship;
 import eu.trustdemocracy.social.core.entities.RelationshipStatus;
 import eu.trustdemocracy.social.core.entities.RelationshipType;
-import eu.trustdemocracy.social.gateways.RelationshipRepository;
+import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

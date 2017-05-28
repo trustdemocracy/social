@@ -8,7 +8,7 @@ import eu.trustdemocracy.social.core.entities.util.UserMapper;
 import eu.trustdemocracy.social.core.interactors.Interactor;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.GetRelationshipsResponseDTO;
-import eu.trustdemocracy.social.gateways.RelationshipRepository;
+import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
 import java.util.List;
 import lombok.val;
 

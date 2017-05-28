@@ -13,8 +13,9 @@ import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.RelationshipResponseDTO;
-import eu.trustdemocracy.social.gateways.RelationshipRepository;
-import eu.trustdemocracy.social.gateways.fake.FakeRelationshipRepository;
+import eu.trustdemocracy.social.gateways.out.FakeRankerGateway;
+import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
+import eu.trustdemocracy.social.gateways.repositories.fake.FakeRelationshipRepository;
 import java.util.UUID;
 import lombok.val;
 import org.jose4j.lang.JoseException;
@@ -25,6 +26,7 @@ public class CancelFollowTest {
 
   private static RelationshipResponseDTO acceptedRelationship;
   private RelationshipRepository relationshipRepository;
+  private FakeRankerGateway rankerGateway;
   private UUID originUserId = UUID.randomUUID();
   private String originUserUsername = "username";
   private UUID targetUserId = UUID.randomUUID();
@@ -35,6 +37,7 @@ public class CancelFollowTest {
     TokenUtils.generateKeys();
 
     relationshipRepository = new FakeRelationshipRepository();
+    rankerGateway = new FakeRankerGateway();
     val createdRelationship = new FollowUser(relationshipRepository)
         .execute(new OriginRelationshipRequestDTO()
             .setOriginUserToken(TokenUtils.createToken(originUserId, originUserUsername))
@@ -44,7 +47,8 @@ public class CancelFollowTest {
         .setOriginUserId(createdRelationship.getOriginUserId())
         .setTargetUserToken(TokenUtils.createToken(targetUserId, targetUserUsername));
 
-    acceptedRelationship = new AcceptFollow(relationshipRepository).execute(toBeAcceptedRelationship);
+    acceptedRelationship = new AcceptFollow(relationshipRepository, rankerGateway)
+        .execute(toBeAcceptedRelationship);
   }
 
   @Test
@@ -54,7 +58,8 @@ public class CancelFollowTest {
         .setTargetUserToken("");
 
     assertThrows(InvalidTokenException.class,
-        () -> new CancelFollow(relationshipRepository).execute(cancelFollowRelationship));
+        () -> new CancelFollow(relationshipRepository, rankerGateway)
+            .execute(cancelFollowRelationship));
   }
 
   @Test
@@ -63,11 +68,11 @@ public class CancelFollowTest {
         .setOriginUserId(acceptedRelationship.getOriginUserId())
         .setTargetUserToken(TokenUtils.createToken(targetUserId, targetUserUsername));
 
-
     val relationship = RelationshipMapper.createEntity(cancelFollowRelationship);
     relationship.setRelationshipType(RelationshipType.FOLLOW);
     assertNotNull(relationshipRepository.find(relationship));
-    val responseRelationship = new CancelFollow(relationshipRepository).execute(cancelFollowRelationship);
+    val responseRelationship = new CancelFollow(relationshipRepository, rankerGateway)
+        .execute(cancelFollowRelationship);
     assertNull(relationshipRepository.find(relationship));
 
     assertEquals(originUserId, responseRelationship.getOriginUserId());

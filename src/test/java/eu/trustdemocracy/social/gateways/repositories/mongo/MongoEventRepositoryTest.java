@@ -1,4 +1,4 @@
-package eu.trustdemocracy.social.gateways.mongo;
+package eu.trustdemocracy.social.gateways.repositories.mongo;
 
 import static com.mongodb.client.model.Filters.eq;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,7 +10,7 @@ import com.github.fakemongo.Fongo;
 import com.mongodb.Block;
 import com.mongodb.client.MongoCollection;
 import eu.trustdemocracy.social.core.entities.Event;
-import eu.trustdemocracy.social.gateways.EventRepository;
+import eu.trustdemocracy.social.gateways.repositories.EventRepository;
 import io.vertx.core.json.JsonObject;
 import java.util.HashSet;
 import java.util.List;

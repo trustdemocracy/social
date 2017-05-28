@@ -13,8 +13,9 @@ import eu.trustdemocracy.social.core.models.request.GetEventsRequestDTO;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.EventResponseDTO;
-import eu.trustdemocracy.social.gateways.fake.FakeEventRepository;
-import eu.trustdemocracy.social.gateways.fake.FakeRelationshipRepository;
+import eu.trustdemocracy.social.gateways.out.FakeRankerGateway;
+import eu.trustdemocracy.social.gateways.repositories.fake.FakeEventRepository;
+import eu.trustdemocracy.social.gateways.repositories.fake.FakeRelationshipRepository;
 import io.vertx.core.json.JsonObject;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,7 +75,7 @@ public class GetEventsTest {
     }
 
     val followUser = new FollowUser(relationshipRepository);
-    val acceptFollow = new AcceptFollow(relationshipRepository);
+    val acceptFollow = new AcceptFollow(relationshipRepository, new FakeRankerGateway());
 
     for (val followedUserId : followedUsersIds.keySet()) {
       if (followedUsersIds.get(followedUserId)) {

@@ -15,10 +15,11 @@ import eu.trustdemocracy.social.core.interactors.relationship.trust.CancelTrust;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.GetTrustRequests;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.TrustUser;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.UnTrust;
-import eu.trustdemocracy.social.gateways.EventRepository;
-import eu.trustdemocracy.social.gateways.RelationshipRepository;
-import eu.trustdemocracy.social.gateways.mongo.MongoEventRepository;
-import eu.trustdemocracy.social.gateways.mongo.MongoRelationshipRepository;
+import eu.trustdemocracy.social.gateways.out.RankerGateway;
+import eu.trustdemocracy.social.gateways.repositories.EventRepository;
+import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
+import eu.trustdemocracy.social.gateways.repositories.mongo.MongoEventRepository;
+import eu.trustdemocracy.social.gateways.repositories.mongo.MongoRelationshipRepository;
 import lombok.val;
 
 public class FakeInteractorFactory implements InteractorFactory {
@@ -42,12 +43,12 @@ public class FakeInteractorFactory implements InteractorFactory {
 
   @Override
   public AcceptFollow getAcceptFollow() {
-    return new AcceptFollow(getFakeRelationshipRepository());
+    return new AcceptFollow(getFakeRelationshipRepository(), getRankerGateway());
   }
 
   @Override
   public CancelFollow getCancelFollow() {
-    return new CancelFollow(getFakeRelationshipRepository());
+    return new CancelFollow(getFakeRelationshipRepository(), getRankerGateway());
   }
 
   @Override
@@ -67,17 +68,17 @@ public class FakeInteractorFactory implements InteractorFactory {
 
   @Override
   public AcceptTrust getAcceptTrust() {
-    return new AcceptTrust(getFakeRelationshipRepository());
+    return new AcceptTrust(getFakeRelationshipRepository(), getRankerGateway());
   }
 
   @Override
   public CancelTrust getCancelTrust() {
-    return new CancelTrust(getFakeRelationshipRepository());
+    return new CancelTrust(getFakeRelationshipRepository(), getRankerGateway());
   }
 
   @Override
   public UnTrust getUnTrust() {
-    return new UnTrust(getFakeRelationshipRepository());
+    return new UnTrust(getFakeRelationshipRepository(), getRankerGateway());
   }
 
   @Override
@@ -96,6 +97,10 @@ public class FakeInteractorFactory implements InteractorFactory {
 
   private EventRepository getFakeEventRepository() {
     return new MongoEventRepository(getDB());
+  }
+
+  private RankerGateway getRankerGateway() {
+    return null;
   }
 
   private MongoDatabase getDB() {

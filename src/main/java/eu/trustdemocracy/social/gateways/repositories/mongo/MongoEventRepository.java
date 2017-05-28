@@ -1,4 +1,4 @@
-package eu.trustdemocracy.social.gateways.mongo;
+package eu.trustdemocracy.social.gateways.repositories.mongo;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.in;
@@ -6,7 +6,7 @@ import static com.mongodb.client.model.Filters.in;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import eu.trustdemocracy.social.core.entities.Event;
-import eu.trustdemocracy.social.gateways.EventRepository;
+import eu.trustdemocracy.social.gateways.repositories.EventRepository;
 import io.vertx.core.json.JsonObject;
 import java.util.ArrayList;
 import java.util.List;

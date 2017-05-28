@@ -14,8 +14,9 @@ import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.RelationshipResponseDTO;
-import eu.trustdemocracy.social.gateways.RelationshipRepository;
-import eu.trustdemocracy.social.gateways.fake.FakeRelationshipRepository;
+import eu.trustdemocracy.social.gateways.out.FakeRankerGateway;
+import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
+import eu.trustdemocracy.social.gateways.repositories.fake.FakeRelationshipRepository;
 import java.util.UUID;
 import lombok.val;
 import org.jose4j.lang.JoseException;
@@ -26,6 +27,7 @@ public class AcceptTrustTest {
 
   private static RelationshipResponseDTO createdRelationship;
   private RelationshipRepository relationshipRepository;
+  private FakeRankerGateway rankerGateway;
   private UUID originUserId = UUID.randomUUID();
   private String originUserUsername = "username";
   private UUID targetUserId = UUID.randomUUID();
@@ -36,6 +38,7 @@ public class AcceptTrustTest {
     TokenUtils.generateKeys();
 
     relationshipRepository = new FakeRelationshipRepository();
+    rankerGateway = new FakeRankerGateway();
     createdRelationship = new TrustUser(relationshipRepository)
         .execute(new OriginRelationshipRequestDTO()
             .setOriginUserToken(TokenUtils.createToken(originUserId, originUserUsername))
@@ -49,7 +52,7 @@ public class AcceptTrustTest {
         .setTargetUserToken("");
 
     assertThrows(InvalidTokenException.class,
-        () -> new AcceptTrust(relationshipRepository).execute(toBeAcceptedRelationship));
+        () -> new AcceptTrust(relationshipRepository, rankerGateway).execute(toBeAcceptedRelationship));
   }
 
   @Test
@@ -65,7 +68,7 @@ public class AcceptTrustTest {
         .setRelationshipType(RelationshipType.FOLLOW);
     assertNull(relationshipRepository.find(followRelationship));
 
-    val responseRelationship = new AcceptTrust(relationshipRepository).execute(toBeAcceptedRelationship);
+    val responseRelationship = new AcceptTrust(relationshipRepository, rankerGateway).execute(toBeAcceptedRelationship);
 
     assertEquals(originUserId, responseRelationship.getOriginUserId());
     assertEquals(originUserUsername, responseRelationship.getOriginUserUsername());

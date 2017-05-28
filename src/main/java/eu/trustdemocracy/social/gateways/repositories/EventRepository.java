@@ -1,4 +1,4 @@
-package eu.trustdemocracy.social.gateways;
+package eu.trustdemocracy.social.gateways.repositories;
 
 import eu.trustdemocracy.social.core.entities.Event;
 import java.util.List;

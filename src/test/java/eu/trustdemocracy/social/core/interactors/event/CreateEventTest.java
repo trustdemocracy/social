@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import eu.trustdemocracy.social.core.models.request.EventRequestDTO;
-import eu.trustdemocracy.social.gateways.fake.FakeEventRepository;
+import eu.trustdemocracy.social.gateways.repositories.fake.FakeEventRepository;
 import io.vertx.core.json.JsonObject;
 import java.util.ArrayList;
 import java.util.List;

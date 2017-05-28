@@ -6,7 +6,7 @@ import eu.trustdemocracy.social.core.interactors.Interactor;
 import eu.trustdemocracy.social.core.interactors.exceptions.ResourceNotFoundException;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.RelationshipResponseDTO;
-import eu.trustdemocracy.social.gateways.RelationshipRepository;
+import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
 import lombok.val;
 
 public class UnFollow implements Interactor<OriginRelationshipRequestDTO, RelationshipResponseDTO> {

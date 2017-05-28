@@ -10,8 +10,8 @@ import eu.trustdemocracy.social.core.interactors.exceptions.InvalidTokenExceptio
 import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
-import eu.trustdemocracy.social.gateways.RelationshipRepository;
-import eu.trustdemocracy.social.gateways.fake.FakeRelationshipRepository;
+import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
+import eu.trustdemocracy.social.gateways.repositories.fake.FakeRelationshipRepository;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;

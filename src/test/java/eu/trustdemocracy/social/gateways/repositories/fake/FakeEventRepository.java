@@ -1,7 +1,7 @@
-package eu.trustdemocracy.social.gateways.fake;
+package eu.trustdemocracy.social.gateways.repositories.fake;
 
 import eu.trustdemocracy.social.core.entities.Event;
-import eu.trustdemocracy.social.gateways.EventRepository;
+import eu.trustdemocracy.social.gateways.repositories.EventRepository;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

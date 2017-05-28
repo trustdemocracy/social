@@ -1,4 +1,4 @@
-package eu.trustdemocracy.social.gateways.mongo;
+package eu.trustdemocracy.social.gateways.repositories.mongo;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
@@ -14,7 +14,7 @@ import eu.trustdemocracy.social.core.entities.Relationship;
 import eu.trustdemocracy.social.core.entities.RelationshipStatus;
 import eu.trustdemocracy.social.core.entities.RelationshipType;
 import eu.trustdemocracy.social.core.entities.User;
-import eu.trustdemocracy.social.gateways.RelationshipRepository;
+import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;

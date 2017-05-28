@@ -10,8 +10,9 @@ import eu.trustdemocracy.social.core.interactors.util.TokenUtils;
 import eu.trustdemocracy.social.core.models.request.OriginRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.request.TargetRelationshipRequestDTO;
 import eu.trustdemocracy.social.core.models.response.RelationshipResponseDTO;
-import eu.trustdemocracy.social.gateways.RelationshipRepository;
-import eu.trustdemocracy.social.gateways.fake.FakeRelationshipRepository;
+import eu.trustdemocracy.social.gateways.out.FakeRankerGateway;
+import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
+import eu.trustdemocracy.social.gateways.repositories.fake.FakeRelationshipRepository;
 import java.util.UUID;
 import lombok.val;
 import org.jose4j.lang.JoseException;
@@ -22,6 +23,7 @@ public class AcceptFollowTest {
 
   private static RelationshipResponseDTO createdRelationship;
   private RelationshipRepository relationshipRepository;
+  private FakeRankerGateway rankerGateway;
   private UUID originUserId = UUID.randomUUID();
   private String originUserUsername = "username";
   private UUID targetUserId = UUID.randomUUID();
@@ -32,6 +34,7 @@ public class AcceptFollowTest {
     TokenUtils.generateKeys();
 
     relationshipRepository = new FakeRelationshipRepository();
+    rankerGateway = new FakeRankerGateway();
     createdRelationship = new FollowUser(relationshipRepository)
         .execute(new OriginRelationshipRequestDTO()
             .setOriginUserToken(TokenUtils.createToken(originUserId, originUserUsername))
@@ -45,7 +48,7 @@ public class AcceptFollowTest {
         .setTargetUserToken("");
 
     assertThrows(InvalidTokenException.class,
-        () -> new AcceptFollow(relationshipRepository).execute(toBeAcceptedRelationship));
+        () -> new AcceptFollow(relationshipRepository, rankerGateway).execute(toBeAcceptedRelationship));
   }
 
   @Test
@@ -54,7 +57,7 @@ public class AcceptFollowTest {
         .setOriginUserId(createdRelationship.getOriginUserId())
         .setTargetUserToken(TokenUtils.createToken(targetUserId, targetUserUsername));
 
-    val responseRelationship = new AcceptFollow(relationshipRepository).execute(toBeAcceptedRelationship);
+    val responseRelationship = new AcceptFollow(relationshipRepository, rankerGateway).execute(toBeAcceptedRelationship);
 
     assertEquals(originUserId, responseRelationship.getOriginUserId());
     assertEquals(originUserUsername, responseRelationship.getOriginUserUsername());

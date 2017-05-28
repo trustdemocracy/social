@@ -13,8 +13,9 @@ import eu.trustdemocracy.social.core.interactors.relationship.trust.CancelTrust;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.GetTrustRequests;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.TrustUser;
 import eu.trustdemocracy.social.core.interactors.relationship.trust.UnTrust;
-import eu.trustdemocracy.social.gateways.EventRepository;
-import eu.trustdemocracy.social.gateways.RelationshipRepository;
+import eu.trustdemocracy.social.gateways.out.RankerGateway;
+import eu.trustdemocracy.social.gateways.repositories.EventRepository;
+import eu.trustdemocracy.social.gateways.repositories.RelationshipRepository;
 
 public class DefaultInteractorFactory implements InteractorFactory {
 
@@ -47,12 +48,12 @@ public class DefaultInteractorFactory implements InteractorFactory {
 
   @Override
   public AcceptFollow getAcceptFollow() {
-    return new AcceptFollow(getRelationshipRepository());
+    return new AcceptFollow(getRelationshipRepository(), getRankerGateway() );
   }
 
   @Override
   public CancelFollow getCancelFollow() {
-    return new CancelFollow(getRelationshipRepository());
+    return new CancelFollow(getRelationshipRepository(), getRankerGateway() );
   }
 
   @Override
@@ -72,17 +73,17 @@ public class DefaultInteractorFactory implements InteractorFactory {
 
   @Override
   public AcceptTrust getAcceptTrust() {
-    return new AcceptTrust(getRelationshipRepository());
+    return new AcceptTrust(getRelationshipRepository(), getRankerGateway() );
   }
 
   @Override
   public CancelTrust getCancelTrust() {
-    return new CancelTrust(getRelationshipRepository());
+    return new CancelTrust(getRelationshipRepository(), getRankerGateway() );
   }
 
   @Override
   public UnTrust getUnTrust() {
-    return new UnTrust(getRelationshipRepository());
+    return new UnTrust(getRelationshipRepository(), getRankerGateway() );
   }
 
   @Override
@@ -103,4 +104,7 @@ public class DefaultInteractorFactory implements InteractorFactory {
     return RepositoryFactory.getRelationshipRepository();
   }
 
+  private RankerGateway getRankerGateway() {
+    return null;
+  }
 }

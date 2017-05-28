@@ -4,7 +4,7 @@ import eu.trustdemocracy.social.core.entities.util.EventMapper;
 import eu.trustdemocracy.social.core.interactors.Interactor;
 import eu.trustdemocracy.social.core.models.request.EventRequestDTO;
 import eu.trustdemocracy.social.core.models.response.EventResponseDTO;
-import eu.trustdemocracy.social.gateways.EventRepository;
+import eu.trustdemocracy.social.gateways.repositories.EventRepository;
 import lombok.val;
 
 public class CreateEvent implements Interactor<EventRequestDTO, EventResponseDTO> {
