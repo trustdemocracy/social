@@ -16,7 +16,7 @@ public class RankerGatewayImpl implements RankerGateway {
   public void addRelationship(Relationship relationship) {
     val json = new JsonObject()
         .put("originId", relationship.getOriginUser().getId().toString())
-        .put("targetId", relationship.getOriginUser().getId().toString());
+        .put("targetId", relationship.getTargetUser().getId().toString());
 
     WebClient.create(vertx)
         .post(getRankerPort(), getRankerHost(), "/relationships")
@@ -28,7 +28,7 @@ public class RankerGatewayImpl implements RankerGateway {
   public void removeRelationship(Relationship relationship) {
     val json = new JsonObject()
         .put("originId", relationship.getOriginUser().getId().toString())
-        .put("targetId", relationship.getOriginUser().getId().toString());
+        .put("targetId", relationship.getTargetUser().getId().toString());
 
     WebClient.create(vertx)
         .post(getRankerPort(), getRankerHost(), "/relationships/remove")
